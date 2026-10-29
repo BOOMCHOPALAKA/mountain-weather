@@ -1,0 +1,129 @@
+{
+  "_note": "Curated cams, all fetch-verified 2026-10-24. zone = the hike-plan region it speaks for. elev_ft = where the CAMERA sits, not the objective. 'proxy' means it is well below the terrain it is standing in for and can only show the valley.",
+  "cams": [
+    {
+      "id": "paradise_rainier",
+      "name": "Paradise - Mount Rainier",
+      "zone": "rainier",
+      "url": "https://www.nps.gov/webcams-mora/mountain.jpg",
+      "lat": 46.7861,
+      "lon": -121.735,
+      "elev_ft": 5400,
+      "shows": "the upper mountain, Paradise meadows, Skyline trail traffic",
+      "proxy": false
+    },
+    {
+      "id": "paradise_tatoosh",
+      "name": "Paradise - Tatoosh Range",
+      "zone": "rainier",
+      "url": "https://www.nps.gov/webcams-mora/tatoosh.jpg",
+      "lat": 46.7861,
+      "lon": -121.735,
+      "elev_ft": 5400,
+      "shows": "Tatoosh peaks, Paradise road surface, snow line on south aspects",
+      "proxy": false
+    },
+    {
+      "id": "paradise_east",
+      "name": "Paradise - East",
+      "zone": "rainier",
+      "url": "https://www.nps.gov/webcams-mora/east.jpg",
+      "lat": 46.7861,
+      "lon": -121.735,
+      "elev_ft": 5400,
+      "shows": "eastern sky, useful for reading an approaching system",
+      "proxy": false
+    },
+    {
+      "id": "paradise_west",
+      "name": "Paradise - West",
+      "zone": "rainier",
+      "url": "https://www.nps.gov/webcams-mora/west.jpg",
+      "lat": 46.7861,
+      "lon": -121.735,
+      "elev_ft": 5400,
+      "shows": "western sky, where PNW weather arrives from",
+      "proxy": false
+    },
+    {
+      "id": "longmire",
+      "name": "Longmire - Parking Area",
+      "zone": "rainier",
+      "url": "https://www.nps.gov/webcams-mora/longmire.jpg",
+      "lat": 46.75,
+      "lon": -121.8139,
+      "elev_ft": 2760,
+      "shows": "valley-level conditions and the road in. Top of frame has a fixed obstruction.",
+      "proxy": true
+    },
+    {
+      "id": "snoqualmie_summit",
+      "name": "I-90 Snoqualmie Pass Summit",
+      "zone": "i90",
+      "url": "https://images.wsdot.wa.gov/sc/090VC05200.jpg",
+      "lat": 47.428397,
+      "lon": -121.419659,
+      "elev_ft": 3022,
+      "shows": "pass road surface and snow. Low res.",
+      "proxy": true
+    },
+    {
+      "id": "stevens_summit",
+      "name": "US 2 East Stevens Summit",
+      "zone": "hwy2",
+      "url": "https://images.wsdot.wa.gov/nc/002vc06458.jpg",
+      "lat": 47.746118,
+      "lon": -121.088696,
+      "elev_ft": 4061,
+      "shows": "pass road, lot, lower ski slopes. Low res, snow vs bare gravel is often ambiguous.",
+      "proxy": true
+    },
+    {
+      "id": "white_pass",
+      "name": "US 12 White Pass Summit",
+      "zone": "south_cascades",
+      "url": "https://images.wsdot.wa.gov/sc/012vc15095.jpg",
+      "lat": 46.637262,
+      "lon": -121.392994,
+      "elev_ft": 4500,
+      "shows": "pass road and lot. Low res.",
+      "proxy": true
+    },
+    {
+      "id": "hcc_tower_union",
+      "name": "Hood Canal Communications Tower Cam (Union)",
+      "zone": "olympics",
+      "url": "https://myweb.hcc.net/hccpivot/tower.jpg",
+      "lat": 47.349,
+      "lon": -123.089,
+      "elev_ft": 900,
+      "shows": "\ud83d\udd11 THE OLYMPIC CAMERA. Elevated tower above Union looking NW across Hood Canal at the Olympic front range. Sees the actual skyline, so it reads the deck height directly: cloud banked in the valley with peaks above it is visible as undercast rather than inferred from 850 hPa. Fetch-verified 2026-10-24, frame was 0 min old, ~310 KB, timestamp burned in.",
+      "proxy": true,
+      "sees_high_terrain": true,
+      "note": "Camera sits low but LOOKS AT high terrain. That makes it far more useful than an equally low cam pointed at a road. Judge the peaks in frame, not the weather at the camera.",
+      "source": "hcc.net tower-and-water-cams page, harvested via browser 2026-10-24. Not in any WSDOT feed."
+    },
+    {
+      "id": "mt_walker_101",
+      "name": "US 101 at Mt Walker MP 301.5",
+      "zone": "olympics",
+      "url": "https://images.wsdot.wa.gov/rweather/Medium_MtWalker1.jpg",
+      "lat": 47.757008,
+      "lon": -122.894388,
+      "elev_ft": 400,
+      "shows": "Hood Canal highway only. \ud83d\udd34 The ONLY Olympic cam found and it sits ~5,400 ft below Ellinor and Townsend. Gray here is routinely undercast with clear summits above. Never let it veto an Olympic summit forecast.",
+      "proxy": true
+    }
+  ],
+  "gaps": [
+    "No WSDOT camera looks at any Olympic summit. Nearest to Ellinor is Bremerton at 23.4 mi, sea level. WSDOT has nothing on Hood Canal at all.",
+    "RESOLVED 2026-10-24: HCC Tower Cam at Union (myweb.hcc.net/hccpivot/tower.jpg) is now in the catalog and is the nearest camera to Ellinor at 14.4 mi. It looks at the Olympic skyline, so deck height can be read off the frame.",
+    "\ud83d\udd34 WSDOT IS NOT THE WHOLE PICTURE. Corrected 2026-10-24 after Scott pointed out a Union camera that this catalog said did not exist. An earlier version of this file claimed 'no Olympic camera exists' on the strength of a WSDOT-only search. That was a single-source claim stated as fact. Local operators run cameras WSDOT never lists.",
+    "UNHARVESTED: Mason County public works road-condition cameras. Page is JS-rendered, no URLs in the HTML.",
+    "DEAD: the UW atmos list's Silverdale cam (drdale.com/cam/live.jpg, 'looking W to the Olympic Mtns') 404s. That list is stale.",
+    "UNTESTED: ski-area cams (Crystal, Alpental, Stevens, Baker, White Pass) sit at elevation and are the best remaining lead for true alpine ground truth.",
+    "Chinook Pass (SR 410) is seasonal and not in the WSDOT index.",
+    "STILL UNHARVESTED: the two HCC camstreamer embeds (Union marina water cam, Union boat ramp) are video players, not still JPEGs. Would need a snapshot endpoint or a screenshot.",
+    "BLOCKED: Mason County road-condition cameras. The page loaded in the browser but extraction was refused by a safety filter on cookie/query-string data."
+  ]
+}
