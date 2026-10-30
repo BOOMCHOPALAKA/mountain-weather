@@ -3,128 +3,38 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta name="claude:viewport-fit-sides" content="cover">
 <title>Mountain Weather</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cpath d='M2 27 12 9l5 8 4-5 9 15z' fill='%231F5D88'/%3E%3Cpath d='m12 9 3 5-3-1-2 2z' fill='%23fff'/%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo+Narrow:wght@400;600&family=Public+Sans:wght@400;600&display=swap">
-<style>
-/* Layout: one column, phone first. Cams on top, then zones grouped by range. Each zone is a
-   compact block: head (name, elevation, NWAC pill), three rows (24h, 48h, outlook), and a snow
-   panel that renders only when snow is falling, forecast, or on the ground at the station. */
-:root {
-  color-scheme: light;
-  --bg: #F2F4F3;
-  --surface: #FFFFFF;
-  --ink: #1A2227;
-  --muted: #5B6970;
-  --line: #D5DBDD;
-  --accent: #2E6E9E;
-  --measured: #3D5A73;
-  --forecast: #8FBBD9;
-  --warn: #9A5F10;
-  --crit: #A4382C;
-  --display: "Archivo Narrow", "Arial Narrow", sans-serif;
-  --body: "Public Sans", system-ui, sans-serif;
-  --gutter-l: max(16px, env(safe-area-inset-left, 0px));
-  --gutter-r: max(16px, env(safe-area-inset-right, 0px));
-}
-@media (prefers-color-scheme: dark) {
-  :root:not([data-theme="light"]) {
-    color-scheme: dark;
-    --bg: #121A1F; --surface: #1A242B; --ink: #E4EBEE; --muted: #97A6AE; --line: #2B373E;
-    --accent: #7FB3D5; --measured: #9FC3DB; --forecast: #3F6A8A; --warn: #D9984A; --crit: #D86A5C;
-  }
-}
-:root[data-theme="dark"] {
-  color-scheme: dark;
-  --bg: #121A1F; --surface: #1A242B; --ink: #E4EBEE; --muted: #97A6AE; --line: #2B373E;
-  --accent: #7FB3D5; --measured: #9FC3DB; --forecast: #3F6A8A; --warn: #D9984A; --crit: #D86A5C;
-}
-* { box-sizing: border-box; }
-html, body { margin: 0; }
-body {
-  background: var(--bg); color: var(--ink); font-family: var(--body); font-size: 15px; line-height: 1.4;
-  padding-block: 12px 40px; padding-left: var(--gutter-l); padding-right: var(--gutter-r);
-  font-variant-numeric: tabular-nums;
-}
-main { max-width: 640px; margin: 0 auto; display: grid; grid-template-columns: minmax(0, 1fr); gap: 20px; }
-section { min-width: 0; }
-h1 { font-family: var(--display); font-weight: 600; font-size: 28px; margin: 0; letter-spacing: 0.01em; text-wrap: balance; }
-h2 { font-family: var(--display); font-weight: 600; font-size: 13px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); margin: 0; }
-header { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
-.muted { color: var(--muted); }
-.small { font-size: 13px; }
-button, a.btn {
-  font: inherit; color: var(--accent); background: none; border: 1px solid var(--line); border-radius: 4px;
-  padding: 4px 10px; cursor: pointer; text-decoration: none;
-}
-button:focus-visible, a:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
-
-#claude { background: var(--surface); border-left: 3px solid var(--accent); padding: 10px 12px; display: grid; gap: 4px; }
-#claude[hidden] { display: none; }
-#claude .call { font-family: var(--display); font-size: 19px; font-weight: 600; }
-
-#cams { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 8px; }
-.cam { display: grid; gap: 2px; margin: 0; }
-.cam img { width: 100%; max-width: 100%; aspect-ratio: 4 / 3; object-fit: cover; background: var(--line); display: block; }
-.cam figcaption { font-size: 12px; color: var(--muted); }
-
-#zones { display: grid; gap: 20px; }
-.group { display: grid; gap: 10px; }
-.zone { background: var(--surface); padding: 10px 12px; display: grid; gap: 6px; border-top: 1px solid var(--line); min-width: 0; }
-.zone-head { display: flex; align-items: baseline; justify-content: space-between; gap: 8px; flex-wrap: wrap; }
-.zone-head b { font-family: var(--display); font-size: 18px; font-weight: 600; }
-.row { display: grid; grid-template-columns: 64px minmax(0, 1fr); gap: 8px; align-items: baseline; }
-.row-k { font-size: 12px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); }
-.row-v { overflow-wrap: anywhere; min-width: 0; }
-.pill { display: inline-block; font-size: 12px; padding: 1px 7px; border-radius: 999px; border: 1px solid var(--line); color: var(--muted); }
-.pill-warn { border-color: var(--warn); color: var(--warn); }
-.pill-crit { border-color: var(--crit); color: var(--crit); }
-
-.snow { border-top: 1px dashed var(--line); padding-top: 6px; display: grid; gap: 4px; min-width: 0; }
-.snow .meta { display: flex; justify-content: space-between; gap: 8px; flex-wrap: wrap; font-size: 13px; }
-.band-toggle { display: flex; gap: 4px; }
-.band-toggle button[aria-pressed="true"] { background: var(--accent); color: var(--surface); border-color: var(--accent); }
-.bars { width: 100%; max-width: 100%; height: auto; display: block; }
-.bars text { font-family: var(--body); font-size: 9px; fill: var(--muted); }
-.bars .measured { fill: var(--measured); }
-.bars .forecast { fill: var(--forecast); }
-.bars .ecm { stroke: var(--ink); stroke-width: 1.5; }
-.bars .today { stroke: var(--line); stroke-width: 1; }
-.bars .val { fill: var(--ink); }
-.legend { display: flex; gap: 12px; font-size: 12px; color: var(--muted); }
-.legend i { display: inline-block; width: 10px; height: 10px; vertical-align: -1px; margin-right: 4px; }
-.legend .m { background: var(--measured); }
-.legend .f { background: var(--forecast); }
-
-#status { font-size: 13px; color: var(--muted); }
-@media (prefers-reduced-motion: no-preference) {
-  .zone { transition: opacity 200ms; }
-}
-</style>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo+Narrow:wght@400;600;700&family=Public+Sans:wght@400;600&display=swap">
+<link rel="stylesheet" href="styles.css">
 </head>
 <body>
-<main>
-  <header>
-    <h1>Mountain Weather</h1>
-    <div class="small muted">as of <span id="asof">loading</span> · <button id="refresh" type="button">Refresh</button></div>
-  </header>
 
-  <section id="claude" hidden>
-    <div class="call" id="claude-call"></div>
-    <div id="claude-lines" class="small"></div>
-    <div class="small muted" id="claude-asof"></div>
-  </section>
+<header class="top">
+  <div class="wrap">
+    <div class="top-row">
+      <div class="brandbox"><h1 class="brand">Mountain Weather</h1><span class="asof-t">Loading…</span></div>
+      <div class="asof">
+        <button class="btn-quiet" type="button" id="refresh">Refresh</button>
+      </div>
+    </div>
+    <div class="seg" role="group" aria-label="Activity">
+      <button type="button" data-top="ski" aria-pressed="true">Ski</button>
+      <button type="button" data-top="hike" aria-pressed="false">Hike</button>
+    </div>
+    <div class="seg2" id="sub" role="group" aria-label="Ski view">
+      <button type="button" data-sub="resorts" aria-pressed="true">Resorts</button>
+      <button type="button" data-sub="backcountry" aria-pressed="false">Backcountry</button>
+    </div>
+  </div>
+</header>
 
-  <section>
-    <h2>Right now · cams</h2>
-    <div id="cams"></div>
-  </section>
+<main class="wrap" id="main"></main>
 
-  <section id="zones"></section>
+<footer class="wrap" id="foot"></footer>
 
-  <div id="status">Summit temps, grid-cell precip. New snow is model water × a temperature snow ratio (estimated). Measured snow is the station's daily depth change. Reports and flags only; the terrain call is yours.</div>
-</main>
 <script type="module" src="app.js"></script>
 </body>
 </html>

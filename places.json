@@ -1,0 +1,3357 @@
+{
+ "_note": "Built by scripts/build_places.py from regions.draft.json and the resort table; do not hand-edit.",
+ "regions": {
+  "hike": [
+   {
+    "id": "olympic",
+    "title": "Olympic Peninsula",
+    "anchor": {
+     "place": "olympic_hood_canal",
+     "role": "High"
+    }
+   },
+   {
+    "id": "rainier",
+    "title": "Mount Rainier Area",
+    "anchor": {
+     "place": "rainier_paradise",
+     "role": "Trailhead"
+    }
+   },
+   {
+    "id": "north_cascades",
+    "title": "North Cascades",
+    "anchor": {
+     "place": "nc_baker",
+     "role": "High"
+    }
+   },
+   {
+    "id": "central_cascades",
+    "title": "Central Cascades",
+    "anchor": {
+     "place": "cc_stevens_east",
+     "role": "High"
+    }
+   },
+   {
+    "id": "snoqualmie",
+    "title": "Snoqualmie Region",
+    "anchor": {
+     "place": "snoq_pass",
+     "role": "High"
+    }
+   },
+   {
+    "id": "south_cascades",
+    "title": "South Cascades",
+    "anchor": {
+     "place": "sc_white_pass",
+     "role": "High"
+    }
+   },
+   {
+    "id": "central_washington",
+    "title": "Central Washington",
+    "anchor": {
+     "place": "cw_wenatchee",
+     "role": "High"
+    }
+   }
+  ],
+  "resorts": [
+   {
+    "id": "wa",
+    "title": "Washington",
+    "anchor": {
+     "place": "res_stevens",
+     "role": "Mid"
+    }
+   },
+   {
+    "id": "or",
+    "title": "Oregon",
+    "anchor": {
+     "place": "res_timberline",
+     "role": "Mid"
+    }
+   },
+   {
+    "id": "id",
+    "title": "Idaho",
+    "anchor": {
+     "place": "res_schweitzer",
+     "role": "Mid"
+    }
+   },
+   {
+    "id": "bc",
+    "title": "BC",
+    "anchor": {
+     "place": "res_whistler",
+     "role": "Mid"
+    }
+   }
+  ],
+  "backcountry": [
+   {
+    "id": "olympics",
+    "title": "Olympics",
+    "anchor": {
+     "place": "bc_olympics_hurricane",
+     "role": "Mid"
+    }
+   },
+   {
+    "id": "cascades_north",
+    "title": "Cascades North",
+    "anchor": {
+     "place": "bc_west_north",
+     "role": "Mid"
+    }
+   },
+   {
+    "id": "cascades_central",
+    "title": "Cascades Central",
+    "anchor": {
+     "place": "bc_stevens",
+     "role": "Mid"
+    }
+   },
+   {
+    "id": "cascades_south",
+    "title": "Cascades South",
+    "anchor": {
+     "place": "bc_rainier",
+     "role": "Base"
+    }
+   },
+   {
+    "id": "mt_hood",
+    "title": "Mt Hood",
+    "anchor": {
+     "place": "bc_mt_hood",
+     "role": "Mid"
+    }
+   }
+  ]
+ },
+ "places": [
+  {
+   "id": "olympic_hood_canal",
+   "mode": "hike",
+   "region": "olympic",
+   "title": "Hood Canal South",
+   "subtitle": "Lake Cushman, Mt Ellinor, Staircase, Lena Lake",
+   "points": [
+    {
+     "role": "High",
+     "name": "Mount Ellinor",
+     "lat": 47.521635,
+     "lon": -123.260677,
+     "elev_ft": 5951,
+     "dem_ft": 5846,
+     "source": "Wikidata (1,814 m); WTA 5,944"
+    },
+    {
+     "role": "Trailhead",
+     "name": "Lena Lake / Brothers Trailhead",
+     "lat": 47.59975,
+     "lon": -123.15087,
+     "elev_ft": 755,
+     "dem_ft": 755,
+     "source": "OSM coordinate; no published elevation"
+    }
+   ],
+   "glance": "High",
+   "snotel": [
+    {
+     "triplet": "1126:WA:SNTL",
+     "name": "Mt. Tebo",
+     "elev_ft": 3380,
+     "mi": 8.2,
+     "lat": 47.46061,
+     "lon": -123.41219
+    },
+    {
+     "triplet": "1107:WA:SNTL",
+     "name": "Buckinghorse",
+     "elev_ft": 4850,
+     "mi": 15.8,
+     "lat": 47.7086,
+     "lon": -123.45747
+    }
+   ],
+   "cams": [
+    "hcc_tower_union"
+   ],
+   "avalanche": {
+    "center": "NWAC",
+    "zone": 3020,
+    "link": null
+   }
+  },
+  {
+   "id": "olympic_hood_canal_north",
+   "mode": "hike",
+   "region": "olympic",
+   "title": "Hood Canal North",
+   "subtitle": "Quilcene, Mt Townsend, Marmot Pass, Mt Walker",
+   "points": [
+    {
+     "role": "High",
+     "name": "Mt Townsend",
+     "lat": 47.8675,
+     "lon": -123.0594,
+     "elev_ft": 6281,
+     "dem_ft": 6220,
+     "source": "Scott's Garmin track (gps)"
+    },
+    {
+     "role": "Trailhead",
+     "name": "Mt Townsend upper trailhead (Forest Road 2760)",
+     "lat": 47.8564167,
+     "lon": -123.0358833,
+     "elev_ft": 3514,
+     "dem_ft": 3514,
+     "source": "WTA hike page Mount Townsend (geo coordinate for the upper-trailhead route); no published elevation"
+    }
+   ],
+   "glance": "High",
+   "snotel": [
+    {
+     "triplet": "943:WA:SNTL",
+     "name": "Dungeness",
+     "elev_ft": 3990,
+     "mi": 1.0,
+     "lat": 47.8722,
+     "lon": -123.07879
+    }
+   ],
+   "cams": [
+    "mt_walker_101"
+   ],
+   "avalanche": {
+    "center": "NWAC",
+    "zone": 3020,
+    "link": null
+   }
+  },
+  {
+   "id": "olympic_north",
+   "mode": "hike",
+   "region": "olympic",
+   "title": "Hurricane Ridge & Sol Duc",
+   "subtitle": "Hurricane Hill, High Divide, Lake Angeles, Lake Crescent",
+   "points": [
+    {
+     "role": "High",
+     "name": "Hurricane Hill",
+     "lat": 47.99009,
+     "lon": -123.52908,
+     "elev_ft": 5757,
+     "dem_ft": 5640,
+     "source": "WTA highest point (OSM 1,757 m = 5,764)"
+    },
+    {
+     "role": "Trailhead",
+     "name": "Lake Angeles Trailhead (Heart O' the Hills)",
+     "lat": 48.03895,
+     "lon": -123.43159,
+     "elev_ft": 1942,
+     "dem_ft": 1942,
+     "source": "OSM coordinate; no published elevation"
+    }
+   ],
+   "glance": "High",
+   "snotel": [
+    {
+     "triplet": "974:WA:SNTL",
+     "name": "Waterhole",
+     "elev_ft": 5010,
+     "mi": 5.7,
+     "lat": 47.94485,
+     "lon": -123.42594
+    },
+    {
+     "triplet": "943:WA:SNTL",
+     "name": "Dungeness",
+     "elev_ft": 3990,
+     "mi": 22.4,
+     "lat": 47.8722,
+     "lon": -123.07879
+    }
+   ],
+   "cams": [],
+   "avalanche": {
+    "center": "NWAC",
+    "zone": 3020,
+    "link": null
+   }
+  },
+  {
+   "id": "olympic_west",
+   "mode": "hike",
+   "region": "olympic",
+   "title": "Hoh & Quinault",
+   "subtitle": "Hoh River, Enchanted Valley, Colonel Bob, Ozette coast",
+   "points": [
+    {
+     "role": "High",
+     "name": "Colonel Bob",
+     "lat": 47.48835,
+     "lon": -123.73996,
+     "elev_ft": 4501,
+     "dem_ft": 4413,
+     "source": "Wikidata"
+    },
+    {
+     "role": "Trailhead",
+     "name": "Hoh Rain Forest Visitor Center",
+     "lat": 47.86088,
+     "lon": -123.93479,
+     "elev_ft": 620,
+     "dem_ft": 620,
+     "source": "OSM coordinate; no published elevation"
+    }
+   ],
+   "glance": "High",
+   "snotel": [
+    {
+     "triplet": "1126:WA:SNTL",
+     "name": "Mt. Tebo",
+     "elev_ft": 3380,
+     "mi": 15.4,
+     "lat": 47.46061,
+     "lon": -123.41219
+    },
+    {
+     "triplet": "1107:WA:SNTL",
+     "name": "Buckinghorse",
+     "elev_ft": 4850,
+     "mi": 20.1,
+     "lat": 47.7086,
+     "lon": -123.45747
+    }
+   ],
+   "cams": [],
+   "avalanche": {
+    "center": "NWAC",
+    "zone": 3020,
+    "link": null
+   }
+  },
+  {
+   "id": "rainier_paradise",
+   "mode": "hike",
+   "region": "rainier",
+   "title": "Paradise & Longmire",
+   "subtitle": "Skyline Trail, Comet Falls, Van Trump Park, Camp Muir",
+   "points": [
+    {
+     "role": "High",
+     "name": "Panorama Point",
+     "lat": 46.80372,
+     "lon": -121.72954,
+     "elev_ft": 6919,
+     "dem_ft": 6867,
+     "source": "Wikidata (2,109 m); NPS signs say 6,800"
+    },
+    {
+     "role": "Trailhead",
+     "name": "Paradise",
+     "lat": 46.7861,
+     "lon": -121.735,
+     "elev_ft": 5400,
+     "dem_ft": 5436,
+     "source": "Wikidata/NPS 5,400; coordinate from zones.json"
+    }
+   ],
+   "glance": "High",
+   "snotel": [
+    {
+     "triplet": "679:WA:SNTL",
+     "name": "Paradise",
+     "elev_ft": 5150,
+     "mi": 1.7,
+     "lat": 46.78266,
+     "lon": -121.74767
+    },
+    {
+     "triplet": "1085:WA:SNTL",
+     "name": "Cayuse Pass",
+     "elev_ft": 5260,
+     "mi": 10.3,
+     "lat": 46.86956,
+     "lon": -121.53434
+    }
+   ],
+   "cams": [
+    "paradise_rainier",
+    "paradise_tatoosh",
+    "paradise_east",
+    "paradise_west",
+    "longmire"
+   ],
+   "avalanche": {
+    "center": "NWAC",
+    "zone": 3023,
+    "link": null
+   }
+  },
+  {
+   "id": "rainier_ohanapecosh",
+   "mode": "hike",
+   "region": "rainier",
+   "title": "Stevens Canyon & Ohanapecosh",
+   "subtitle": "Shriner Peak, Bench & Snow Lakes, Grove of the Patriarchs, Silver Falls",
+   "points": [
+    {
+     "role": "High",
+     "name": "Shriner Peak",
+     "lat": 46.81172,
+     "lon": -121.52997,
+     "elev_ft": 5834,
+     "dem_ft": 5791,
+     "source": "Wikidata"
+    },
+    {
+     "role": "Trailhead",
+     "name": "Ohanapecosh Visitor Center",
+     "lat": 46.73592,
+     "lon": -121.56592,
+     "elev_ft": 1893,
+     "dem_ft": 1965,
+     "source": "OSM ele tag (577 m)"
+    }
+   ],
+   "glance": "High",
+   "snotel": [
+    {
+     "triplet": "1085:WA:SNTL",
+     "name": "Cayuse Pass",
+     "elev_ft": 5260,
+     "mi": 4.0,
+     "lat": 46.86956,
+     "lon": -121.53434
+    },
+    {
+     "triplet": "679:WA:SNTL",
+     "name": "Paradise",
+     "elev_ft": 5150,
+     "mi": 10.5,
+     "lat": 46.78266,
+     "lon": -121.74767
+    }
+   ],
+   "cams": [],
+   "avalanche": {
+    "center": "NWAC",
+    "zone": 3023,
+    "link": null
+   }
+  },
+  {
+   "id": "rainier_chinook",
+   "mode": "hike",
+   "region": "rainier",
+   "title": "Chinook Pass",
+   "subtitle": "Naches Peak Loop, Sheep Lake, Sourdough Gap, Noble Knob",
+   "points": [
+    {
+     "role": "High",
+     "name": "Naches Peak",
+     "lat": 46.86509,
+     "lon": -121.50743,
+     "elev_ft": 6452,
+     "dem_ft": 6325,
+     "source": "Wikidata"
+    },
+    {
+     "role": "Trailhead",
+     "name": "Chinook Pass",
+     "lat": 46.8717,
+     "lon": -121.515,
+     "elev_ft": 5433,
+     "dem_ft": 5404,
+     "source": "Wikidata (1,656 m)"
+    }
+   ],
+   "glance": "High",
+   "snotel": [
+    {
+     "triplet": "1085:WA:SNTL",
+     "name": "Cayuse Pass",
+     "elev_ft": 5260,
+     "mi": 1.3,
+     "lat": 46.86956,
+     "lon": -121.53434
+    },
+    {
+     "triplet": "642:WA:SNTL",
+     "name": "Morse Lake",
+     "elev_ft": 5400,
+     "mi": 3.0,
+     "lat": 46.90585,
+     "lon": -121.4827
+    }
+   ],
+   "cams": [],
+   "avalanche": {
+    "center": "NWAC",
+    "zone": 3023,
+    "link": null
+   }
+  },
+  {
+   "id": "rainier_sunrise",
+   "mode": "hike",
+   "region": "rainier",
+   "title": "Sunrise & White River",
+   "subtitle": "Burroughs Mountain, Fremont Lookout, Summerland, Glacier Basin",
+   "points": [
+    {
+     "role": "High",
+     "name": "Third Burroughs Mountain",
+     "lat": 46.90176,
+     "lon": -121.71353,
+     "elev_ft": 7828,
+     "dem_ft": 7762,
+     "source": "OSM ele tag (2,386 m); WTA 7,828"
+    },
+    {
+     "role": "Trailhead",
+     "name": "Sunrise Visitor Center",
+     "lat": 46.91439,
+     "lon": -121.64344,
+     "elev_ft": 6391,
+     "dem_ft": 6417,
+     "source": "OSM ele tag (1,948 m); NPS 6,400"
+    }
+   ],
+   "glance": "High",
+   "snotel": [
+    {
+     "triplet": "1085:WA:SNTL",
+     "name": "Cayuse Pass",
+     "elev_ft": 5260,
+     "mi": 8.7,
+     "lat": 46.86956,
+     "lon": -121.53434
+    },
+    {
+     "triplet": "642:WA:SNTL",
+     "name": "Morse Lake",
+     "elev_ft": 5400,
+     "mi": 10.9,
+     "lat": 46.90585,
+     "lon": -121.4827
+    }
+   ],
+   "cams": [],
+   "avalanche": {
+    "center": "NWAC",
+    "zone": 3023,
+    "link": null
+   }
+  },
+  {
+   "id": "rainier_mowich",
+   "mode": "hike",
+   "region": "rainier",
+   "title": "Mowich & Carbon River",
+   "subtitle": "Tolmie Peak, Spray Park, Summit Lake, Carbon Glacier",
+   "points": [
+    {
+     "role": "High",
+     "name": "Tolmie Peak",
+     "lat": 46.958071,
+     "lon": -121.877322,
+     "elev_ft": 5955,
+     "dem_ft": 5869,
+     "source": "Wikidata (1,815 m); WTA lookout 5,900"
+    },
+    {
+     "role": "Trailhead",
+     "name": "Mowich Lake trailhead/campground",
+     "lat": 46.93277,
+     "lon": -121.86317,
+     "elev_ft": 4944,
+     "dem_ft": 4944,
+     "source": "OSM coordinate; no published elevation"
+    }
+   ],
+   "glance": "High",
+   "snotel": [
+    {
+     "triplet": "941:WA:SNTL",
+     "name": "Mowich",
+     "elev_ft": 3170,
+     "mi": 4.1,
+     "lat": 46.92833,
+     "lon": -121.95232
+    },
+    {
+     "triplet": "942:WA:SNTL",
+     "name": "Burnt Mountain",
+     "elev_ft": 4160,
+     "mi": 6.7,
+     "lat": 47.0444,
+     "lon": -121.94032
+    }
+   ],
+   "cams": [],
+   "avalanche": {
+    "center": "NWAC",
+    "zone": 3023,
+    "link": null
+   }
+  },
+  {
+   "id": "nc_mountain_loop",
+   "mode": "hike",
+   "region": "north_cascades",
+   "title": "Mountain Loop",
+   "subtitle": "Lake 22, Mt Pilchuck, Heather Lake, Gothic Basin",
+   "points": [
+    {
+     "role": "High",
+     "name": "Mount Pilchuck",
+     "lat": 48.05776,
+     "lon": -121.797764,
+     "elev_ft": 5341,
+     "dem_ft": 5125,
+     "source": "Wikidata (1,628 m)"
+    },
+    {
+     "role": "Trailhead",
+     "name": "Lake Twenty Two Trailhead",
+     "lat": 48.07685,
+     "lon": -121.74592,
+     "elev_ft": 1129,
+     "dem_ft": 1129,
+     "source": "OSM coordinate; no published elevation"
+    }
+   ],
+   "glance": "High",
+   "snotel": [
+    {
+     "triplet": "1345:WA:SNTL",
+     "name": "Deer Pass",
+     "elev_ft": 3360,
+     "mi": 19.3,
+     "lat": 48.3325,
+     "lon": -121.72133
+    },
+    {
+     "triplet": "1319:WA:SNTL",
+     "name": "Decline Creek",
+     "elev_ft": 4480,
+     "mi": 20.0,
+     "lat": 48.23594,
+     "lon": -121.455
+    }
+   ],
+   "cams": [],
+   "avalanche": {
+    "center": "NWAC",
+    "zone": 3022,
+    "link": null
+   }
+  },
+  {
+   "id": "nc_baker",
+   "mode": "hike",
+   "region": "north_cascades",
+   "title": "Mount Baker",
+   "subtitle": "Artist Point, Chain Lakes, Yellow Aster Butte, Park Butte",
+   "points": [
+    {
+     "role": "High",
+     "name": "Table Mountain",
+     "lat": 48.84677,
+     "lon": -121.71237,
+     "elev_ft": 5742,
+     "dem_ft": 5705,
+     "source": "Wikidata"
+    },
+    {
+     "role": "Trailhead",
+     "name": "Heather Meadows Visitor Center",
+     "lat": 48.85481,
+     "lon": -121.68574,
+     "elev_ft": 4400,
+     "dem_ft": 4400,
+     "source": "OSM coordinate; no published elevation"
+    }
+   ],
+   "glance": "High",
+   "snotel": [
+    {
+     "triplet": "909:WA:SNTL",
+     "name": "Wells Creek",
+     "elev_ft": 4040,
+     "mi": 3.8,
+     "lat": 48.8661,
+     "lon": -121.78976
+    },
+    {
+     "triplet": "999:WA:SNTL",
+     "name": "Marten Ridge",
+     "elev_ft": 3520,
+     "mi": 5.8,
+     "lat": 48.76292,
+     "lon": -121.69823
+    }
+   ],
+   "cams": [],
+   "avalanche": {
+    "center": "NWAC",
+    "zone": 3021,
+    "link": null
+   }
+  },
+  {
+   "id": "nc_hwy20",
+   "mode": "hike",
+   "region": "north_cascades",
+   "title": "North Cascades Highway",
+   "subtitle": "Maple Pass, Blue Lake, Cascade Pass, Hidden Lake",
+   "points": [
+    {
+     "role": "High",
+     "name": "Maple Pass",
+     "lat": 48.50489,
+     "lon": -120.76888,
+     "elev_ft": 6620,
+     "dem_ft": 6604,
+     "source": "OSM ele tag (2,018 m); WTA loop high point 6,650"
+    },
+    {
+     "role": "Trailhead",
+     "name": "Rainy Pass",
+     "lat": 48.51802,
+     "lon": -120.73397,
+     "elev_ft": 4875,
+     "dem_ft": 4865,
+     "source": "OSM ele tag (1,486 m); WSDOT signs 4,855"
+    }
+   ],
+   "glance": "High",
+   "snotel": [
+    {
+     "triplet": "711:WA:SNTL",
+     "name": "Rainy Pass",
+     "elev_ft": 4880,
+     "mi": 1.8,
+     "lat": 48.51865,
+     "lon": -120.7358
+    },
+    {
+     "triplet": "975:WA:SNTL",
+     "name": "Swamp Creek",
+     "elev_ft": 3930,
+     "mi": 4.6,
+     "lat": 48.57142,
+     "lon": -120.78267
+    }
+   ],
+   "cams": [],
+   "avalanche": {
+    "center": "NWAC",
+    "zone": 3029,
+    "link": null
+   }
+  },
+  {
+   "id": "nc_methow",
+   "mode": "hike",
+   "region": "north_cascades",
+   "title": "Methow & Sawtooth",
+   "subtitle": "Goat Peak, Twisp River, Eagle Lakes, Crater Lakes",
+   "points": [
+    {
+     "role": "High",
+     "name": "Goat Peak (Methow)",
+     "lat": 48.6322,
+     "lon": -120.404,
+     "elev_ft": 7001,
+     "dem_ft": 6929,
+     "source": "Wikidata; WTA lookout 7,001"
+    },
+    {
+     "role": "Trailhead",
+     "name": "South Creek Trailhead (Twisp River Rd)",
+     "lat": 48.43932,
+     "lon": -120.53104,
+     "elev_ft": 3245,
+     "dem_ft": 3245,
+     "source": "OSM coordinate; no published elevation"
+    }
+   ],
+   "glance": "High",
+   "snotel": [
+    {
+     "triplet": "711:WA:SNTL",
+     "name": "Rainy Pass",
+     "elev_ft": 4880,
+     "mi": 17.1,
+     "lat": 48.51865,
+     "lon": -120.7358
+    },
+    {
+     "triplet": "975:WA:SNTL",
+     "name": "Swamp Creek",
+     "elev_ft": 3930,
+     "mi": 17.8,
+     "lat": 48.57142,
+     "lon": -120.78267
+    }
+   ],
+   "cams": [],
+   "avalanche": {
+    "center": "NWAC",
+    "zone": 3029,
+    "link": null
+   }
+  },
+  {
+   "id": "nc_pasayten",
+   "mode": "hike",
+   "region": "north_cascades",
+   "title": "Pasayten & Harts Pass",
+   "subtitle": "Harts Pass, Slate Peak, Windy Pass, Horseshoe Basin",
+   "points": [
+    {
+     "role": "High",
+     "name": "Slate Peak",
+     "lat": 48.74088,
+     "lon": -120.68047,
+     "elev_ft": 7440,
+     "dem_ft": 7411,
+     "source": "OSM ele tag (2,267.7 m)"
+    },
+    {
+     "role": "Trailhead",
+     "name": "Harts Pass",
+     "lat": 48.72107,
+     "lon": -120.66989,
+     "elev_ft": 6184,
+     "dem_ft": 6184,
+     "source": "OSM coordinate; no published elevation"
+    }
+   ],
+   "glance": "High",
+   "snotel": [
+    {
+     "triplet": "515:WA:SNTL",
+     "name": "Harts Pass",
+     "elev_ft": 6490,
+     "mi": 1.7,
+     "lat": 48.72047,
+     "lon": -120.6586
+    },
+    {
+     "triplet": "975:WA:SNTL",
+     "name": "Swamp Creek",
+     "elev_ft": 3930,
+     "mi": 12.6,
+     "lat": 48.57142,
+     "lon": -120.78267
+    }
+   ],
+   "cams": [],
+   "avalanche": {
+    "center": "NWAC",
+    "zone": 3029,
+    "link": null
+   }
+  },
+  {
+   "id": "cc_stevens_west",
+   "mode": "hike",
+   "region": "central_cascades",
+   "title": "Stevens Pass West",
+   "subtitle": "Lake Serene, Wallace Falls, Blanca Lake, Barclay Lake",
+   "points": [
+    {
+     "role": "High",
+     "name": "Beckler Peak",
+     "lat": 47.736497,
+     "lon": -121.289269,
+     "elev_ft": 5041,
+     "dem_ft": 5010,
+     "source": "Wikidata (1,536.5 m); WTA 5,026"
+    },
+    {
+     "role": "Trailhead",
+     "name": "Lake Serene Trailhead",
+     "lat": 47.80911,
+     "lon": -121.57402,
+     "elev_ft": 604,
+     "dem_ft": 604,
+     "source": "OSM coordinate; no published elevation"
+    }
+   ],
+   "glance": "High",
+   "snotel": [
+    {
+     "triplet": "912:WA:SNTL",
+     "name": "Skookum Creek",
+     "elev_ft": 3320,
+     "mi": 15.3,
+     "lat": 47.68433,
+     "lon": -121.61007
+    },
+    {
+     "triplet": "908:WA:SNTL",
+     "name": "Alpine Meadows",
+     "elev_ft": 3500,
+     "mi": 19.2,
+     "lat": 47.77957,
+     "lon": -121.69847
+    }
+   ],
+   "cams": [],
+   "avalanche": {
+    "center": "NWAC",
+    "zone": 3024,
+    "link": null
+   }
+  },
+  {
+   "id": "cc_stevens_east",
+   "mode": "hike",
+   "region": "central_cascades",
+   "title": "Stevens Pass East",
+   "subtitle": "Lake Valhalla, Mt McCausland, Spider Meadow, Lake Wenatchee",
+   "points": [
+    {
+     "role": "High",
+     "name": "Mount McCausland",
+     "lat": 47.796778,
+     "lon": -121.103433,
+     "elev_ft": 5748,
+     "dem_ft": 5633,
+     "source": "Wikidata (1,752 m)"
+    },
+    {
+     "role": "Trailhead",
+     "name": "Smithbrook Trailhead",
+     "lat": 47.80234,
+     "lon": -121.07723,
+     "elev_ft": 4016,
+     "dem_ft": 4016,
+     "source": "OSM coordinate; no published elevation"
+    }
+   ],
+   "glance": "High",
+   "snotel": [
+    {
+     "triplet": "791:WA:SNTL",
+     "name": "Stevens Pass",
+     "elev_ft": 3940,
+     "mi": 3.5,
+     "lat": 47.74607,
+     "lon": -121.09288
+    },
+    {
+     "triplet": "1338:WA:SNTL",
+     "name": "Icicle Creek",
+     "elev_ft": 4550,
+     "mi": 17.4,
+     "lat": 47.59404,
+     "lon": -120.88255
+    }
+   ],
+   "cams": [
+    "stevens_summit"
+   ],
+   "avalanche": {
+    "center": "NWAC",
+    "zone": 3024,
+    "link": null
+   }
+  },
+  {
+   "id": "cc_leavenworth",
+   "mode": "hike",
+   "region": "central_cascades",
+   "title": "Leavenworth & Icicle",
+   "subtitle": "Enchantments, Colchuck Lake, Snow Lakes, Icicle Ridge",
+   "points": [
+    {
+     "role": "High",
+     "name": "Aasgard Pass",
+     "lat": 47.48078,
+     "lon": -120.82245,
+     "elev_ft": 7841,
+     "dem_ft": 7776,
+     "source": "Wikidata 7,841 (OSM 2,390 m); coordinate OSM"
+    },
+    {
+     "role": "Trailhead",
+     "name": "Stuart Lake Trailhead",
+     "lat": 47.52775,
+     "lon": -120.82087,
+     "elev_ft": 3425,
+     "dem_ft": 3425,
+     "source": "OSM coordinate; no published elevation"
+    }
+   ],
+   "glance": "High",
+   "snotel": [
+    {
+     "triplet": "1338:WA:SNTL",
+     "name": "Icicle Creek",
+     "elev_ft": 4550,
+     "mi": 8.3,
+     "lat": 47.59404,
+     "lon": -120.88255
+    },
+    {
+     "triplet": "478:WA:SNTL",
+     "name": "Fish Lake",
+     "elev_ft": 3440,
+     "mi": 12.9,
+     "lat": 47.53565,
+     "lon": -121.08553
+    }
+   ],
+   "cams": [],
+   "avalanche": {
+    "center": "NWAC",
+    "zone": 3030,
+    "link": null
+   }
+  },
+  {
+   "id": "cc_entiat_chelan",
+   "mode": "hike",
+   "region": "central_cascades",
+   "title": "Entiat & Lake Chelan",
+   "subtitle": "Entiat River, Duncan Hill, Lake Chelan, Holden & Stehekin",
+   "points": [
+    {
+     "role": "High",
+     "name": "Duncan Hill",
+     "lat": 48.05757,
+     "lon": -120.65481,
+     "elev_ft": 7818,
+     "dem_ft": 7740,
+     "source": "Wikidata (2,383 m)"
+    },
+    {
+     "role": "Trailhead",
+     "name": "Cottonwood Campground (Entiat road end)",
+     "lat": 48.02021,
+     "lon": -120.64211,
+     "elev_ft": 3091,
+     "dem_ft": 3091,
+     "source": "OSM coordinate; no published elevation"
+    }
+   ],
+   "glance": "High",
+   "snotel": [
+    {
+     "triplet": "699:WA:SNTL",
+     "name": "Pope Ridge",
+     "elev_ft": 3590,
+     "mi": 6.2,
+     "lat": 47.9909,
+     "lon": -120.56622
+    },
+    {
+     "triplet": "1171:WA:SNTL",
+     "name": "Trinity",
+     "elev_ft": 2890,
+     "mi": 9.1,
+     "lat": 48.07471,
+     "lon": -120.84989
+    }
+   ],
+   "cams": [],
+   "avalanche": {
+    "center": "NWAC",
+    "zone": 3030,
+    "link": null
+   }
+  },
+  {
+   "id": "cc_blewett",
+   "mode": "hike",
+   "region": "central_cascades",
+   "title": "Blewett Pass",
+   "subtitle": "Iron Bear, Ingalls Creek, Red Top Lookout, Tronsen Ridge",
+   "points": [
+    {
+     "role": "High",
+     "name": "Red Top Mountain",
+     "lat": 47.3009,
+     "lon": -120.7608,
+     "elev_ft": 5361,
+     "dem_ft": 5305,
+     "source": "Wikidata (1,634 m); WTA lookout 5,360"
+    },
+    {
+     "role": "Trailhead",
+     "name": "Blewett Pass",
+     "lat": 47.33492,
+     "lon": -120.57826,
+     "elev_ft": 4124,
+     "dem_ft": 4127,
+     "source": "Wikidata 4,124; coordinate OSM"
+    }
+   ],
+   "glance": "High",
+   "snotel": [
+    {
+     "triplet": "352:WA:SNTL",
+     "name": "Blewett Pass",
+     "elev_ft": 4240,
+     "mi": 5.1,
+     "lat": 47.35037,
+     "lon": -120.6796
+    },
+    {
+     "triplet": "507:WA:SNTL",
+     "name": "Grouse Camp",
+     "elev_ft": 5390,
+     "mi": 12.9,
+     "lat": 47.28107,
+     "lon": -120.48771
+    }
+   ],
+   "cams": [],
+   "avalanche": {
+    "center": "NWAC",
+    "zone": 3030,
+    "link": null
+   }
+  },
+  {
+   "id": "snoq_pass",
+   "mode": "hike",
+   "region": "snoqualmie",
+   "title": "Snoqualmie Pass",
+   "subtitle": "Snow Lake, Granite Mountain, Kendall Katwalk, Annette Lake",
+   "points": [
+    {
+     "role": "High",
+     "name": "Granite Mountain",
+     "lat": 47.417445,
+     "lon": -121.481448,
+     "elev_ft": 5630,
+     "dem_ft": 5581,
+     "source": "Wikidata (1,716 m)"
+    },
+    {
+     "role": "Trailhead",
+     "name": "Snoqualmie Pass",
+     "lat": 47.42539,
+     "lon": -121.41189,
+     "elev_ft": 3015,
+     "dem_ft": 3031,
+     "source": "OSM ele tag (919 m); WSDOT signs 3,022"
+    }
+   ],
+   "glance": "High",
+   "snotel": [
+    {
+     "triplet": "672:WA:SNTL",
+     "name": "Olallie Meadows",
+     "elev_ft": 4010,
+     "mi": 3.5,
+     "lat": 47.37406,
+     "lon": -121.44213
+    },
+    {
+     "triplet": "899:WA:SNTL",
+     "name": "Tinkham Creek",
+     "elev_ft": 3000,
+     "mi": 5.9,
+     "lat": 47.33198,
+     "lon": -121.46975
+    }
+   ],
+   "cams": [
+    "snoqualmie_summit"
+   ],
+   "avalanche": {
+    "center": "NWAC",
+    "zone": 3028,
+    "link": null
+   }
+  },
+  {
+   "id": "snoq_north_bend",
+   "mode": "hike",
+   "region": "snoqualmie",
+   "title": "North Bend",
+   "subtitle": "Mount Si, Rattlesnake Ledge, Mailbox Peak, Bandera",
+   "points": [
+    {
+     "role": "High",
+     "name": "Mount Si",
+     "lat": 47.5076,
+     "lon": -121.74,
+     "elev_ft": 4167,
+     "dem_ft": 4058,
+     "source": "Wikidata"
+    },
+    {
+     "role": "Trailhead",
+     "name": "Mount Si Trailhead",
+     "lat": 47.48801,
+     "lon": -121.72316,
+     "elev_ft": 715,
+     "dem_ft": 715,
+     "source": "OSM coordinate; no published elevation"
+    }
+   ],
+   "glance": "High",
+   "snotel": [
+    {
+     "triplet": "898:WA:SNTL",
+     "name": "Mount Gardner",
+     "elev_ft": 2930,
+     "mi": 13.1,
+     "lat": 47.35768,
+     "lon": -121.56812
+    },
+    {
+     "triplet": "912:WA:SNTL",
+     "name": "Skookum Creek",
+     "elev_ft": 3320,
+     "mi": 13.6,
+     "lat": 47.68433,
+     "lon": -121.61007
+    }
+   ],
+   "cams": [],
+   "avalanche": {
+    "center": "NWAC",
+    "zone": 3022,
+    "link": null
+   }
+  },
+  {
+   "id": "snoq_teanaway",
+   "mode": "hike",
+   "region": "snoqualmie",
+   "title": "Teanaway & Salmon La Sac",
+   "subtitle": "Lake Ingalls, Navaho Peak, Esmeralda Basin, Davis Peak",
+   "points": [
+    {
+     "role": "High",
+     "name": "Navaho Peak",
+     "lat": 47.4225,
+     "lon": -120.803055,
+     "elev_ft": 7224,
+     "dem_ft": 7133,
+     "source": "Wikidata (2,202 m); WTA 7,223"
+    },
+    {
+     "role": "Trailhead",
+     "name": "Esmeralda Trailhead",
+     "lat": 47.43674,
+     "lon": -120.93707,
+     "elev_ft": 4308,
+     "dem_ft": 4308,
+     "source": "OSM coordinate; no published elevation"
+    }
+   ],
+   "glance": "High",
+   "snotel": [
+    {
+     "triplet": "352:WA:SNTL",
+     "name": "Blewett Pass",
+     "elev_ft": 4240,
+     "mi": 7.6,
+     "lat": 47.35037,
+     "lon": -120.6796
+    },
+    {
+     "triplet": "734:WA:SNTL",
+     "name": "Sasse Ridge",
+     "elev_ft": 4340,
+     "mi": 12.4,
+     "lat": 47.38485,
+     "lon": -121.06323
+    }
+   ],
+   "cams": [],
+   "avalanche": {
+    "center": "NWAC",
+    "zone": 3030,
+    "link": null
+   }
+  },
+  {
+   "id": "sc_goat_rocks",
+   "mode": "hike",
+   "region": "south_cascades",
+   "title": "Goat Rocks",
+   "subtitle": "Snowgrass Flat, Goat Lake, Packwood Lake, Old Snowy",
+   "points": [
+    {
+     "role": "High",
+     "name": "Old Snowy Mountain",
+     "lat": 46.51225,
+     "lon": -121.4545,
+     "elev_ft": 7900,
+     "dem_ft": 7799,
+     "source": "OSM ele tag (2,408 m)"
+    },
+    {
+     "role": "Trailhead",
+     "name": "Snowgrass Hikers' Trailhead",
+     "lat": 46.46394,
+     "lon": -121.51889,
+     "elev_ft": 4682,
+     "dem_ft": 4682,
+     "source": "OSM coordinate; no published elevation"
+    }
+   ],
+   "glance": "High",
+   "snotel": [
+    {
+     "triplet": "692:WA:SNTL",
+     "name": "Pigtail Peak",
+     "elev_ft": 5800,
+     "mi": 8.2,
+     "lat": 46.62153,
+     "lon": -121.38643
+    },
+    {
+     "triplet": "702:WA:SNTL",
+     "name": "Potato Hill",
+     "elev_ft": 4480,
+     "mi": 11.6,
+     "lat": 46.3497,
+     "lon": -121.51415
+    }
+   ],
+   "cams": [],
+   "avalanche": {
+    "center": "NWAC",
+    "zone": 3023,
+    "link": null
+   }
+  },
+  {
+   "id": "sc_white_pass",
+   "mode": "hike",
+   "region": "south_cascades",
+   "title": "White Pass & Packwood",
+   "subtitle": "High Rock, Tatoosh Ridge, Jug Lake, Shellrock Peak",
+   "points": [
+    {
+     "role": "High",
+     "name": "High Rock Lookout",
+     "lat": 46.68344,
+     "lon": -121.90159,
+     "elev_ft": 5686,
+     "dem_ft": 5561,
+     "source": "Wikidata (1,733 m); WTA 5,685"
+    },
+    {
+     "role": "Trailhead",
+     "name": "White Pass",
+     "lat": 46.6383,
+     "lon": -121.39,
+     "elev_ft": 4500,
+     "dem_ft": 4478,
+     "source": "Wikidata 4,500"
+    }
+   ],
+   "glance": "High",
+   "snotel": [
+    {
+     "triplet": "1257:WA:SNTL",
+     "name": "Skate Creek",
+     "elev_ft": 3770,
+     "mi": 4.4,
+     "lat": 46.64336,
+     "lon": -121.83044
+    },
+    {
+     "triplet": "679:WA:SNTL",
+     "name": "Paradise",
+     "elev_ft": 5150,
+     "mi": 10.0,
+     "lat": 46.78266,
+     "lon": -121.74767
+    }
+   ],
+   "cams": [
+    "white_pass"
+   ],
+   "avalanche": {
+    "center": "NWAC",
+    "zone": 3023,
+    "link": null
+   }
+  },
+  {
+   "id": "sc_adams",
+   "mode": "hike",
+   "region": "south_cascades",
+   "title": "Mount Adams & Indian Heaven",
+   "subtitle": "Killen Creek, South Climb, Bird Creek Meadows, Indian Heaven",
+   "points": [
+    {
+     "role": "High",
+     "name": "South Butte (South Climb)",
+     "lat": 46.1608043,
+     "lon": -121.4801622,
+     "elev_ft": 7795,
+     "dem_ft": 7740,
+     "source": "USGS/GNIS peak via OpenStreetMap node 356546494 (https://www.openstreetmap.org/node/356546494, GNIS 1526138, ele 2375.9 m = 7,795 ft); on the South Climb route flank per https://www.oregonhikers.org/field_guide/Mount_Adams_Summit_Hike. Timberline stand-in for the summit, approved by Scott 2026-10-29. DEM 7,740 ft checked with wx.py verify; flank point, terrain climbs away"
+    },
+    {
+     "role": "Trailhead",
+     "name": "South Climb Trailhead (Cold Springs)",
+     "lat": 46.13536,
+     "lon": -121.49617,
+     "elev_ft": 5568,
+     "dem_ft": 5568,
+     "source": "OSM coordinate; no published elevation"
+    }
+   ],
+   "glance": "High",
+   "snotel": [
+    {
+     "triplet": "702:WA:SNTL",
+     "name": "Potato Hill",
+     "elev_ft": 4480,
+     "mi": 13.2,
+     "lat": 46.3497,
+     "lon": -121.51415
+    },
+    {
+     "triplet": "804:WA:SNTL",
+     "name": "Surprise Lakes",
+     "elev_ft": 4280,
+     "mi": 14.3,
+     "lat": 46.09497,
+     "lon": -121.76345
+    }
+   ],
+   "cams": [],
+   "avalanche": {
+    "center": "NWAC",
+    "zone": 3023,
+    "link": null
+   }
+  },
+  {
+   "id": "sc_st_helens",
+   "mode": "hike",
+   "region": "south_cascades",
+   "title": "Mount St. Helens",
+   "subtitle": "Monitor Ridge, Ape Caves, Harry's Ridge, Lava Canyon",
+   "points": [
+    {
+     "role": "High",
+     "name": "Monitor Ridge GPS station",
+     "lat": 46.180009,
+     "lon": -122.1898658,
+     "elev_ft": 6936,
+     "dem_ft": 6936,
+     "source": "OpenStreetMap node 14271360302 'GPS measuring Tower' on the Monitor Ridge route (https://www.openstreetmap.org/node/14271360302); https://www.oregonhikers.org/field_guide/Mount_Saint_Helens_Hike says 'At around 7000 feet or so, you'll see some equipment to forecast volcano eruptions'. No published exact elevation, so elev_ft = DEM 6,936 ft (wx.py verify). Timberline stand-in for the crater rim, approved by Scott 2026-10-29"
+    },
+    {
+     "role": "Trailhead",
+     "name": "Climbers Bivouac",
+     "lat": 46.14671,
+     "lon": -122.18267,
+     "elev_ft": 3786,
+     "dem_ft": 3786,
+     "source": "OSM coordinate; no published elevation"
+    }
+   ],
+   "glance": "High",
+   "snotel": [
+    {
+     "triplet": "1012:WA:SNTL",
+     "name": "Swift Creek",
+     "elev_ft": 4440,
+     "mi": 1.2,
+     "lat": 46.1638,
+     "lon": -122.18402
+    },
+    {
+     "triplet": "553:WA:SNTL",
+     "name": "June Lake",
+     "elev_ft": 3440,
+     "mi": 2.8,
+     "lat": 46.14778,
+     "lon": -122.15413
+    }
+   ],
+   "cams": [],
+   "avalanche": {
+    "center": "NWAC",
+    "zone": 3023,
+    "link": null
+   }
+  },
+  {
+   "id": "sc_dark_divide",
+   "mode": "hike",
+   "region": "south_cascades",
+   "title": "Dark Divide",
+   "subtitle": "Juniper Ridge, Sunrise Peak, Tongue Mountain, Badger Peak",
+   "points": [
+    {
+     "role": "High",
+     "name": "Sunrise Peak",
+     "lat": 46.33245,
+     "lon": -121.75928,
+     "elev_ft": 5892,
+     "dem_ft": 5732,
+     "source": "OSM ele tag (1,795.9 m); WTA 5,892"
+    },
+    {
+     "role": "Trailhead",
+     "name": "Juniper Ridge Trailhead",
+     "lat": 46.39659,
+     "lon": -121.76529,
+     "elev_ft": 3730,
+     "dem_ft": 3730,
+     "source": "OSM coordinate; no published elevation"
+    }
+   ],
+   "glance": "High",
+   "snotel": [
+    {
+     "triplet": "1263:WA:SNTL",
+     "name": "Pinto Rock",
+     "elev_ft": 4450,
+     "mi": 8.8,
+     "lat": 46.32318,
+     "lon": -121.94219
+    },
+    {
+     "triplet": "591:WA:SNTL",
+     "name": "Lone Pine",
+     "elev_ft": 3940,
+     "mi": 10.6,
+     "lat": 46.27143,
+     "lon": -121.96288
+    }
+   ],
+   "cams": [],
+   "avalanche": {
+    "center": "NWAC",
+    "zone": 3023,
+    "link": null
+   }
+  },
+  {
+   "id": "cw_wenatchee",
+   "mode": "hike",
+   "region": "central_washington",
+   "title": "Wenatchee Foothills",
+   "subtitle": "Mission Ridge, Clara & Marion Lakes, Saddle Rock, Sage Hills",
+   "points": [
+    {
+     "role": "High",
+     "name": "Mission Peak",
+     "lat": 47.28,
+     "lon": -120.43483,
+     "elev_ft": 6827,
+     "dem_ft": 6795,
+     "source": "OSM ele tag (2,081 m); WTA 6,876"
+    },
+    {
+     "role": "Trailhead",
+     "name": "Saddle Rock Trailhead",
+     "lat": 47.39634,
+     "lon": -120.33042,
+     "elev_ft": 1106,
+     "dem_ft": 1106,
+     "source": "OSM coordinate; no published elevation"
+    }
+   ],
+   "glance": "High",
+   "snotel": [
+    {
+     "triplet": "507:WA:SNTL",
+     "name": "Grouse Camp",
+     "elev_ft": 5390,
+     "mi": 2.5,
+     "lat": 47.28107,
+     "lon": -120.48771
+    },
+    {
+     "triplet": "841:WA:SNTL",
+     "name": "Upper Wheeler",
+     "elev_ft": 4330,
+     "mi": 3.1,
+     "lat": 47.28734,
+     "lon": -120.37015
+    }
+   ],
+   "cams": [],
+   "avalanche": {
+    "center": "NWAC",
+    "zone": 3030,
+    "link": null
+   }
+  },
+  {
+   "id": "cw_yakima",
+   "mode": "hike",
+   "region": "central_washington",
+   "title": "Yakima River Canyon",
+   "subtitle": "Umtanum Creek, Umtanum Ridge, Manastash Ridge, Cowiche Canyon",
+   "points": [
+    {
+     "role": "High",
+     "name": "Umtanum Ridge crest (above Yakima canyon)",
+     "lat": 46.8395,
+     "lon": -120.528,
+     "elev_ft": 3480,
+     "dem_ft": 3622,
+     "source": "WTA 'Umtanum Ridge Crest' highest point; coordinate by DEM grid search"
+    },
+    {
+     "role": "Trailhead",
+     "name": "Umtanum (Yakima Canyon, SR 821)",
+     "lat": 46.86439,
+     "lon": -120.47972,
+     "elev_ft": 1345,
+     "dem_ft": 1348,
+     "source": "OSM ele tag (410 m)"
+    }
+   ],
+   "glance": "High",
+   "snotel": [],
+   "cams": [],
+   "avalanche": null
+  },
+  {
+   "id": "bc_olympics_hood_canal",
+   "mode": "backcountry",
+   "region": "olympics",
+   "title": "Olympics: Hood Canal",
+   "subtitle": "Mt Ellinor, Mt Washington, The Brothers, Mt Townsend",
+   "points": [
+    {
+     "role": "Base",
+     "name": "Mount Ellinor Upper Trailhead",
+     "lat": 47.5103,
+     "lon": -123.24772,
+     "elev_ft": 3540,
+     "dem_ft": 3556,
+     "source": "OSM ele tag (1,079 m)"
+    },
+    {
+     "role": "Mid",
+     "name": "Ellinor winter route (mid)",
+     "lat": 47.51976,
+     "lon": -123.25659,
+     "elev_ft": 5236,
+     "dem_ft": 5236,
+     "source": "OSM path node; no published elevation"
+    },
+    {
+     "role": "Top",
+     "name": "Mount Ellinor",
+     "lat": 47.521635,
+     "lon": -123.260677,
+     "elev_ft": 5951,
+     "dem_ft": 5846,
+     "source": "Wikidata (1,814 m); WTA 5,944"
+    }
+   ],
+   "glance": "Mid",
+   "snotel": [
+    {
+     "triplet": "1126:WA:SNTL",
+     "name": "Mt. Tebo",
+     "elev_ft": 3380,
+     "mi": 8.3,
+     "lat": 47.46061,
+     "lon": -123.41219
+    },
+    {
+     "triplet": "1107:WA:SNTL",
+     "name": "Buckinghorse",
+     "elev_ft": 4850,
+     "mi": 16.1,
+     "lat": 47.7086,
+     "lon": -123.45747
+    }
+   ],
+   "cams": [
+    "hcc_tower_union",
+    "mt_walker_101"
+   ],
+   "avalanche": {
+    "center": "NWAC",
+    "zone": 3020,
+    "link": null
+   }
+  },
+  {
+   "id": "bc_olympics_hurricane",
+   "mode": "backcountry",
+   "region": "olympics",
+   "title": "Olympics: Hurricane Ridge",
+   "subtitle": "Hurricane Ridge, Hurricane Hill, Mt Angeles, Klahhane Ridge",
+   "points": [
+    {
+     "role": "Base",
+     "name": "Lake Angeles",
+     "lat": 48.00632,
+     "lon": -123.43365,
+     "elev_ft": 4196,
+     "dem_ft": 4242,
+     "source": "WTA highest point for Lake Angeles"
+    },
+    {
+     "role": "Mid",
+     "name": "Hurricane Ridge (visitor center site)",
+     "lat": 47.9694,
+     "lon": -123.4983,
+     "elev_ft": 5242,
+     "dem_ft": 5249,
+     "source": "NPS 5,242; coordinate zones.json"
+    },
+    {
+     "role": "Top",
+     "name": "Mount Angeles",
+     "lat": 47.995,
+     "lon": -123.4666,
+     "elev_ft": 6454,
+     "dem_ft": 6345,
+     "source": "Wikidata"
+    }
+   ],
+   "glance": "Mid",
+   "snotel": [
+    {
+     "triplet": "974:WA:SNTL",
+     "name": "Waterhole",
+     "elev_ft": 5010,
+     "mi": 3.8,
+     "lat": 47.94485,
+     "lon": -123.42594
+    },
+    {
+     "triplet": "1107:WA:SNTL",
+     "name": "Buckinghorse",
+     "elev_ft": 4850,
+     "mi": 18.1,
+     "lat": 47.7086,
+     "lon": -123.45747
+    }
+   ],
+   "cams": [],
+   "avalanche": {
+    "center": "NWAC",
+    "zone": 3020,
+    "link": null
+   }
+  },
+  {
+   "id": "bc_west_north",
+   "mode": "backcountry",
+   "region": "cascades_north",
+   "title": "West Slopes North",
+   "subtitle": "Mt Baker backcountry, Heather Meadows, Table Mountain, Ptarmigan Ridge",
+   "points": [
+    {
+     "role": "Base",
+     "name": "Heather Meadows Visitor Center",
+     "lat": 48.85481,
+     "lon": -121.68574,
+     "elev_ft": 4400,
+     "dem_ft": 4400,
+     "source": "OSM coordinate; no published elevation"
+    },
+    {
+     "role": "Mid",
+     "name": "Table Mountain",
+     "lat": 48.84677,
+     "lon": -121.71237,
+     "elev_ft": 5742,
+     "dem_ft": 5705,
+     "source": "Wikidata"
+    },
+    {
+     "role": "Top",
+     "name": "Coleman Pinnacle",
+     "lat": 48.82081,
+     "lon": -121.74078,
+     "elev_ft": 6404,
+     "dem_ft": 6250,
+     "source": "OSM ele tag (1,952 m)"
+    }
+   ],
+   "glance": "Mid",
+   "snotel": [
+    {
+     "triplet": "909:WA:SNTL",
+     "name": "Wells Creek",
+     "elev_ft": 4040,
+     "mi": 3.8,
+     "lat": 48.8661,
+     "lon": -121.78976
+    },
+    {
+     "triplet": "999:WA:SNTL",
+     "name": "Marten Ridge",
+     "elev_ft": 3520,
+     "mi": 5.8,
+     "lat": 48.76292,
+     "lon": -121.69823
+    }
+   ],
+   "cams": [],
+   "avalanche": {
+    "center": "NWAC",
+    "zone": 3021,
+    "link": null
+   }
+  },
+  {
+   "id": "bc_west_central",
+   "mode": "backcountry",
+   "region": "cascades_central",
+   "title": "West Slopes Central",
+   "subtitle": "Mountain Loop, Barlow Pass, Mt Dickerman, Vesper Peak",
+   "points": [
+    {
+     "role": "Base",
+     "name": "Barlow Pass",
+     "lat": 48.02854,
+     "lon": -121.44502,
+     "elev_ft": 2362,
+     "dem_ft": 2428,
+     "source": "Wikidata 2,362; coordinate OSM"
+    },
+    {
+     "role": "Mid",
+     "name": "Mount Dickerman",
+     "lat": 48.068611,
+     "lon": -121.470277,
+     "elev_ft": 5722,
+     "dem_ft": 5564,
+     "source": "Wikidata (1,744 m); WTA 5,760"
+    },
+    {
+     "role": "Top",
+     "name": "Vesper Peak",
+     "lat": 48.0118,
+     "lon": -121.51818,
+     "elev_ft": 6221,
+     "dem_ft": 6106,
+     "source": "Wikidata"
+    }
+   ],
+   "glance": "Mid",
+   "snotel": [
+    {
+     "triplet": "1319:WA:SNTL",
+     "name": "Decline Creek",
+     "elev_ft": 4480,
+     "mi": 11.6,
+     "lat": 48.23594,
+     "lon": -121.455
+    },
+    {
+     "triplet": "908:WA:SNTL",
+     "name": "Alpine Meadows",
+     "elev_ft": 3500,
+     "mi": 22.6,
+     "lat": 47.77957,
+     "lon": -121.69847
+    }
+   ],
+   "cams": [],
+   "avalanche": {
+    "center": "NWAC",
+    "zone": 3022,
+    "link": null
+   }
+  },
+  {
+   "id": "bc_west_south",
+   "mode": "backcountry",
+   "region": "cascades_south",
+   "title": "West Slopes South",
+   "subtitle": "Crystal backcountry, Chinook Pass, White Pass, Tatoosh",
+   "points": [
+    {
+     "role": "Base",
+     "name": "Crystal Mountain base area",
+     "lat": 46.93666,
+     "lon": -121.47586,
+     "elev_ft": 4478,
+     "dem_ft": 4478,
+     "source": "OSM (Alpine Inn); no published elevation"
+    },
+    {
+     "role": "Mid",
+     "name": "Chinook Pass",
+     "lat": 46.8717,
+     "lon": -121.515,
+     "elev_ft": 5433,
+     "dem_ft": 5404,
+     "source": "Wikidata (1,656 m)"
+    },
+    {
+     "role": "Top",
+     "name": "Crystal Mountain summit",
+     "lat": 46.9285,
+     "lon": -121.5045,
+     "elev_ft": 6872,
+     "dem_ft": 6877,
+     "source": "zones.json (published, DEM-checked)"
+    }
+   ],
+   "glance": "Mid",
+   "snotel": [
+    {
+     "triplet": "1085:WA:SNTL",
+     "name": "Cayuse Pass",
+     "elev_ft": 5260,
+     "mi": 0.9,
+     "lat": 46.86956,
+     "lon": -121.53434
+    },
+    {
+     "triplet": "642:WA:SNTL",
+     "name": "Morse Lake",
+     "elev_ft": 5400,
+     "mi": 2.8,
+     "lat": 46.90585,
+     "lon": -121.4827
+    }
+   ],
+   "cams": [
+    "white_pass"
+   ],
+   "avalanche": {
+    "center": "NWAC",
+    "zone": 3023,
+    "link": null
+   }
+  },
+  {
+   "id": "bc_rainier",
+   "mode": "backcountry",
+   "region": "cascades_south",
+   "title": "Mount Rainier",
+   "subtitle": "Paradise, Muir Snowfield, Mazama Ridge, Tatoosh",
+   "points": [
+    {
+     "role": "Base",
+     "name": "Paradise",
+     "lat": 46.7861,
+     "lon": -121.735,
+     "elev_ft": 5400,
+     "dem_ft": 5436,
+     "source": "Wikidata/NPS 5,400; coordinate from zones.json"
+    },
+    {
+     "role": "Mid",
+     "name": "Panorama Point",
+     "lat": 46.80372,
+     "lon": -121.72954,
+     "elev_ft": 6919,
+     "dem_ft": 6867,
+     "source": "Wikidata (2,109 m); NPS signs say 6,800"
+    },
+    {
+     "role": "Top",
+     "name": "Camp Muir",
+     "lat": 46.835526,
+     "lon": -121.732913,
+     "elev_ft": 10088,
+     "dem_ft": 10125,
+     "source": "Wikidata (WTA 10,080)"
+    }
+   ],
+   "glance": "Mid",
+   "snotel": [
+    {
+     "triplet": "679:WA:SNTL",
+     "name": "Paradise",
+     "elev_ft": 5150,
+     "mi": 1.7,
+     "lat": 46.78266,
+     "lon": -121.74767
+    },
+    {
+     "triplet": "1085:WA:SNTL",
+     "name": "Cayuse Pass",
+     "elev_ft": 5260,
+     "mi": 10.3,
+     "lat": 46.86956,
+     "lon": -121.53434
+    }
+   ],
+   "cams": [
+    "paradise_rainier",
+    "paradise_tatoosh",
+    "paradise_east",
+    "paradise_west",
+    "longmire"
+   ],
+   "avalanche": {
+    "center": "NWAC",
+    "zone": 3023,
+    "link": null
+   }
+  },
+  {
+   "id": "bc_stevens",
+   "mode": "backcountry",
+   "region": "cascades_central",
+   "title": "Stevens Pass",
+   "subtitle": "Stevens Pass, Skyline Lake, Cowboy Mountain, Lichtenberg",
+   "points": [
+    {
+     "role": "Base",
+     "name": "Stevens Pass",
+     "lat": 47.74564,
+     "lon": -121.08917,
+     "elev_ft": 4061,
+     "dem_ft": 4111,
+     "source": "WSDOT signs 4,061 (Wikidata 4,111); coordinate OSM"
+    },
+    {
+     "role": "Mid",
+     "name": "Skyline Lake",
+     "lat": 47.756841,
+     "lon": -121.097862,
+     "elev_ft": 5098,
+     "dem_ft": 5131,
+     "source": "Wikidata (1,554 m)"
+    },
+    {
+     "role": "Top",
+     "name": "Cowboy Mountain",
+     "lat": 47.73182,
+     "lon": -121.10321,
+     "elev_ft": 5853,
+     "dem_ft": 5768,
+     "source": "Wikidata (1,784 m)"
+    }
+   ],
+   "glance": "Mid",
+   "snotel": [
+    {
+     "triplet": "791:WA:SNTL",
+     "name": "Stevens Pass",
+     "elev_ft": 3940,
+     "mi": 0.8,
+     "lat": 47.74607,
+     "lon": -121.09288
+    },
+    {
+     "triplet": "1338:WA:SNTL",
+     "name": "Icicle Creek",
+     "elev_ft": 4550,
+     "mi": 15.1,
+     "lat": 47.59404,
+     "lon": -120.88255
+    }
+   ],
+   "cams": [
+    "stevens_summit"
+   ],
+   "avalanche": {
+    "center": "NWAC",
+    "zone": 3024,
+    "link": null
+   }
+  },
+  {
+   "id": "bc_snoqualmie",
+   "mode": "backcountry",
+   "region": "cascades_central",
+   "title": "Snoqualmie Pass",
+   "subtitle": "Alpental, Snow Lake, Granite Mountain, Kendall",
+   "points": [
+    {
+     "role": "Base",
+     "name": "Snoqualmie Pass",
+     "lat": 47.42539,
+     "lon": -121.41189,
+     "elev_ft": 3015,
+     "dem_ft": 3031,
+     "source": "OSM ele tag (919 m); WSDOT signs 3,022"
+    },
+    {
+     "role": "Mid",
+     "name": "Snow Lake",
+     "lat": 47.466944,
+     "lon": -121.455556,
+     "elev_ft": 4019,
+     "dem_ft": 4016,
+     "source": "Wikidata (1,225 m)"
+    },
+    {
+     "role": "Top",
+     "name": "Denny Mountain",
+     "lat": 47.4385,
+     "lon": -121.4428,
+     "elev_ft": 5518,
+     "dem_ft": 5436,
+     "source": "Wikidata (1,682 m); coordinate zones.json (grid-searched 2026-10-25)"
+    }
+   ],
+   "glance": "Mid",
+   "snotel": [
+    {
+     "triplet": "672:WA:SNTL",
+     "name": "Olallie Meadows",
+     "elev_ft": 4010,
+     "mi": 6.4,
+     "lat": 47.37406,
+     "lon": -121.44213
+    },
+    {
+     "triplet": "899:WA:SNTL",
+     "name": "Tinkham Creek",
+     "elev_ft": 3000,
+     "mi": 9.3,
+     "lat": 47.33198,
+     "lon": -121.46975
+    }
+   ],
+   "cams": [
+    "snoqualmie_summit"
+   ],
+   "avalanche": {
+    "center": "NWAC",
+    "zone": 3028,
+    "link": null
+   }
+  },
+  {
+   "id": "bc_east_north",
+   "mode": "backcountry",
+   "region": "cascades_north",
+   "title": "East Slopes North",
+   "subtitle": "Washington Pass, Blue Lake, Cutthroat Pass, Harts Pass",
+   "points": [
+    {
+     "role": "Base",
+     "name": "Washington Pass",
+     "lat": 48.52358,
+     "lon": -120.65424,
+     "elev_ft": 5476,
+     "dem_ft": 5489,
+     "source": "Wikidata (1,669 m); coordinate OSM"
+    },
+    {
+     "role": "Top",
+     "name": "Cutthroat Pass",
+     "lat": 48.55485,
+     "lon": -120.70047,
+     "elev_ft": 6798,
+     "dem_ft": 6824,
+     "source": "OSM ele tag (2,072 m); WTA 6,800"
+    }
+   ],
+   "glance": "Base",
+   "snotel": [
+    {
+     "triplet": "711:WA:SNTL",
+     "name": "Rainy Pass",
+     "elev_ft": 4880,
+     "mi": 3.7,
+     "lat": 48.51865,
+     "lon": -120.7358
+    },
+    {
+     "triplet": "975:WA:SNTL",
+     "name": "Swamp Creek",
+     "elev_ft": 3930,
+     "mi": 6.7,
+     "lat": 48.57142,
+     "lon": -120.78267
+    }
+   ],
+   "cams": [],
+   "avalanche": {
+    "center": "NWAC",
+    "zone": 3029,
+    "link": null
+   }
+  },
+  {
+   "id": "bc_east_central",
+   "mode": "backcountry",
+   "region": "cascades_central",
+   "title": "East Slopes Central",
+   "subtitle": "Blewett Pass, Teanaway, Icicle, Lake Wenatchee",
+   "points": [
+    {
+     "role": "Base",
+     "name": "Blewett Pass",
+     "lat": 47.33492,
+     "lon": -120.57826,
+     "elev_ft": 4124,
+     "dem_ft": 4127,
+     "source": "Wikidata 4,124; coordinate OSM"
+    },
+    {
+     "role": "Mid",
+     "name": "Red Top Mountain",
+     "lat": 47.3009,
+     "lon": -120.7608,
+     "elev_ft": 5361,
+     "dem_ft": 5305,
+     "source": "Wikidata (1,634 m); WTA lookout 5,360"
+    },
+    {
+     "role": "Top",
+     "name": "Navaho Peak",
+     "lat": 47.4225,
+     "lon": -120.803055,
+     "elev_ft": 7224,
+     "dem_ft": 7133,
+     "source": "Wikidata (2,202 m); WTA 7,223"
+    }
+   ],
+   "glance": "Mid",
+   "snotel": [
+    {
+     "triplet": "352:WA:SNTL",
+     "name": "Blewett Pass",
+     "elev_ft": 4240,
+     "mi": 5.1,
+     "lat": 47.35037,
+     "lon": -120.6796
+    },
+    {
+     "triplet": "507:WA:SNTL",
+     "name": "Grouse Camp",
+     "elev_ft": 5390,
+     "mi": 12.9,
+     "lat": 47.28107,
+     "lon": -120.48771
+    }
+   ],
+   "cams": [],
+   "avalanche": {
+    "center": "NWAC",
+    "zone": 3030,
+    "link": null
+   }
+  },
+  {
+   "id": "bc_east_south",
+   "mode": "backcountry",
+   "region": "cascades_south",
+   "title": "East Slopes South",
+   "subtitle": "Bumping River, American Ridge, Mount Aix, Rimrock",
+   "points": [
+    {
+     "role": "Base",
+     "name": "Bumping Lake",
+     "lat": 46.85649,
+     "lon": -121.311,
+     "elev_ft": 3409,
+     "dem_ft": 3409,
+     "source": "OSM coordinate (reservoir); no published elevation"
+    },
+    {
+     "role": "Mid",
+     "name": "Goat Peak (American Ridge)",
+     "lat": 46.93959,
+     "lon": -121.26501,
+     "elev_ft": 6375,
+     "dem_ft": 6289,
+     "source": "OSM ele tag (1,943 m)"
+    },
+    {
+     "role": "Top",
+     "name": "Mount Aix",
+     "lat": 46.795,
+     "lon": -121.25584,
+     "elev_ft": 7766,
+     "dem_ft": 7566,
+     "source": "OSM ele tag (2,367 m)"
+    }
+   ],
+   "glance": "Mid",
+   "snotel": [
+    {
+     "triplet": "375:WA:SNTL",
+     "name": "Bumping Ridge",
+     "elev_ft": 4600,
+     "mi": 9.5,
+     "lat": 46.81003,
+     "lon": -121.33058
+    },
+    {
+     "triplet": "642:WA:SNTL",
+     "name": "Morse Lake",
+     "elev_ft": 5400,
+     "mi": 10.5,
+     "lat": 46.90585,
+     "lon": -121.4827
+    }
+   ],
+   "cams": [],
+   "avalanche": {
+    "center": "NWAC",
+    "zone": 3031,
+    "link": null
+   }
+  },
+  {
+   "id": "bc_mt_hood",
+   "mode": "backcountry",
+   "region": "mt_hood",
+   "title": "Mt Hood",
+   "subtitle": "Timberline, Government Camp, Palmer, Mt Hood Meadows",
+   "points": [
+    {
+     "role": "Base",
+     "name": "Government Camp",
+     "lat": 45.3041,
+     "lon": -121.75476,
+     "elev_ft": 3885,
+     "dem_ft": 3891,
+     "source": "OSM ele tag (1,184 m); Wikidata says 4,416, conflict"
+    },
+    {
+     "role": "Mid",
+     "name": "Timberline Lodge",
+     "lat": 45.331223,
+     "lon": -121.711253,
+     "elev_ft": 6004,
+     "dem_ft": 5974,
+     "source": "OSM ele tag (1,830 m)"
+    },
+    {
+     "role": "Top",
+     "name": "Silcox Hut",
+     "lat": 45.34463,
+     "lon": -121.70949,
+     "elev_ft": 6942,
+     "dem_ft": 6942,
+     "source": "OSM coordinate; no published elevation"
+    }
+   ],
+   "glance": "Mid",
+   "snotel": [
+    {
+     "triplet": "651:OR:SNTL",
+     "name": "Mt Hood Test Site",
+     "elev_ft": 5380,
+     "mi": 0.7,
+     "lat": 45.32097,
+     "lon": -121.7158
+    },
+    {
+     "triplet": "655:OR:SNTL",
+     "name": "Mud Ridge",
+     "elev_ft": 4070,
+     "mi": 5.5,
+     "lat": 45.25362,
+     "lon": -121.73673
+    }
+   ],
+   "cams": [],
+   "avalanche": {
+    "center": "NWAC",
+    "zone": 3032,
+    "link": null
+   }
+  },
+  {
+   "id": "res_baker",
+   "mode": "resort",
+   "region": "wa",
+   "title": "Mt Baker",
+   "subtitle": "Heather Meadows, Pan Dome, Shuksan Arm",
+   "points": [
+    {
+     "role": "Base",
+     "name": "Chair 7 bottom",
+     "lat": 48.86144,
+     "lon": -121.65437,
+     "elev_ft": 3500,
+     "dem_ft": 3635,
+     "source": "Mt Baker resort site; DEM-checked 2026-10-29"
+    },
+    {
+     "role": "Mid",
+     "name": "Mid-mountain (calc)",
+     "lat": 48.85486,
+     "lon": -121.65979,
+     "elev_ft": 4294,
+     "dem_ft": 4003,
+     "source": "elev_ft calculated as the mid of base and top (published where available, else DEM); dem_ft = DEM at this coordinate"
+    },
+    {
+     "role": "Top",
+     "name": "Chair 8 top",
+     "lat": 48.84828,
+     "lon": -121.66521,
+     "elev_ft": 5089,
+     "dem_ft": 5121,
+     "source": "Mt Baker resort site; DEM-checked 2026-10-29"
+    }
+   ],
+   "glance": "Mid",
+   "snotel": [
+    {
+     "triplet": "909:WA:SNTL",
+     "name": "Wells Creek",
+     "elev_ft": 4040,
+     "mi": 6.0,
+     "lat": 48.8661,
+     "lon": -121.78976
+    },
+    {
+     "triplet": "999:WA:SNTL",
+     "name": "Marten Ridge",
+     "elev_ft": 3520,
+     "mi": 6.6,
+     "lat": 48.76292,
+     "lon": -121.69823
+    }
+   ],
+   "cams": [],
+   "avalanche": {
+    "center": "NWAC",
+    "zone": 3021,
+    "link": null
+   }
+  },
+  {
+   "id": "res_stevens",
+   "mode": "resort",
+   "region": "wa",
+   "title": "Stevens Pass",
+   "subtitle": "Front side, Mill Valley, Southern Cross",
+   "points": [
+    {
+     "role": "Base",
+     "name": "Brooks Express bottom",
+     "lat": 47.74433,
+     "lon": -121.09249,
+     "elev_ft": 4061,
+     "dem_ft": 4022,
+     "source": "Stevens Pass resort site; DEM-checked 2026-10-29"
+    },
+    {
+     "role": "Mid",
+     "name": "Mid-mountain (calc)",
+     "lat": 47.74164,
+     "lon": -121.08569,
+     "elev_ft": 4953,
+     "dem_ft": 4386,
+     "source": "elev_ft calculated as the mid of base and top (published where available, else DEM); dem_ft = DEM at this coordinate"
+    },
+    {
+     "role": "Top",
+     "name": "Southern Cross top",
+     "lat": 47.73896,
+     "lon": -121.07889,
+     "elev_ft": 5845,
+     "dem_ft": 5551,
+     "source": "Stevens Pass resort site; DEM-checked 2026-10-29"
+    }
+   ],
+   "glance": "Mid",
+   "snotel": [
+    {
+     "triplet": "791:WA:SNTL",
+     "name": "Stevens Pass",
+     "elev_ft": 3940,
+     "mi": 0.5,
+     "lat": 47.74607,
+     "lon": -121.09288
+    },
+    {
+     "triplet": "1338:WA:SNTL",
+     "name": "Icicle Creek",
+     "elev_ft": 4550,
+     "mi": 13.9,
+     "lat": 47.59404,
+     "lon": -120.88255
+    }
+   ],
+   "cams": [],
+   "avalanche": {
+    "center": "NWAC",
+    "zone": 3024,
+    "link": null
+   }
+  },
+  {
+   "id": "res_alpental",
+   "mode": "resort",
+   "region": "wa",
+   "title": "Alpental",
+   "subtitle": "Upper and lower mountain, Edelweiss",
+   "points": [
+    {
+     "role": "Base",
+     "name": "Armstrong Express bottom",
+     "lat": 47.44488,
+     "lon": -121.42637,
+     "elev_ft": 3146,
+     "dem_ft": 3146,
+     "source": "DEM (no published value)"
+    },
+    {
+     "role": "Mid",
+     "name": "Mid-mountain (calc)",
+     "lat": 47.44186,
+     "lon": -121.43457,
+     "elev_ft": 4283,
+     "dem_ft": 3911,
+     "source": "elev_ft calculated as the mid of base and top (published where available, else DEM); dem_ft = DEM at this coordinate"
+    },
+    {
+     "role": "Top",
+     "name": "Edelweiss top",
+     "lat": 47.43883,
+     "lon": -121.44277,
+     "elev_ft": 5420,
+     "dem_ft": 5436,
+     "source": "Wikipedia (Alpental article); DEM-checked 2026-10-29"
+    }
+   ],
+   "glance": "Mid",
+   "snotel": [
+    {
+     "triplet": "672:WA:SNTL",
+     "name": "Olallie Meadows",
+     "elev_ft": 4010,
+     "mi": 4.7,
+     "lat": 47.37406,
+     "lon": -121.44213
+    },
+    {
+     "triplet": "899:WA:SNTL",
+     "name": "Tinkham Creek",
+     "elev_ft": 3000,
+     "mi": 7.8,
+     "lat": 47.33198,
+     "lon": -121.46975
+    }
+   ],
+   "cams": [],
+   "avalanche": {
+    "center": "NWAC",
+    "zone": 3028,
+    "link": null
+   }
+  },
+  {
+   "id": "res_summit_snoq",
+   "mode": "resort",
+   "region": "wa",
+   "title": "Summit at Snoqualmie",
+   "subtitle": "Summit West, Central, East",
+   "points": [
+    {
+     "role": "Base",
+     "name": "Silver Fir bottom",
+     "lat": 47.40106,
+     "lon": -121.40793,
+     "elev_ft": 2610,
+     "dem_ft": 2884,
+     "source": "Wikipedia (Summit at Snoqualmie article, Summit East); DEM-checked 2026-10-29"
+    },
+    {
+     "role": "Mid",
+     "name": "Mid-mountain (calc)",
+     "lat": 47.40011,
+     "lon": -121.41556,
+     "elev_ft": 3232,
+     "dem_ft": 3241,
+     "source": "elev_ft calculated as the mid of base and top (published where available, else DEM); dem_ft = DEM at this coordinate"
+    },
+    {
+     "role": "Top",
+     "name": "Silver Fir top",
+     "lat": 47.39916,
+     "lon": -121.4232,
+     "elev_ft": 3855,
+     "dem_ft": 3855,
+     "source": "DEM (no published value)"
+    }
+   ],
+   "glance": "Mid",
+   "snotel": [
+    {
+     "triplet": "672:WA:SNTL",
+     "name": "Olallie Meadows",
+     "elev_ft": 4010,
+     "mi": 2.2,
+     "lat": 47.37406,
+     "lon": -121.44213
+    },
+    {
+     "triplet": "899:WA:SNTL",
+     "name": "Tinkham Creek",
+     "elev_ft": 3000,
+     "mi": 5.3,
+     "lat": 47.33198,
+     "lon": -121.46975
+    }
+   ],
+   "cams": [],
+   "avalanche": {
+    "center": "NWAC",
+    "zone": 3028,
+    "link": null
+   }
+  },
+  {
+   "id": "res_crystal",
+   "mode": "resort",
+   "region": "wa",
+   "title": "Crystal Mountain",
+   "subtitle": "Gondola, Green Valley, Northway",
+   "points": [
+    {
+     "role": "Base",
+     "name": "Mt. Rainier Gondola bottom",
+     "lat": 46.93567,
+     "lon": -121.4749,
+     "elev_ft": 4400,
+     "dem_ft": 4383,
+     "source": "Wikipedia (Crystal Mountain article); DEM-checked 2026-10-29"
+    },
+    {
+     "role": "Mid",
+     "name": "Mid-mountain (calc)",
+     "lat": 46.93198,
+     "lon": -121.48981,
+     "elev_ft": 5696,
+     "dem_ft": 5541,
+     "source": "elev_ft calculated as the mid of base and top (published where available, else DEM); dem_ft = DEM at this coordinate"
+    },
+    {
+     "role": "Top",
+     "name": "Chair 6 top",
+     "lat": 46.92828,
+     "lon": -121.50472,
+     "elev_ft": 6992,
+     "dem_ft": 6919,
+     "source": "Wikipedia (Crystal Mountain article); DEM-checked 2026-10-29"
+    }
+   ],
+   "glance": "Mid",
+   "snotel": [
+    {
+     "triplet": "642:WA:SNTL",
+     "name": "Morse Lake",
+     "elev_ft": 5400,
+     "mi": 1.8,
+     "lat": 46.90585,
+     "lon": -121.4827
+    },
+    {
+     "triplet": "1085:WA:SNTL",
+     "name": "Cayuse Pass",
+     "elev_ft": 5260,
+     "mi": 4.8,
+     "lat": 46.86956,
+     "lon": -121.53434
+    }
+   ],
+   "cams": [],
+   "avalanche": {
+    "center": "NWAC",
+    "zone": 3023,
+    "link": null
+   }
+  },
+  {
+   "id": "res_white_pass",
+   "mode": "resort",
+   "region": "wa",
+   "title": "White Pass",
+   "subtitle": "Front side, Paradise basin",
+   "points": [
+    {
+     "role": "Base",
+     "name": "Great White Express bottom",
+     "lat": 46.63754,
+     "lon": -121.39009,
+     "elev_ft": 4500,
+     "dem_ft": 4469,
+     "source": "Wikipedia (White Pass article); DEM-checked 2026-10-29"
+    },
+    {
+     "role": "Mid",
+     "name": "Mid-mountain (calc)",
+     "lat": 46.62106,
+     "lon": -121.39864,
+     "elev_ft": 5500,
+     "dem_ft": 5499,
+     "source": "elev_ft calculated as the mid of base and top (published where available, else DEM); dem_ft = DEM at this coordinate"
+    },
+    {
+     "role": "Top",
+     "name": "Couloir Express top",
+     "lat": 46.60458,
+     "lon": -121.40719,
+     "elev_ft": 6500,
+     "dem_ft": 6476,
+     "source": "Wikipedia (White Pass article); DEM-checked 2026-10-29"
+    }
+   ],
+   "glance": "Mid",
+   "snotel": [
+    {
+     "triplet": "692:WA:SNTL",
+     "name": "Pigtail Peak",
+     "elev_ft": 5800,
+     "mi": 0.6,
+     "lat": 46.62153,
+     "lon": -121.38643
+    },
+    {
+     "triplet": "863:WA:SNTL",
+     "name": "White Pass E.S.",
+     "elev_ft": 4440,
+     "mi": 1.6,
+     "lat": 46.64142,
+     "lon": -121.38153
+    }
+   ],
+   "cams": [],
+   "avalanche": {
+    "center": "NWAC",
+    "zone": 3023,
+    "link": null
+   }
+  },
+  {
+   "id": "res_mission",
+   "mode": "resort",
+   "region": "wa",
+   "title": "Mission Ridge",
+   "subtitle": "Bomber Bowl, Chak Chak",
+   "points": [
+    {
+     "role": "Base",
+     "name": "Chair 4 bottom",
+     "lat": 47.29126,
+     "lon": -120.39938,
+     "elev_ft": 4570,
+     "dem_ft": 4613,
+     "source": "Wikipedia (Mission Ridge article); DEM-checked 2026-10-29"
+    },
+    {
+     "role": "Mid",
+     "name": "Mid-mountain (calc)",
+     "lat": 47.28252,
+     "lon": -120.41324,
+     "elev_ft": 5695,
+     "dem_ft": 5482,
+     "source": "elev_ft calculated as the mid of base and top (published where available, else DEM); dem_ft = DEM at this coordinate"
+    },
+    {
+     "role": "Top",
+     "name": "Chair 2 top",
+     "lat": 47.27378,
+     "lon": -120.4271,
+     "elev_ft": 6820,
+     "dem_ft": 6755,
+     "source": "Wikipedia (Mission Ridge article); DEM-checked 2026-10-29"
+    }
+   ],
+   "glance": "Mid",
+   "snotel": [
+    {
+     "triplet": "841:WA:SNTL",
+     "name": "Upper Wheeler",
+     "elev_ft": 4330,
+     "mi": 2.0,
+     "lat": 47.28734,
+     "lon": -120.37015
+    },
+    {
+     "triplet": "507:WA:SNTL",
+     "name": "Grouse Camp",
+     "elev_ft": 5390,
+     "mi": 3.5,
+     "lat": 47.28107,
+     "lon": -120.48771
+    }
+   ],
+   "cams": [],
+   "avalanche": {
+    "center": "NWAC",
+    "zone": 3030,
+    "link": null
+   }
+  },
+  {
+   "id": "res_hurricane",
+   "mode": "resort",
+   "region": "wa",
+   "title": "Hurricane Ridge",
+   "subtitle": "Poma, rope tows, Hurricane Hill",
+   "points": [
+    {
+     "role": "Base",
+     "name": "Poma Lift bottom",
+     "lat": 47.97474,
+     "lon": -123.49669,
+     "elev_ft": 4800,
+     "dem_ft": 4800,
+     "source": "Hurricane Ridge ski area site; DEM-checked 2026-10-29"
+    },
+    {
+     "role": "Mid",
+     "name": "Mid-mountain (calc)",
+     "lat": 47.97324,
+     "lon": -123.49428,
+     "elev_ft": 5150,
+     "dem_ft": 4997,
+     "source": "elev_ft calculated as the mid of base and top (published where available, else DEM); dem_ft = DEM at this coordinate"
+    },
+    {
+     "role": "Top",
+     "name": "Intermediate Tow top",
+     "lat": 47.97175,
+     "lon": -123.49187,
+     "elev_ft": 5500,
+     "dem_ft": 5338,
+     "source": "Hurricane Ridge ski area site; DEM-checked 2026-10-29"
+    }
+   ],
+   "glance": "Mid",
+   "snotel": [
+    {
+     "triplet": "974:WA:SNTL",
+     "name": "Waterhole",
+     "elev_ft": 5010,
+     "mi": 3.7,
+     "lat": 47.94485,
+     "lon": -123.42594
+    }
+   ],
+   "cams": [],
+   "avalanche": {
+    "center": "NWAC",
+    "zone": 3020,
+    "link": null
+   }
+  },
+  {
+   "id": "res_timberline",
+   "mode": "resort",
+   "region": "or",
+   "title": "Timberline",
+   "subtitle": "Magic Mile, Palmer, Still Creek",
+   "points": [
+    {
+     "role": "Base",
+     "name": "Magic Mile bottom",
+     "lat": 45.33096,
+     "lon": -121.71356,
+     "elev_ft": 6000,
+     "dem_ft": 5958,
+     "source": "Timberline Lodge site; DEM-checked 2026-10-29"
+    },
+    {
+     "role": "Mid",
+     "name": "Mid-mountain (calc)",
+     "lat": 45.34481,
+     "lon": -121.70952,
+     "elev_ft": 7270,
+     "dem_ft": 6942,
+     "source": "elev_ft calculated as the mid of base and top (published where available, else DEM); dem_ft = DEM at this coordinate"
+    },
+    {
+     "role": "Top",
+     "name": "Palmer top",
+     "lat": 45.35867,
+     "lon": -121.70548,
+     "elev_ft": 8540,
+     "dem_ft": 8553,
+     "source": "Timberline Lodge site; DEM-checked 2026-10-29"
+    }
+   ],
+   "glance": "Mid",
+   "snotel": [
+    {
+     "triplet": "651:OR:SNTL",
+     "name": "Mt Hood Test Site",
+     "elev_ft": 5380,
+     "mi": 1.7,
+     "lat": 45.32097,
+     "lon": -121.7158
+    }
+   ],
+   "cams": [],
+   "avalanche": {
+    "center": "NWAC",
+    "zone": 3032,
+    "link": null
+   }
+  },
+  {
+   "id": "res_meadows",
+   "mode": "resort",
+   "region": "or",
+   "title": "Mt Hood Meadows",
+   "subtitle": "Cascade, Heather Canyon, Shooting Star",
+   "points": [
+    {
+     "role": "Base",
+     "name": "Hood River Express bottom",
+     "lat": 45.32555,
+     "lon": -121.64286,
+     "elev_ft": 4523,
+     "dem_ft": 4564,
+     "source": "Wikipedia (Mt Hood Meadows article); DEM-checked 2026-10-29"
+    },
+    {
+     "role": "Mid",
+     "name": "Mid-mountain (calc)",
+     "lat": 45.33745,
+     "lon": -121.66235,
+     "elev_ft": 5912,
+     "dem_ft": 5810,
+     "source": "elev_ft calculated as the mid of base and top (published where available, else DEM); dem_ft = DEM at this coordinate"
+    },
+    {
+     "role": "Top",
+     "name": "Cascade Express top",
+     "lat": 45.34936,
+     "lon": -121.68184,
+     "elev_ft": 7300,
+     "dem_ft": 7421,
+     "source": "Wikipedia (Mt Hood Meadows article); DEM-checked 2026-10-29"
+    }
+   ],
+   "glance": "Mid",
+   "snotel": [
+    {
+     "triplet": "651:OR:SNTL",
+     "name": "Mt Hood Test Site",
+     "elev_ft": 5380,
+     "mi": 2.8,
+     "lat": 45.32097,
+     "lon": -121.7158
+    }
+   ],
+   "cams": [],
+   "avalanche": {
+    "center": "NWAC",
+    "zone": 3032,
+    "link": null
+   }
+  },
+  {
+   "id": "res_skibowl",
+   "mode": "resort",
+   "region": "or",
+   "title": "Mt Hood Skibowl",
+   "subtitle": "Lower and Upper Bowl",
+   "points": [
+    {
+     "role": "Base",
+     "name": "Lower Bowl chair bottom",
+     "lat": 45.30073,
+     "lon": -121.77349,
+     "elev_ft": 3500,
+     "dem_ft": 3648,
+     "source": "Wikipedia (Mt Hood Skibowl article); DEM-checked 2026-10-29"
+    },
+    {
+     "role": "Mid",
+     "name": "Mid-mountain (calc)",
+     "lat": 45.29457,
+     "lon": -121.77813,
+     "elev_ft": 4264,
+     "dem_ft": 4173,
+     "source": "elev_ft calculated as the mid of base and top (published where available, else DEM); dem_ft = DEM at this coordinate"
+    },
+    {
+     "role": "Top",
+     "name": "Upper Bowl chair top",
+     "lat": 45.28841,
+     "lon": -121.78278,
+     "elev_ft": 5027,
+     "dem_ft": 4957,
+     "source": "Wikipedia (Mt Hood Skibowl article); DEM-checked 2026-10-29"
+    }
+   ],
+   "glance": "Mid",
+   "snotel": [
+    {
+     "triplet": "651:OR:SNTL",
+     "name": "Mt Hood Test Site",
+     "elev_ft": 5380,
+     "mi": 3.5,
+     "lat": 45.32097,
+     "lon": -121.7158
+    }
+   ],
+   "cams": [],
+   "avalanche": {
+    "center": "NWAC",
+    "zone": 3032,
+    "link": null
+   }
+  },
+  {
+   "id": "res_cooper_spur",
+   "mode": "resort",
+   "region": "or",
+   "title": "Cooper Spur",
+   "subtitle": "Homestead, Hood River side",
+   "points": [
+    {
+     "role": "Base",
+     "name": "Homestead Chair bottom",
+     "lat": 45.41216,
+     "lon": -121.60532,
+     "elev_ft": 3969,
+     "dem_ft": 3967,
+     "source": "Cooper Spur resort site; DEM-checked 2026-10-29"
+    },
+    {
+     "role": "Mid",
+     "name": "Mid-mountain (calc)",
+     "lat": 45.41067,
+     "lon": -121.60668,
+     "elev_ft": 4184,
+     "dem_ft": 4075,
+     "source": "elev_ft calculated as the mid of base and top (published where available, else DEM); dem_ft = DEM at this coordinate"
+    },
+    {
+     "role": "Top",
+     "name": "Homestead Chair top",
+     "lat": 45.40919,
+     "lon": -121.60805,
+     "elev_ft": 4400,
+     "dem_ft": 4173,
+     "source": "Cooper Spur resort site; DEM-checked 2026-10-29"
+    }
+   ],
+   "glance": "Mid",
+   "snotel": [
+    {
+     "triplet": "651:OR:SNTL",
+     "name": "Mt Hood Test Site",
+     "elev_ft": 5380,
+     "mi": 8.2,
+     "lat": 45.32097,
+     "lon": -121.7158
+    }
+   ],
+   "cams": [],
+   "avalanche": {
+    "center": "NWAC",
+    "zone": 3032,
+    "link": null
+   }
+  },
+  {
+   "id": "res_summit_govy",
+   "mode": "resort",
+   "region": "or",
+   "title": "Summit Ski Area",
+   "subtitle": "Government Camp",
+   "points": [
+    {
+     "role": "Base",
+     "name": "Summit chair bottom",
+     "lat": 45.30331,
+     "lon": -121.74589,
+     "elev_ft": 4000,
+     "dem_ft": 3983,
+     "source": "Timberline Lodge site (Summit Pass bottom); DEM-checked 2026-10-29"
+    },
+    {
+     "role": "Mid",
+     "name": "Mid-mountain (calc)",
+     "lat": 45.30584,
+     "lon": -121.74326,
+     "elev_ft": 4152,
+     "dem_ft": 4193,
+     "source": "elev_ft calculated as the mid of base and top (published where available, else DEM); dem_ft = DEM at this coordinate"
+    },
+    {
+     "role": "Top",
+     "name": "Summit chair top",
+     "lat": 45.30837,
+     "lon": -121.74063,
+     "elev_ft": 4304,
+     "dem_ft": 4304,
+     "source": "DEM (no published value)"
+    }
+   ],
+   "glance": "Mid",
+   "snotel": [
+    {
+     "triplet": "651:OR:SNTL",
+     "name": "Mt Hood Test Site",
+     "elev_ft": 5380,
+     "mi": 1.7,
+     "lat": 45.32097,
+     "lon": -121.7158
+    }
+   ],
+   "cams": [],
+   "avalanche": {
+    "center": "NWAC",
+    "zone": 3032,
+    "link": null
+   }
+  },
+  {
+   "id": "res_bachelor",
+   "mode": "resort",
+   "region": "or",
+   "title": "Mt Bachelor",
+   "subtitle": "Summit, Northwest, Cloudchaser",
+   "points": [
+    {
+     "role": "Base",
+     "name": "Northwest Express bottom",
+     "lat": 43.99963,
+     "lon": -121.71717,
+     "elev_ft": 5700,
+     "dem_ft": 5709,
+     "source": "Mt Bachelor resort site; DEM-checked 2026-10-29"
+    },
+    {
+     "role": "Mid",
+     "name": "Mid-mountain (calc)",
+     "lat": 43.9886,
+     "lon": -121.70152,
+     "elev_ft": 7382,
+     "dem_ft": 6991,
+     "source": "elev_ft calculated as the mid of base and top (published where available, else DEM); dem_ft = DEM at this coordinate"
+    },
+    {
+     "role": "Top",
+     "name": "Summit Express top",
+     "lat": 43.97757,
+     "lon": -121.68587,
+     "elev_ft": 9065,
+     "dem_ft": 8980,
+     "source": "Mt Bachelor resort site; DEM-checked 2026-10-29"
+    }
+   ],
+   "glance": "Mid",
+   "snotel": [
+    {
+     "triplet": "815:OR:SNTL",
+     "name": "Three Creeks Meadow",
+     "elev_ft": 5680,
+     "mi": 11.2,
+     "lat": 44.14425,
+     "lon": -121.64095
+    }
+   ],
+   "cams": [],
+   "avalanche": {
+    "center": "COAA",
+    "zone": 2470,
+    "link": null
+   }
+  },
+  {
+   "id": "res_schweitzer",
+   "mode": "resort",
+   "region": "id",
+   "title": "Schweitzer",
+   "subtitle": "Outback Bowl, Stella, Lakeview",
+   "points": [
+    {
+     "role": "Base",
+     "name": "Stella bottom",
+     "lat": 48.3976,
+     "lon": -116.60745,
+     "elev_ft": 3960,
+     "dem_ft": 3963,
+     "source": "Wikipedia (Schweitzer article); DEM-checked 2026-10-29"
+    },
+    {
+     "role": "Mid",
+     "name": "Mid-mountain (calc)",
+     "lat": 48.38866,
+     "lon": -116.6207,
+     "elev_ft": 5180,
+     "dem_ft": 5007,
+     "source": "elev_ft calculated as the mid of base and top (published where available, else DEM); dem_ft = DEM at this coordinate"
+    },
+    {
+     "role": "Top",
+     "name": "Great Escape Quad top",
+     "lat": 48.37972,
+     "lon": -116.63395,
+     "elev_ft": 6400,
+     "dem_ft": 6381,
+     "source": "Schweitzer resort site; DEM-checked 2026-10-29"
+    }
+   ],
+   "glance": "Mid",
+   "snotel": [
+    {
+     "triplet": "738:ID:SNTL",
+     "name": "Schweitzer Basin",
+     "elev_ft": 6090,
+     "mi": 1.3,
+     "lat": 48.37428,
+     "lon": -116.63917
+    }
+   ],
+   "cams": [],
+   "avalanche": {
+    "center": "IPAC",
+    "zone": 3018,
+    "link": null
+   }
+  },
+  {
+   "id": "res_whistler",
+   "mode": "resort",
+   "region": "bc",
+   "title": "Whistler Blackcomb",
+   "subtitle": "Whistler, Blackcomb, Peak 2 Peak",
+   "points": [
+    {
+     "role": "Base",
+     "name": "Whistler Village Gondola lower",
+     "lat": 50.11275,
+     "lon": -122.95453,
+     "elev_ft": 2214,
+     "dem_ft": 2231,
+     "source": "Whistler Blackcomb resort site; DEM-checked 2026-10-29"
+    },
+    {
+     "role": "Mid",
+     "name": "Mid-mountain (calc)",
+     "lat": 50.10179,
+     "lon": -122.91588,
+     "elev_ft": 4856,
+     "dem_ft": 4790,
+     "source": "elev_ft calculated as the mid of base and top (published where available, else DEM); dem_ft = DEM at this coordinate"
+    },
+    {
+     "role": "Top",
+     "name": "Showcase Quad top",
+     "lat": 50.09084,
+     "lon": -122.87723,
+     "elev_ft": 7497,
+     "dem_ft": 7372,
+     "source": "Whistler Blackcomb resort site; DEM-checked 2026-10-29"
+    }
+   ],
+   "glance": "Mid",
+   "snotel": [],
+   "cams": [],
+   "avalanche": {
+    "center": "AVCAN",
+    "zone": null,
+    "link": "https://avalanche.ca/forecasts"
+   }
+  },
+  {
+   "id": "res_revelstoke",
+   "mode": "resort",
+   "region": "bc",
+   "title": "Revelstoke",
+   "subtitle": "Revelation Bowl, North Bowl",
+   "points": [
+    {
+     "role": "Base",
+     "name": "Revelation Gondola lower",
+     "lat": 50.95832,
+     "lon": -118.16318,
+     "elev_ft": 1680,
+     "dem_ft": 1690,
+     "source": "Revelstoke resort site and Wikipedia; DEM-checked 2026-10-29"
+    },
+    {
+     "role": "Mid",
+     "name": "Mid-mountain (calc)",
+     "lat": 50.96063,
+     "lon": -118.13272,
+     "elev_ft": 4490,
+     "dem_ft": 4295,
+     "source": "elev_ft calculated as the mid of base and top (published where available, else DEM); dem_ft = DEM at this coordinate"
+    },
+    {
+     "role": "Top",
+     "name": "The Stoke top",
+     "lat": 50.96295,
+     "lon": -118.10227,
+     "elev_ft": 7300,
+     "dem_ft": 7297,
+     "source": "Revelstoke resort site and Wikipedia; DEM-checked 2026-10-29"
+    }
+   ],
+   "glance": "Mid",
+   "snotel": [],
+   "cams": [],
+   "avalanche": {
+    "center": "AVCAN",
+    "zone": null,
+    "link": "https://avalanche.ca/forecasts"
+   }
+  },
+  {
+   "id": "res_kicking_horse",
+   "mode": "resort",
+   "region": "bc",
+   "title": "Kicking Horse",
+   "subtitle": "CPR Ridge, Feuz Bowl, Terminator",
+   "points": [
+    {
+     "role": "Base",
+     "name": "Golden Eagle Express bottom",
+     "lat": 51.29754,
+     "lon": -117.04867,
+     "elev_ft": 3900,
+     "dem_ft": 4140,
+     "source": "Kicking Horse resort site; DEM-checked 2026-10-29"
+    },
+    {
+     "role": "Mid",
+     "name": "Mid-mountain (calc)",
+     "lat": 51.28725,
+     "lon": -117.06994,
+     "elev_ft": 5646,
+     "dem_ft": 6230,
+     "source": "elev_ft published mid-mountain (resort); dem_ft = DEM at this coordinate"
+    },
+    {
+     "role": "Top",
+     "name": "Stairway to Heaven top",
+     "lat": 51.27696,
+     "lon": -117.09121,
+     "elev_ft": 8218,
+     "dem_ft": 7969,
+     "source": "Kicking Horse resort site; DEM-checked 2026-10-29"
+    }
+   ],
+   "glance": "Mid",
+   "snotel": [],
+   "cams": [],
+   "avalanche": {
+    "center": "AVCAN",
+    "zone": null,
+    "link": "https://avalanche.ca/forecasts"
+   }
+  }
+ ]
+}
