@@ -452,7 +452,7 @@ export function camsStrip(cams, at) {
 // brief: { text, at } for one mode, already checked fresh by the app; null hides it.
 export function briefSection(brief, mode) {
   if (!brief || typeof brief.text !== "string" || !brief.text.trim()) return "";
-  return `<section class="brief" aria-labelledby="h-brief"><div class="sec-h"><h2 id="h-brief">Today's brief</h2><span class="small muted">AI summary · ${esc(brief.atText)}</span></div><div class="brief-card"><p class="brief-t">${esc(brief.text)}</p><p class="brief-n">Written by AI from the forecast, cams and avalanche centers. Compares weather only; check the avalanche forecast before choosing terrain.</p></div></section>`;
+  return `<section class="brief" aria-labelledby="h-brief"><div class="sec-h"><h2 id="h-brief">TLDR</h2><span class="small muted">AI summary · ${esc(brief.atText)}</span></div><div class="brief-card"><p class="brief-t">${esc(brief.text)}</p><p class="brief-n">Written by AI from the forecast, cams and avalanche centers. Compares weather only; check the avalanche forecast before choosing terrain.</p></div></section>`;
 }
 
 export function footer() {
