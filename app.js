@@ -1,7 +1,8 @@
 // page/app.js
 // Orchestration: loads only what the visible view shows, builds vm objects, renders with render.js, wires the controls.
 // Every Open-Meteo request comes from planRequests (weight <= 300), cached 30 minutes, at most 2 in flight.
-import { makeNet } from "./net.js";
+// A view's forecasts also stay on the device 24 hours as a fallback, shown with a notice when Open-Meteo refuses.
+import { makeNet, limitOf } from "./net.js";
 import { planRequests } from "./engine/request.js";
 import { PROFILES } from "./engine/models.js";
 import { parseForecast } from "./engine/parse.js";
@@ -9,7 +10,7 @@ import { mapLayerUrl, productUrl } from "./engine/avalanche.js";
 import { snotelUrl, parseSnotel } from "./engine/snotel.js";
 import { defaultMode } from "./engine/regions.js";
 import { localHourString } from "./engine/forecast.js";
-import { skiRowZ, skiCardZ, hikeRowZ, hikeCardZ, regionZ, top3Z, avalFor, camsForPage, distanceRole, miles, tomorrowVerdict, zonesFrom, zoneExpired } from "./vm.js";
+import { skiRowZ, skiCardZ, hikeRowZ, hikeCardZ, regionZ, top3Z, avalFor, camsForPage, distanceRole, miles, tomorrowVerdict, zonesFrom, zoneExpired, forecastNotice } from "./vm.js";
 import * as R from "./render.js";
 
 const VIEWS = ["resorts", "backcountry", "hike"];
@@ -18,6 +19,7 @@ const NOUN = { resorts: "resort", backcountry: "zone", hike: "area" };
 const CENTERS = ["NWAC", "COAA", "IPAC"];
 const KEEP_VIEW_MS = 14 * 86400000;
 const CACHE_TTL_MIN = 30;   // every cached request on this page
+const LAST_GOOD_MIN = 24 * 60;   // how long a view's forecast stays usable as a fallback
 const OM_TIMEOUT_MS = 20000;   // Open-Meteo multi-point requests can take a while
 const STALE_ON_RETURN_MS = 30 * 60000;
 const PREF_KEYS = ["mw2:starred", "mw2:view", "mw2:sub", "mw2:open"];   // never evicted
@@ -41,7 +43,7 @@ const S = {
   starred: new Set(LS.get("mw2:starred") || []), open: SS.get("mw2:open") || {}, filter: "",
   glance: new Map(), clouds: new Map(), stations: new Map(), cards: new Map(), verdicts: new Map(),
   layers: null, layersP: null, layersAt: null, brief: null, briefP: null, loading: new Set(), seen: new Set(), hashes: new Map(),
-  lastGoodAt: null,
+  lastGoodAt: null, lastGood: new Set(), force: new Set(), triedAt: 0,
 };
 const saveOpen = () => SS.set("mw2:open", S.open);
 
@@ -59,7 +61,8 @@ function omSlot(fn) {   // at most 2 Open-Meteo requests in flight across the pa
 }
 async function getJson(url, ttl = CACHE_TTL_MIN, opts = {}) {
   S.seen.add(url);
-  const r = await net.cachedJson(url, ttl, opts);
+  if (opts.lastGoodMin) S.lastGood.add(url);
+  const r = await net.cachedJson(url, ttl, { ...opts, force: S.force.delete(url) });
   if (r.data && r.data.error === true) throw new Error(r.data.reason || "error body");
   return r;
 }
@@ -68,22 +71,23 @@ const pointOf = (place, role) => place.points.find((p) => p.role === role) || nu
 const withKey = (place, role) => { const p = pointOf(place, role); return p ? { ...p, key: ptKey(place.id, role) } : null; };
 
 // One forecast request; each requested point lands in `into` by key. Never throws to the caller's pool twice.
-async function forecast(req, profile, into) {
+async function forecast(req, profile, into, keep) {
   const P = PROFILES[profile];
   try {
-    const { at, data } = await omSlot(() => getJson(req.url, CACHE_TTL_MIN, { timeoutMs: OM_TIMEOUT_MS }));
+    const { at, data, saved, reason } = await omSlot(() => getJson(req.url, CACHE_TTL_MIN, { timeoutMs: OM_TIMEOUT_MS, ...(keep ? { lastGoodMin: LAST_GOOD_MIN } : {}) }));
     const locs = parseForecast(data, P.models, P.hourly);   // rule 7: the requested model list
-    req.points.forEach((p, i) => into.set(p.key, locs[i] && locs[i].time.length ? { status: "ok", loc: locs[i], at } : { status: "error" }));
+    const extra = saved ? { saved: true, limit: limitOf(reason) } : {};
+    req.points.forEach((p, i) => into.set(p.key, locs[i] && locs[i].time.length ? { status: "ok", loc: locs[i], at, ...extra } : { status: "error" }));
   } catch (e) {
-    req.points.forEach((p) => into.set(p.key, { status: "error" }));
+    req.points.forEach((p) => into.set(p.key, { status: "error", limit: limitOf(e && e.message) }));
     throw e;
   } finally { schedule(); }
 }
 const needs = (map, pts) => pts.filter((p) => p && (!map.has(p.key) || map.get(p.key).status === "error"));
-function forecastJobs(pts, profile, into) {
+function forecastJobs(pts, profile, into, keep = false) {
   const todo = needs(into, pts);
   todo.forEach((p) => into.set(p.key, { status: "loading" }));
-  return planRequests(todo, profile).map((req) => () => forecast(req, profile, into));
+  return planRequests(todo, profile).map((req) => () => forecast(req, profile, into, keep));
 }
 const runJobs = (jobs) => net.pool(jobs, 2, (job) => job());
 
@@ -144,7 +148,7 @@ async function loadView(view) {
   if (S.loading.has(view)) return;
   S.loading.add(view);
   try {
-    const jobs = [...forecastJobs(viewGlancePoints(view), "glance", S.glance), ...forecastJobs(anchorPoints(view), "clouds", S.clouds)];
+    const jobs = [...forecastJobs(viewGlancePoints(view), "glance", S.glance, true), ...forecastJobs(anchorPoints(view), "clouds", S.clouds, true)];
     await Promise.all([runJobs(jobs), loadLayers(), loadStations(view), loadBrief()]);
     if (view === "hike") await loadHikeVerdicts();
   } finally { S.loading.delete(view); schedule(); }
@@ -297,12 +301,18 @@ function updateAsOf(view) {
   const ats = gs.map((g) => g?.at).filter(fin);
   if (ats.length) {
     S.lastGoodAt = Math.min(...ats);
-    $(".asof-t").textContent = `as of ${clock(S.lastGoodAt)}`;
+    $(".asof-t").textContent = `${gs.some((g) => g?.saved) ? "saved forecast from" : "as of"} ${clock(S.lastGoodAt)}`;
   } else if (S.loading.has(view) || !gs.length || gs.some((g) => !g || g.status === "loading")) {
     $(".asof-t").textContent = "Loading…";
   } else {
     $(".asof-t").textContent = S.lastGoodAt ? `Forecast unavailable · last loaded ${clock(S.lastGoodAt)}` : "Forecast unavailable";
   }
+  const note = forecastNotice(gs, clock), el = $("#notice");
+  el.textContent = note || "";
+  el.hidden = !note;
+  const savedAt = gs.filter((g) => g?.saved).map((g) => g.at).filter(fin), tag = $("#saved-tag");
+  tag.textContent = savedAt.length ? `Saved forecast from ${clock(Math.min(...savedAt))}` : "";
+  tag.hidden = !savedAt.length;
 }
 // The oldest data on screen: the view's forecasts and the avalanche layers.
 function oldestOnScreen(view) {
@@ -433,7 +443,7 @@ async function chooseView() {
   await loadLayers();
   const inSeason = Object.values(zonesFrom(S.layers || [])).some((z) => !z.off_season && z.level >= 1 && !zoneExpired(z, Date.now()));
   if (inSeason) return sub;
-  await runJobs(forecastJobs(viewGlancePoints("resorts"), "glance", S.glance));
+  await runJobs(forecastJobs(viewGlancePoints("resorts"), "glance", S.glance, true));
   const snow24 = placesOf("resorts").map(rowZ).map((z) => z.glance.n24).filter(fin);
   return defaultMode({ avalancheInSeason: false, resortSnow24: snow24 }) === "ski" ? sub : "hike";
 }
@@ -517,8 +527,12 @@ $("#sub").addEventListener("click", (e) => {
   const b = e.target.closest("button[data-sub]");
   if (b) { setView(b.dataset.sub); window.scrollTo({ top: 0 }); }
 });
-function refresh() {   // drop the device cache for every request this page made, then fetch again
-  for (const u of S.seen) { try { localStorage.removeItem(`mw2:${u}`); } catch { /* blocked */ } }
+function refresh() {   // fetch again; a view's forecast stays on the device as the fallback until a new one replaces it
+  S.triedAt = Date.now();
+  for (const u of S.seen) {
+    if (S.lastGood.has(u)) S.force.add(u);
+    else { try { localStorage.removeItem(`mw2:${u}`); } catch { /* blocked */ } }
+  }
   S.seen.clear();
   for (const m of [S.glance, S.clouds, S.stations, S.cards, S.verdicts]) m.clear();
   S.layers = null; S.layersP = null; S.layersAt = null; S.briefP = null; S.brief = null;
@@ -531,7 +545,9 @@ function onReturn() {
   if (!S.P || !S.view || document.visibilityState === "hidden") return;
   if (S.loading.has(S.view)) { schedule(); return; }
   const oldest = oldestOnScreen(S.view);
-  if (oldest == null || Date.now() - oldest > STALE_ON_RETURN_MS) refresh(); else schedule();
+  const stale = oldest == null || Date.now() - oldest > STALE_ON_RETURN_MS;
+  // A saved forecast is always old, so a failed refresh waits the same 30 minutes before the next automatic try. The Refresh button still works.
+  if (stale && Date.now() - S.triedAt > STALE_ON_RETURN_MS) refresh(); else schedule();
 }
 document.addEventListener("visibilitychange", () => { if (document.visibilityState === "visible") onReturn(); });
 window.addEventListener("pageshow", (e) => { if (e.persisted) onReturn(); });
@@ -558,7 +574,7 @@ async function main() {
     const [p, c] = await Promise.all([net.fetchJson("places.json"), net.fetchJson("cams.json")]);
     S.P = p; S.cams = c; S.byId = Object.fromEntries(p.places.map((x) => [x.id, x]));
   } catch {
-    $("#main").innerHTML = `<p class="empty">The place list didn't load. ${R.UNAVAILABLE}.</p>`;
+    $("#main").innerHTML = '<p class="empty">The place list didn\'t load. Tap Refresh to try again.</p>';
     $(".asof-t").textContent = "";
     return;
   }

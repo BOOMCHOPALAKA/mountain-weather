@@ -29,7 +29,22 @@ export function rangeText(lo, hi) {
   return a === b ? b : `${a}–${b}`;
 }
 // One wording for a forecast that failed to load, shared by vm and render.
-export const UNAVAILABLE = "Forecast unavailable, tap Refresh";
+export const UNAVAILABLE = "Forecast unavailable";
+// The line above the cards when the forecast isn't live. glances: the view's glance entries. clock: ms to a display time.
+export function forecastNotice(glances, clock) {
+  const gs = glances.filter(Boolean);
+  if (!gs.length || gs.length < glances.length || gs.some((g) => g.status === "loading")) return null;
+  const saved = gs.filter((g) => g.saved), failed = gs.filter((g) => g.status === "error");
+  const limit = [...saved, ...failed].find((g) => g.limit)?.limit;
+  const hit = `Open-Meteo's free ${limit} limit was reached on this connection`;
+  if (saved.length) {
+    const from = `Showing the saved forecast from ${clock(Math.min(...saved.map((g) => g.at)))}.`;
+    return limit ? `${from} ${hit}, so it can't update yet.` : `${from} The forecast service didn't answer. Tap Refresh to try again.`;
+  }
+  if (!failed.length) return null;
+  if (limit) return `${hit}. Forecasts return when it resets, and Refresh won't help until then.`;
+  return failed.length === gs.length ? "Forecasts didn't load. Tap Refresh to try again." : "Some forecasts didn't load. Tap Refresh to try again.";
+}
 export const fmtWater = (x) => (fin(x) ? x.toFixed(2) : "–");
 export const dow = (ymd) => DOW[new Date(`${ymd}T12:00:00Z`).getUTCDay()];
 // Display inches for the trio: a number, or "<1" (the mock's render dims 0 and "<1").

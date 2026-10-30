@@ -3,7 +3,9 @@
 // A small JSON digest of what the page shows on load, built with the page's own engine and view-model,
 // so the TLDR writer has one source of facts and tldr/check.mjs can verify every number and place.
 //
-//   node tldr/digest.mjs --root <deploy root> [--out digest.json]
+//   node tldr/digest.mjs --root <deploy root> [--out digest.json] [--saved]
+//
+// --saved reads Open-Meteo from the disk copy in scripts/saved_fetch.mjs. It is for local runs; the deployed copy has no scripts/.
 //
 // <root> is laid out like the deploy: vm.js, net.js, engine.js, engine/, places.json, package.json.
 // Fetches what page/app.js fetches on load for Ski > Resorts, Ski > Backcountry and Hike: glance for every
@@ -277,7 +279,7 @@ export async function buildDigest({ codeDir, placesPath, fetchImpl, nowMs = Date
     }
     const md = { top3, regions };
     if (t.partial) md.partial = t.partial;
-    if (t.empty) md.empty = t.empty.includes("tap Refresh") ? "unavailable" : t.empty;   // page wording, not the writer's
+    if (t.empty) md.empty = /unavailable/i.test(t.empty) ? "unavailable" : t.empty;   // page wording, not the writer's
     return md;
   }
 
@@ -328,12 +330,16 @@ function fail(msg, code = 1) { process.stderr.write(`digest: ${msg}\n`); process
 async function main(argv) {
   const arg = (k) => { const i = argv.indexOf(k); return i >= 0 ? argv[i + 1] : undefined; };
   const rootArg = arg("--root"), out = arg("--out");
-  if (!rootArg) fail("usage: node tldr/digest.mjs --root <deploy root> [--out digest.json]", 2);
+  if (!rootArg) fail("usage: node tldr/digest.mjs --root <deploy root> [--out digest.json] [--saved]", 2);
   const root = path.resolve(rootArg);
   const lack = [...NEEDED, "places.json"].filter((f) => !fs.existsSync(path.join(root, f)));
   if (lack.length) fail(`--root ${root} is not a deploy root (missing ${lack.join(", ")})`, 2);
+  // Dynamic import: the deployed copy has no scripts/, so the helper loads only when --saved is given. No flag means live fetch, as before.
+  const fetchImpl = argv.includes("--saved")
+    ? (await import(new URL("../scripts/saved_fetch.mjs", import.meta.url))).savedFetch({ log: () => {} })
+    : undefined;
   let d;
-  try { d = await buildDigest({ codeDir: root, placesPath: path.join(root, "places.json") }); }
+  try { d = await buildDigest({ codeDir: root, placesPath: path.join(root, "places.json"), fetchImpl }); }
   catch (e) { fail(String(e?.message || e).split("\n")[0]); }
   let json = layout(d) + "\n";
   if (Buffer.byteLength(json) >= 20480) json = JSON.stringify(d) + "\n";   // compact when the readable form runs long

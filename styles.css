@@ -268,6 +268,7 @@ section { min-width: 0; }
 
 /* empty state */
 .empty { font-family: var(--display); font-weight: 600; font-size: 16px; color: var(--muted); }
+.notice { margin-block: var(--s2); font-size: 14px; line-height: 1.4; color: var(--ink); }
 
 /* hike day strip */
 .days { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); border: 1px solid var(--line); border-radius: 6px; overflow: hidden; }
@@ -378,6 +379,8 @@ footer .disc { border-top: 1px solid var(--line-strong); padding-top: var(--s3);
 .top.compact .wrap { grid-template-columns: minmax(0, 2fr) minmax(0, 3fr) auto; column-gap: var(--s2); padding-block: var(--s1); }
 .top.compact .seg2 button { padding-inline: 2px; font-size: 12px; }   /* "Backcountry" fits at 320 px */
 .top.compact .wrap:has(> .seg2[hidden]) { grid-template-columns: minmax(0, 1fr) auto; }
+.saved-tag { display: none; margin: 0; font-size: 12px; color: var(--muted); }
+.top.compact .saved-tag:not([hidden]) { display: block; grid-column: 1 / -1; order: 4; }   /* order 4: .asof is order 3 and must keep column 3 of the first row */
 
 /* ---------- v3: card head + merged condition line ---------- */
 .card-head .places { flex-basis: 100%; font-size: 12px; color: var(--ink); margin-top: 2px; }
