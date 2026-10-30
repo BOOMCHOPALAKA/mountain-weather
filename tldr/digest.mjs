@@ -10,8 +10,9 @@
 // <root> is laid out like the deploy: vm.js, net.js, engine.js, engine/, places.json, package.json.
 // Fetches what page/app.js fetches on load for Ski > Resorts, Ski > Backcountry and Hike: glance for every
 // place and region anchor, clouds for the anchors (and the hike top three's high points), the three avalanche
-// map layers, and SNOTEL hourly for the anchor stations. Open-Meteo: planRequests (weight <= 300), 2 in flight.
+// map layers, and SNOTEL hourly for the anchor stations and each ski place's nearest station. Open-Meteo: planRequests (weight <= 300), 2 in flight.
 // A failed request leaves its regions and places out and names them under "missing". Nothing is guessed.
+// "picks" names the best weather for the TLDR. engine/picks.js holds the rules; this file only gathers their inputs.
 import fs from "node:fs";
 import path from "node:path";
 import { pathToFileURL } from "node:url";
@@ -23,6 +24,7 @@ const CENTERS = ["NWAC", "COAA", "IPAC"];
 const TIMEOUT_MS = 20000;   // the page's Open-Meteo timeout; used for every request here (a batch job, not a phone)
 const NEEDED = ["vm.js", "net.js", "engine.js", "engine/request.js", "engine/clouds.js"];
 const fin = (x) => typeof x === "number" && Number.isFinite(x);
+const rnd = (x) => (fin(x) ? Math.round(x) : null);
 
 // ISO 8601 with the America/Los_Angeles offset, e.g. 2026-10-30T06:37:12-07:00.
 export function isoPacific(ms) {
@@ -58,11 +60,11 @@ function collectNumbers(x, out) {
 
 async function loadModules(codeDir) {
   const imp = (rel) => import(pathToFileURL(path.join(codeDir, rel)).href);
-  const [net, request, models, parse, avalanche, snotel, forecast, clouds, vm] = await Promise.all([
+  const [net, request, models, parse, avalanche, snotel, forecast, clouds, picks, vm] = await Promise.all([
     imp("net.js"), imp("engine/request.js"), imp("engine/models.js"), imp("engine/parse.js"), imp("engine/avalanche.js"),
-    imp("engine/snotel.js"), imp("engine/forecast.js"), imp("engine/clouds.js"), imp("vm.js"),
+    imp("engine/snotel.js"), imp("engine/forecast.js"), imp("engine/clouds.js"), imp("engine/picks.js"), imp("vm.js"),
   ]);
-  return { ...net, ...request, ...models, ...parse, ...avalanche, ...snotel, ...forecast, ...clouds, ...vm };
+  return { ...net, ...request, ...models, ...parse, ...avalanche, ...snotel, ...forecast, ...clouds, ...picks, ...vm };
 }
 
 // codeDir holds vm.js, net.js and engine/; placesPath is places.json. Both are the deploy root in production.
@@ -123,7 +125,9 @@ export async function buildDigest({ codeDir, placesPath, fetchImpl, nowMs = Date
   }
   async function loadStations(view) {
     const sts = [...new Map(regionsOf(view).map(anchorStation).filter(Boolean).map((s) => [s.triplet, s])).values()];
-    const trips = sts.map((s) => s.triplet).filter((t) => !stations.has(t));
+    await fetchStations(sts.map((s) => s.triplet).filter((t) => !stations.has(t)));
+  }
+  async function fetchStations(trips) {
     if (!trips.length) return;
     trips.forEach((t) => stations.set(t, { status: "loading" }));
     try {
@@ -137,6 +141,9 @@ export async function buildDigest({ codeDir, placesPath, fetchImpl, nowMs = Date
   const omJobs = VIEWS.flatMap((v) => [...forecastJobs(viewGlancePoints(v), "glance", glance), ...forecastJobs(anchorPoints(v), "clouds", clouds)]);
   await Promise.all([runJobs(omJobs), loadLayers(), ...VIEWS.map(loadStations)]);
   if (![...glance.values()].some((g) => g.status === "ok")) throw new Error("no forecast data loaded (every Open-Meteo glance request failed)");
+  // best_day reads each ski place's own station. One more SNOTEL request for the ones the anchors didn't bring; a failure drops those places from best_day.
+  const ownStations = [...placesOf("resorts"), ...placesOf("backcountry")].map((p) => p.snotel?.[0]?.triplet).filter(Boolean);
+  await fetchStations([...new Set(ownStations)].filter((t) => !stations.has(t)));
 
   // ---- view-model, the way rowZ / regionView / top3View build it ----
   const avalOf = (place) => M.avalFor(place, layers, nowMs);
@@ -290,6 +297,72 @@ export async function buildDigest({ codeDir, placesPath, fetchImpl, nowMs = Date
     avalanche.push({ key: zoneKeyOf(place), center: d.center, zone: zoneName(a), state: d.state, level: d.level, word: d.word, link: a?.url ?? null });
   }
 
+  // ---- picks ----
+  const gone = [...new Set(missing)];
+  // A broken pick reads null. It never stops the run: the rest of the digest still publishes.
+  function safely(name, build) {
+    try { return build(); }
+    catch (e) { process.stderr.write(`digest: pick ${name} left out: ${String(e?.message || e).split("\n")[0]}\n`); return null; }
+  }
+  // Same place set for both ski picks. The title check matters: a place can load while another of its name fails (resort and
+  // backcountry Stevens Pass), and a name in missing is one the checker rejects.
+  const skiPlaces = () => [...placesOf("resorts"), ...placesOf("backcountry")].filter((p) => usable(p) && !gone.includes(p.title));
+  function mostSnowPick() {
+    const zs = skiPlaces().map(rowZ);
+    const row = M.top3Z("ski", zs).rows[0];
+    if (!row || !(zs.find((z) => z.id === row.id).rank.n24.precip.value >= M.PICK.stormIn)) return null;
+    const loc = locOf(glance, ptKey(row.id, byId[row.id].glance));
+    return { ...skiTop3Row(row), quality: M.snowQuality(M.snowRatio(loc, M.nowIndex(loc, nowMs))) };
+  }
+  // Depth at the place's own nearest station (snotel is nearest first): the page's latest reading, finite and at most 36 h old.
+  // null: no station speaks for this place, so a storm can still qualify it.
+  // undefined: one should have answered and didn't. The base is unknown, and a measurement might have ruled the place out, so it can't compete.
+  function baseOf(place) {
+    const st = place.snotel?.[0];
+    if (!st || !M.stationSpeaks(st.elev_ft, Math.min(...place.points.map((x) => x.elev_ft)))) return null;
+    const sd = stations.get(st.triplet);
+    return sd?.status === "ok" ? M.depthReading({ hourly: sd.hourly }, nowMs)?.depth : undefined;
+  }
+  // Forecast snow before a day, for ranking only. Offset 0: today's hours up to now. Offset 1: all of today. Offset 2: today and tomorrow.
+  // Yesterday is out of reach: the forecast data starts at local midnight today.
+  function freshBefore(loc, n, ymd0, offset) {
+    const wholeDay = (d) => M.daySummary(loc, M.addDays(ymd0, d), d, -1)?.snow?.value ?? 0;
+    const midnight = loc.time.indexOf(`${ymd0}T00:00`);
+    const inches = offset === 0 ? M.windowTotals(loc, midnight, n - midnight).snow?.value ?? 0 : wholeDay(0) + (offset === 2 ? wholeDay(1) : 0);
+    return Math.round(inches * 10) / 10;
+  }
+  function bestDayPick() {
+    if (![...stations.values()].some((s) => s.status === "ok")) return null;   // SNOTEL down: nothing to compare against
+    const cands = [];
+    for (const p of skiPlaces()) {
+      const loc = locOf(glance, ptKey(p.id, p.glance)), n = M.nowIndex(loc, nowMs);
+      if (n < 0) continue;
+      const baseIn = baseOf(p);
+      if (baseIn === undefined) continue;
+      const local = M.localHourString(nowMs, loc.utcOffset), ymd0 = local.slice(0, 10);
+      for (const offset of [0, 1, 2]) {
+        if (offset === 0 && +local.slice(11, 13) >= 11) continue;
+        const ymd = M.addDays(ymd0, offset);
+        if (p.mode === "resort" && !M.resortSeason(ymd)) continue;
+        const s = M.daySummary(loc, ymd, offset, offset === 0 ? n : -1);
+        if (M.niceDay(s)) cands.push({ id: p.id, offset, gust: s.gust.value, freshIn: freshBefore(loc, n, ymd0, offset), baseIn, s });
+      }
+    }
+    const c = M.bestSkiDay(cands);
+    if (!c) return null;
+    const p = byId[c.id];
+    return { name: p.title, zone_key: zoneKeyOf(p), day: M.dow(c.s.ymd), gust: rnd(c.gust), hi_f: rnd(c.s.hi.value), lo_f: rnd(c.s.lo?.value),
+      fresh: c.freshIn >= M.PICK.freshIn, sky: M.skyWord(c.s), aval: avalDigest(avalOf(p)) };
+  }
+  // modes.hike.top3[0], built from the same row. A row whose name is in missing can't be used, so the next one stands in.
+  function hikePick() {
+    const zs = placesOf("hike").map(rowZ);
+    const row = M.top3Z("hike", zs).rows.find((r) => !gone.includes(r.name));
+    if (!row) return null;
+    const t = zs.find((z) => z.id === row.id).rank.tomorrow;
+    return { ...hikeTop3Row(row), day: M.dow(t.ymd), hi_f: rnd(t.hi) };
+  }
+
   // place_index: every name a writer may use -> its zone key. Place, region and spot names come first; a name that two
   // of them use with different zone keys is ambiguous and left out. Zone names fill in only where no such name exists.
   // Nothing in missing is ever indexed, even when another source still carries that name.
@@ -303,13 +376,23 @@ export async function buildDigest({ codeDir, placesPath, fetchImpl, nowMs = Date
     for (const row of md.top3) add(row.name, row.zone_key);
     for (const r of md.regions) { add(r.name, r.zone_key); add(r.spot, r.spot_zone_key); add(r.gust_at, r.gust_at_zone_key); }
   }
+  // A pick whose name already means another zone can't be written, so it reads null and the name keeps its meaning.
+  const named = (pick) => {
+    if (!pick) return null;
+    if (ambiguous.has(pick.name) || (index.has(pick.name) && index.get(pick.name) !== pick.zone_key)) return null;
+    add(pick.name, pick.zone_key);
+    return pick;
+  };
+  const picks = {
+    ski: { most_snow: named(safely("most_snow", mostSnowPick)), best_day: named(safely("best_day", bestDayPick)) },
+    hike: { best: named(safely("hike", hikePick)) },
+  };
   for (const a of avalanche) if (a.zone && !index.has(a.zone) && !ambiguous.has(a.zone)) index.set(a.zone, a.key);
-  const gone = [...new Set(missing)];
   for (const m of gone) index.delete(m);
   const place_index = Object.fromEntries(index);
 
-  const numbers = [...collectNumbers(Object.values(modes).map((m) => [m.top3, m.regions, m.partial, m.empty]), new Set())].sort((a, b) => a - b);
-  return { at: isoPacific(nowMs), modes, avalanche, numbers, place_index, places: Object.keys(place_index), ambiguous: [...ambiguous], missing: gone };
+  const numbers = [...collectNumbers([Object.values(modes).map((m) => [m.top3, m.regions, m.partial, m.empty]), picks], new Set())].sort((a, b) => a - b);
+  return { at: isoPacific(nowMs), modes, picks, avalanche, numbers, place_index, places: Object.keys(place_index), ambiguous: [...ambiguous], missing: gone };
 }
 
 // JSON a person can skim and a model can read, kept small: one line per top3 row, region and avalanche zone

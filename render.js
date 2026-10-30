@@ -449,10 +449,13 @@ export function camsStrip(cams, at) {
   return `<section aria-labelledby="h-cams"><div class="sec-h"><h2 id="h-cams">Cams right now</h2>${tip.btn}</div>${tip.panel}<div class="cams" tabindex="0" aria-label="Cameras, scroll sideways">${figs}</div></section>`;
 }
 
+// Each pick reads on its own line when it starts a sentence.
+const PICK_START = /(?<=[.!?])\s+(?=Most snow:|Best ski day:|Driest )/;
 // brief: { text, at } for one mode, already checked fresh by the app; null hides it.
 export function briefSection(brief, mode) {
   if (!brief || typeof brief.text !== "string" || !brief.text.trim()) return "";
-  return `<section class="brief" aria-labelledby="h-brief"><div class="sec-h"><h2 id="h-brief">TLDR</h2><span class="small muted">AI summary · ${esc(brief.atText)}</span></div><div class="brief-card"><p class="brief-t">${esc(brief.text)}</p><p class="brief-n">Written by AI from the forecast, cams and avalanche centers. Compares weather only; check the avalanche forecast before choosing terrain.</p></div></section>`;
+  const paras = brief.text.trim().split(PICK_START).map((t) => `<p class="brief-t">${esc(t)}</p>`).join("");
+  return `<section class="brief" aria-labelledby="h-brief"><div class="sec-h"><h2 id="h-brief">TLDR</h2><span class="small muted">AI summary · ${esc(brief.atText)}</span></div><div class="brief-card">${paras}<p class="brief-n">Written by AI from the forecast, cams and avalanche centers. Compares weather only; check the avalanche forecast before choosing terrain.</p></div></section>`;
 }
 
 export function footer() {

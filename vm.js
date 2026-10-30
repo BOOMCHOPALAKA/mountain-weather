@@ -6,6 +6,7 @@ import { localHourString, nowIndex, headline, windowIdx, windowTotals, daySummar
 import { cloudVerdict, snowLevel, modelColumn, verdictFor, feetFactor } from "./engine/clouds.js";
 import { modelNow, stationNow, nowReading } from "./engine/now.js";
 import { regionNext24, topThree } from "./engine/regions.js";
+import { PICK } from "./engine/picks.js";
 import { parseMapLayer, parseProduct } from "./engine/avalanche.js";
 import { storms, latestHourly } from "./engine/snotel.js";
 import { slr, wetness } from "./engine.js";
@@ -440,9 +441,8 @@ function trioZ(loc, nowMs) {
     return [`${h} h`, s ? dispIn(s.value) : "–", s ? rangeText(s.min, s.max) : "–"];
   });
 }
-// Water-weighted snow ratio over the snowy hours, per model, then the middle value.
-function ratioZ(loc, nowMs, label) {
-  const n = isLoc(loc) ? nowIndex(loc, nowMs) : -1;
+// Water-weighted snow ratio over the next 24 hours' snowy hours, per model, then the middle value. null when under 0.5 in.
+export function snowRatio(loc, n) {
   const idx = windowIdx(loc || { time: [] }, n, 24);
   if (!idx.length || !(windowTotals(loc, n, 24).snow?.value >= 0.5)) return null;
   const rs = [];
@@ -453,7 +453,11 @@ function ratioZ(loc, nowMs, label) {
     for (const i of idx) { const r = P[i] > 0 ? slr(T[i]) : null; if (r != null) { w += P[i]; s += P[i] * r; } }
     if (w > 0) rs.push(s / w);
   }
-  return rs.length ? `~${Math.round(median(rs))}:1 at ${label}, est.` : null;
+  return rs.length ? median(rs) : null;
+}
+function ratioZ(loc, nowMs, label) {
+  const r = snowRatio(loc, isLoc(loc) ? nowIndex(loc, nowMs) : -1);
+  return r == null ? null : `~${Math.round(r)}:1 at ${label}, est.`;
 }
 function bandsZ(place, locAt, nowMs) {
   return [...place.points].sort((a, b) => b.elev_ft - a.elev_ft).map((p) => {
@@ -509,7 +513,7 @@ export function hikeRowZ(place, glanceLoc, nowMs) {
   let tomorrow = null;
   if (idx >= 0) {
     const s = daySummary(glanceLoc, addDays(localNow(glanceLoc, nowMs).ymd, 1), 1);
-    if (s?.daylightWater) tomorrow = { water: s.daylightWater.value, gust: s.gust?.value ?? 0 };
+    if (s?.daylightWater) tomorrow = { water: s.daylightWater.value, gust: s.gust?.value ?? 0, cloudy: s.cloudyFrac?.value ?? null, hi: s.hi?.value ?? null, ymd: s.ymd };
   }
   return {
     id: place.id, mode: "hike", region: place.region, name: place.title, sub: place.subtitle, star: false, glance,
@@ -663,7 +667,7 @@ export function regionZ(region, places, zsCollapsed, glanceByPlace, anchorLoc, a
 /* ---------- top three ---------- */
 const FOOT = {
   ski: "Ranked by forecast snow at each place's middle point, next 24 h (NBM where it covers), est. Pill: the avalanche center's rating today. Gusts flagged at 35 mph and up.",
-  hike: "Areas with a high point at 4,000 ft and up, ranked by forecast water in daylight hours. Clouds are a model read.",
+  hike: "Areas with a high point at 4,000 ft and up, ranked by forecast water in daylight hours, then cloud, then wind. June to September skips forecast highs above 85°F. Clouds are a model read.",
 };
 // A place counts as loaded when its row has a forecast. "No snow" and "nothing dry" may only be said when every place loaded.
 // counts (optional): { loaded, total } from the caller; otherwise read from the rows (glance.unavailable = didn't load).
@@ -688,7 +692,10 @@ export function top3Z(mode, items, counts = null) {
     return { id: r.id, name: r.name, at: `at ${fmtFt(r.elev_ft)}`, num: `${fmtIn(p.value)}″`, small: `${rangeText(p.min, p.max)} est.`,
       aval: z?.aval || null, gust: int(r.n24.gust?.value) ?? 0 };
   });
-  const allEmpty = hike ? "No area at 4,000 ft and up has a forecast yet." : "No snow forecast in the next 24 h.";
-  const partEmpty = hike ? `None of the ${loaded} areas that loaded is at 4,000 ft and up with a forecast.` : `No snow forecast in the next 24 h at the ${loaded} places that loaded.`;
+  // High enough with a forecast and still no row: heat is the only other thing that rules an area out.
+  const hot = hike && !rows.length && items.some((z) => z.rank?.elev_ft >= 4000 && z.rank.tomorrow);
+  const allEmpty = hot ? `No area at 4,000 ft and up is under ${PICK.hotF}°F.` : hike ? "No area at 4,000 ft and up has a forecast yet." : "No snow forecast in the next 24 h.";
+  const partEmpty = hot ? `None of the ${loaded} areas that loaded is at 4,000 ft and up and under ${PICK.hotF}°F.`
+    : hike ? `None of the ${loaded} areas that loaded is at 4,000 ft and up with a forecast.` : `No snow forecast in the next 24 h at the ${loaded} places that loaded.`;
   return { title, rows, foot: hike ? FOOT.hike : FOOT.ski, empty: rows.length ? null : failed ? partEmpty : allEmpty, partial, loaded, failed, total };
 }

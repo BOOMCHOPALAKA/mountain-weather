@@ -1,5 +1,6 @@
 // page/engine/regions.js
 // Region roll-ups, the top-three strip and the default mode.
+import { tooHot } from "./picks.js";
 export function regionNext24(areas) {
   const v = areas.filter((a) => a.n24);
   if (!v.length) return null;
@@ -27,8 +28,8 @@ export function topThree(items, mode) {
       .slice(0, 3);
   }
   return items
-    .filter((x) => x.elev_ft >= 4000 && x.tomorrow)
-    .sort((a, b) => a.tomorrow.water - b.tomorrow.water || a.tomorrow.gust - b.tomorrow.gust)
+    .filter((x) => x.elev_ft >= 4000 && x.tomorrow && !tooHot(x.tomorrow))
+    .sort((a, b) => a.tomorrow.water - b.tomorrow.water || (a.tomorrow.cloudy ?? 1) - (b.tomorrow.cloudy ?? 1) || a.tomorrow.gust - b.tomorrow.gust)
     .slice(0, 3);
 }
 
