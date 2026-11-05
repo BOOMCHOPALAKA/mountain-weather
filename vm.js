@@ -10,6 +10,7 @@ import { PICK } from "./engine/picks.js";
 import { parseMapLayer, parseProduct } from "./engine/avalanche.js";
 import { storms, latestHourly } from "./engine/snotel.js";
 import { slr, wetness } from "./engine.js";
+import { periodRows } from "./engine/periods.js";
 
 /* ---------- formatting ---------- */
 const DOW = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
@@ -466,12 +467,26 @@ function bandsZ(place, locAt, nowMs) {
     return s ? [roleLabel(place, p.role), fmtFt(p.elev_ft), Math.round(s.value), Math.round(s.min), Math.round(s.max)] : null;
   }).filter(Boolean);
 }
+// Scott, 2026-11-01: the name when a spot has one, elevation alone when it doesn't. Resorts read Base, Mid, Top.
+export function spotLabel(place, p) {
+  if (place.mode === "resort") return p.role;
+  if (/\((calc|mid)\)/.test(p.name)) return null;
+  return p.name.replace(/\s*\([^)]*\)\s*$/, "");
+}
+function elevZ(place, locAt, cloudsAt, aloftAt, nowMs) {
+  const spots = [...place.points].sort((a, b) => b.elev_ft - a.elev_ft).map((p) => {
+    const loc = locAt(p.role);
+    const periods = isLoc(loc) ? periodRows(loc, cloudsAt(p.role), aloftAt(p.role), p.elev_ft, nowMs) : [];
+    return periods.length ? { role: p.role, name: spotLabel(place, p), ft: fmtFt(p.elev_ft), periods: periods.map((x) => ({ ...x, day: dow(x.ymd) })) } : null;
+  }).filter(Boolean);
+  return spots.length ? spots : null;
+}
 function standsFor(place, aval) {
   const lo = place.points[0], hi = highest(place);
   const span = lo === hi ? lo.name : `${lo.name} to ${hi.name}`;
   return aval?.zone && aval.zone !== place.title ? `${span}; avalanche rating from ${aval.zone}` : span;
 }
-export function skiCardZ(place, detailLocs, cloudLocs, glanceLocs, snotel, product, cams, nowMs, aval = null) {
+export function skiCardZ(place, detailLocs, cloudLocs, glanceLocs, snotel, product, cams, nowMs, aval = null, aloftLocs = null) {
   const locAt = (role) => pick(detailLocs, place, role) || pick(glanceLocs, place, role);
   const cloudsAt = (role) => withPrecip(pick(cloudLocs, place, role), locAt(role));
   const row = skiRowZ(place, pick(glanceLocs, place, place.glance) || locAt(place.glance), nowMs, aval);
@@ -494,6 +509,8 @@ export function skiCardZ(place, detailLocs, cloudLocs, glanceLocs, snotel, produ
     bands: bandsZ(place, locAt, nowMs), ratio: ratioZ(atLoc, nowMs, roleLabel(place, atPt.role)),
     cams: camsFor(place.cams, cams, nowMs), avalBands: avalBandsZ(product, aval, nowMs),
     fcRows: fcRowsZ(atLoc, nowMs), cloudChart: cloudChartZ(cl, sumPt.elev_ft, nowMs),
+    elevText: row.elev,   // the row's "Low 5,400 · Mid ..." line; z.elev is now the by-elevation forecast
+    elev: elevZ(place, locAt, cloudsAt, (role) => pick(aloftLocs, place, role), nowMs),
   };
 }
 
@@ -559,7 +576,7 @@ function hikeDays(loc, cl, summit, nowMs) {
   return { days, src, start };
 }
 // glanceLocs (optional): the header uses the same source as the collapsed row; everything falls back to it when detail is missing.
-export function hikeCardZ(place, detailLocs, cloudLocs, cams, nowMs, glanceLocs = null) {
+export function hikeCardZ(place, detailLocs, cloudLocs, cams, nowMs, glanceLocs = null, aloftLocs = null) {
   const hi = pointOf(place, "High") || pointOf(place, place.glance), th = pointOf(place, "Trailhead");
   const locAt = (role) => pick(detailLocs, place, role) || pick(glanceLocs, place, role);
   const hiLoc = locAt(hi.role), thLoc = th ? locAt(th.role) : null;
@@ -581,6 +598,8 @@ export function hikeCardZ(place, detailLocs, cloudLocs, cams, nowMs, glanceLocs 
     thDays: td ? td.days.map(([, c, h, l]) => [c, h, l]) : null,
     tomorrow, snowLevel: snowLevelText(sl), snowLevelModels: sl?.models || [], standsFor: place.subtitle,
     cams: camsFor(place.cams, cams, nowMs), fcRows: fcRowsZ(hiLoc, nowMs), cloudChart: cloudChartZ(cl, hi.elev_ft, nowMs),
+    elevText: row.elev,
+    elev: elevZ(place, locAt, (role) => pick(cloudLocs, place, role), (role) => pick(aloftLocs, place, role), nowMs),
   };
 }
 

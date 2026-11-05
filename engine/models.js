@@ -17,6 +17,7 @@ export const FREEZE_LONG = [GFS, ICON];
 
 export const LABEL = { [NBM]: "NBM", [HRRR]: "HRRR", [HRDPS]: "HRDPS", [NAM]: "NAM", [ECMWF]: "ECMWF", [GFS]: "GFS", [ICON]: "ICON" };
 export const LEVELS = [850, 800, 750, 700, 650, 600];
+export const WIND_LEVELS = [850, 800, 700];        // low to high. ICON has no 750 hPa wind
 
 const CLOUD_VARS = ["cloud_cover_low", "cloud_cover_high", "freezing_level_height",
   ...LEVELS.map((p) => `cloud_cover_${p}hPa`), ...LEVELS.map((p) => `geopotential_height_${p}hPa`)];
@@ -27,6 +28,8 @@ export const PROFILES = {
   clouds: { days: 6, models: [HRRR, HRDPS, GFS, ICON], hourly: CLOUD_VARS },
   detail: { days: 8, models: [NBM, HRRR, HRDPS, NAM, ECMWF, GFS, ICON],
             hourly: ["temperature_2m", "precipitation", "weather_code", "wind_speed_10m", "wind_direction_10m", "wind_gusts_10m"] },
+  aloft: { days: 6, models: [HRRR, GFS, ICON],     // HRDPS left out: flat across levels on 2026-11-01
+           hourly: WIND_LEVELS.flatMap((p) => [`wind_speed_${p}hPa`, `wind_direction_${p}hPa`, `geopotential_height_${p}hPa`]) },
 };
 
 export const BUDGET = 300;

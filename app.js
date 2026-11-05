@@ -168,11 +168,11 @@ async function loadHikeVerdicts() {
 async function loadCard(place) {
   const have = S.cards.get(place.id);
   if (have && have.status !== "error") return;
-  const c = { status: "loading", detail: new Map(), clouds: new Map(), snotel: null, product: null, at: null };
+  const c = { status: "loading", detail: new Map(), clouds: new Map(), aloft: new Map(), snotel: null, product: null, at: null };
   S.cards.set(place.id, c);
   schedule();
   const pts = place.points.map((p) => withKey(place, p.role));
-  const jobs = [...forecastJobs(pts, "detail", c.detail), ...forecastJobs(pts, "clouds", c.clouds)];
+  const jobs = [...forecastJobs(pts, "detail", c.detail), ...forecastJobs(pts, "clouds", c.clouds), ...forecastJobs(pts, "aloft", c.aloft)];
   const st = place.mode !== "hike" ? place.snotel?.[0] : null;
   const snow = st ? Promise.all([
     getJson(snotelUrl([st.triplet], "DAILY", pstDay(Date.now() - 9 * 86400000), pstDay(Date.now()), ["SNWD", "WTEQ"])).then((r) => parseSnotel(r.data)[st.triplet] || []).catch(() => { c.snotelError = true; return []; }),
@@ -205,10 +205,10 @@ const byRole = (place, m) => Object.fromEntries(place.points.map((p) => [p.role,
 function cardZ(place) {
   const c = S.cards.get(place.id);
   const gl = glanceLocsOf(place), aval = avalOf(place);
-  const detail = byRole(place, c?.detail), clouds = byRole(place, c?.clouds);
+  const detail = byRole(place, c?.detail), clouds = byRole(place, c?.clouds), aloft = byRole(place, c?.aloft);
   const z = place.mode === "hike"
-    ? hikeCardZ(place, detail, clouds, S.cams, S.now, gl)
-    : skiCardZ(place, detail, clouds, gl, c?.snotel || null, c?.product || null, S.cams, S.now, aval);
+    ? hikeCardZ(place, detail, clouds, S.cams, S.now, gl, aloft)
+    : skiCardZ(place, detail, clouds, gl, c?.snotel || null, c?.product || null, S.cams, S.now, aval, aloft);
   if (place.mode === "hike") z.aval = aval;
   if (place.mode !== "hike" && place.snotel?.length && (!c || c.status === "loading")) z.snotelPending = true;   // never "no station" while it loads
   if (c?.snotelError) {   // a failed SNOTEL request is not "not posted": say it didn't load
@@ -272,7 +272,7 @@ function swap(key, el, html) {   // replace el only when its rendered html chang
 const moreState = (id) => {
   const secs = {};
   for (const [k, v] of Object.entries(S.open)) if (k.startsWith(`sec:${id}:`)) secs[k.slice(`sec:${id}:`.length)] = v;
-  return { more: !!S.open[`more:${id}`], secs };
+  return { more: !!S.open[`more:${id}`], secs, elev: S.open[`elev:${id}`] };
 };
 const pinnedCard = (place) => {
   const z = cardZ(place);
@@ -472,6 +472,14 @@ document.addEventListener("click", (e) => {
   if (i) { toggle(i); return; }
   const m = e.target.closest(".more");
   if (m) { const o = toggle(m); m.firstChild.textContent = o ? "Less" : "More"; S.open[`more:${m.dataset.more}`] = o; saveOpen(); return; }
+  const ec = e.target.closest(".elev-chip");
+  if (ec) {
+    const box = ec.closest(".elev-sec");
+    box.querySelectorAll(".elev-chip").forEach((b) => b.setAttribute("aria-pressed", String(b === ec)));
+    box.querySelectorAll(".elev-spot").forEach((s) => { s.hidden = s.dataset.spot !== ec.dataset.elev; });
+    S.open[`elev:${ec.dataset.place}`] = ec.dataset.elev; saveOpen();
+    return;
+  }
   const s = e.target.closest(".star");
   if (s) {
     const id = s.dataset.star;

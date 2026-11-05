@@ -547,3 +547,18 @@ dialog.sheet::backdrop { background: rgb(8 14 18 / 0.55); }
   @keyframes open-in { from { opacity: 0; transform: translateY(-4px); } to { opacity: 1; transform: none; } }
   @keyframes sheet-up { from { transform: translateY(24px); opacity: 0.6; } to { transform: none; opacity: 1; } }
 }
+
+/* forecast by elevation */
+.elev-sec { display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--s2); min-width: 0; }
+.elev-chips { display: flex; flex-wrap: wrap; gap: var(--s1); }
+.elev-chip { min-height: 44px; padding: 4px 12px; border: 1px solid var(--line); border-radius: 8px; background: var(--surface); color: var(--ink); font-family: var(--body); font-size: 14px; font-weight: 500; cursor: pointer; }
+.elev-chip small { display: block; font-size: 12px; font-weight: 400; color: var(--muted); }
+.elev-chip[aria-pressed="true"] { background: var(--surface-2); font-weight: 600; box-shadow: inset 0 0 0 1.5px var(--accent); }
+.elev-wrap { overflow-x: auto; overscroll-behavior-x: contain; border: 1px solid var(--line); border-radius: 8px; }
+.elev-wrap:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.elev-t { border-collapse: separate; border-spacing: 0; font-size: 13px; }
+.elev-t th, .elev-t td { padding: 6px 8px; text-align: center; white-space: nowrap; border-bottom: 1px solid var(--line); }
+.elev-t tbody tr:last-child th, .elev-t tbody tr:last-child td { border-bottom: 0; }
+.elev-t thead th { font-family: var(--display); font-weight: 600; background: var(--surface-2); }
+.elev-t th[scope="row"], .elev-t thead th:first-child { position: sticky; left: 0; z-index: 1; text-align: left; font-weight: 500; color: var(--muted); background: var(--surface); box-shadow: 1px 0 0 var(--line); }
+.elev-t td { font-variant-numeric: tabular-nums; color: var(--ink); }

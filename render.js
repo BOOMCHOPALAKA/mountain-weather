@@ -285,6 +285,35 @@ function avalBody(z) {
   return `<p>${esc(a.c)} has no rating for this zone today.</p>${link}`;
 }
 
+/* forecast by elevation: one table per spot, one showing at a time */
+const cellSnow = (v) => (v == null ? "–" : v < 0.5 ? "0" : v < 1 ? "&lt;1" : String(Math.round(v)));
+const cellRain = (v) => (v == null ? "–" : v < 0.005 ? "0" : v.toFixed(2));
+const cellNum = (v) => (v == null ? "–" : String(Math.round(v)));
+function elevTable(s) {
+  const P = s.periods;
+  const days = [];
+  for (const p of P) { if (days.length && days[days.length - 1][0] === p.day) days[days.length - 1][1]++; else days.push([p.day, 1]); }
+  const row = (k, fn) => `<tr><th scope="row">${k}</th>${P.map((p) => `<td>${fn(p)}</td>`).join("")}</tr>`;
+  const anySurface = P.some((p) => p.wind?.from === "surface");
+  return `<div class="elev-wrap" tabindex="0" role="region" aria-label="Forecast at ${esc(s.name || s.ft)}"><table class="elev-t">
+    <thead><tr><th scope="col"></th>${days.map(([d, n]) => `<th scope="col" colspan="${n}">${esc(d)}</th>`).join("")}</tr>
+    <tr><th scope="col"></th>${P.map((p) => `<th scope="col">${esc(p.part)}</th>`).join("")}</tr></thead>
+    <tbody>${row("Sky", (p) => chip(p.cond))}${row("Snow, in", (p) => cellSnow(p.snow))}${row("Rain, in", (p) => cellRain(p.rain))}${row("High, °F", (p) => cellNum(p.hi))}${row("Low, °F", (p) => cellNum(p.lo))}${row("Wind, mph", (p) => (p.wind ? `${p.wind.dir} ${Math.round(p.wind.mph)}` : "–"))}${anySurface ? row("Gust, mph", (p) => cellNum(p.gust)) : ""}${row("Freezing level, ft", (p) => (p.freezeFt == null ? "–" : p.freezeFt.toLocaleString("en-US")))}</tbody>
+  </table></div>`;
+}
+export function elevSection(z, picked) {
+  const spots = z.elev;
+  if (!spots) return '<p class="sub">No forecast by elevation right now.</p>';
+  const cur = spots.some((s) => s.role === picked) ? picked : spots[0].role;
+  const t = info({ what: "forecast by elevation", src: "Open-Meteo: NBM, HRRR, HRDPS, NAM, ECMWF, GFS, ICON.",
+    how: "Each row is the forecast at that spot's own coordinate. Temperature is set to the spot's elevation. Snow is each model's water times a temperature snow ratio. Wind above the 850 hPa height (about 5,000 ft) comes from pressure levels (HRRR, GFS, ICON).",
+    fresh: "Updates with the card, up to 30 minutes old." });
+  return `<div class="elev-sec"><p class="frow-l"><span>Pick a spot</span>${t.btn}</p>${t.panel}
+    <div class="elev-chips" role="group" aria-label="Spot">${spots.map((s) => `<button type="button" class="elev-chip" data-place="${esc(z.id)}" data-elev="${esc(s.role)}" aria-pressed="${s.role === cur}">${s.name ? `${esc(s.name)} <small>${esc(s.ft)}</small>` : esc(s.ft)}</button>`).join("")}</div>
+    ${spots.map((s) => `<div class="elev-spot" data-spot="${esc(s.role)}"${s.role === cur ? "" : " hidden"}>${elevTable(s)}</div>`).join("")}
+    <p class="sub">Spots close together can share a model cell, so rain and clouds can match. Temperature, snow and wind change with height. Wind up high is free air, so expect less in sheltered terrain.</p></div>`;
+}
+
 // st: { more: bool, secs: { Name: bool } } from the app's session state.
 export function moreBlock(z, mode, st = {}) {
   const pid = `more-${slug(z.id)}`;
@@ -307,6 +336,7 @@ export function moreBlock(z, mode, st = {}) {
   const body = [
     sec("Now", nowBody, false, cams.length ? `${cams.length} cam${cams.length === 1 ? "" : "s"}` : ""),
     sec("Forecast", fcBody, mode === "hike", "24 h, 48 h"),
+    sec("By elevation", elevSection(z, st.elev), true, "5 days"),
     sec("Clouds", z.cloudChart ? cloudChart(z) : '<p class="sub">No cloud data for this place right now.</p>', true, "48 h by height"),
     hasSnow ? sec("Snow", strip(z, true) + snowBands(z), true, "by elevation") : "",
     sec("Avalanche", avalBody(z), false),
@@ -325,7 +355,7 @@ export function skiFace(z, mode, st) {
   return `${trio(z)}${strip(z)}${bcNote(z)}${condLine(z)}${mode === "backcountry" && z.avalBands ? avalBands(z) : ""}${moreBlock(z, mode, st)}`;
 }
 export function skiCard(z, mode, st) {
-  const head = `<div class="card-head"><div class="ttl"><h3>${esc(z.name)}</h3></div><div class="acts">${mode === "backcountry" && z.avalBands ? "" : pill(z.aval)}${star(z)}</div>${z.sub ? `<p class="places">${esc(z.sub)}</p>` : ""}<p class="elev">${esc(z.elev)}</p></div>`;
+  const head = `<div class="card-head"><div class="ttl"><h3>${esc(z.name)}</h3></div><div class="acts">${mode === "backcountry" && z.avalBands ? "" : pill(z.aval)}${star(z)}</div>${z.sub ? `<p class="places">${esc(z.sub)}</p>` : ""}<p class="elev">${esc(z.elevText)}</p></div>`;
   return `<article class="card" data-name="${esc(String(z.name).toLowerCase())}" id="pin-${slug(z.id)}" tabindex="-1">${head}${skiFace(z, mode, st)}</article>`;
 }
 export function hikeFace(z, st) {
@@ -340,7 +370,7 @@ export function hikeCard(z, st, h = "h3") {
 }
 // The body of an expanded row (the card without its title, which the row already shows).
 export function skiRowBody(z, mode, st) {
-  return `<div class="crow-acts">${mode === "backcountry" && z.avalBands ? "<span></span>" : pill(z.aval) || "<span></span>"}${star(z)}</div>${mode === "backcountry" ? `<p class="elev">${esc(z.elev)}</p>${z.sub ? `<p class="elev">${esc(z.sub)}</p>` : ""}` : ""}${skiFace(z, mode, st)}`;
+  return `<div class="crow-acts">${mode === "backcountry" && z.avalBands ? "<span></span>" : pill(z.aval) || "<span></span>"}${star(z)}</div>${mode === "backcountry" ? `<p class="elev">${esc(z.elevText)}</p>${z.sub ? `<p class="elev">${esc(z.sub)}</p>` : ""}` : ""}${skiFace(z, mode, st)}`;
 }
 export function areaRowBody(z, st) {
   return `<div class="crow-acts"><span></span>${star(z)}</div>${hikeFace(z, st)}`;

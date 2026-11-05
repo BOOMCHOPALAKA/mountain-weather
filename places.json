@@ -103,6 +103,14 @@
     }
    },
    {
+    "id": "mt_rainier",
+    "title": "Mt Rainier",
+    "anchor": {
+     "place": "bc_rainier",
+     "role": "Base"
+    }
+   },
+   {
     "id": "cascades_north",
     "title": "Cascades North",
     "anchor": {
@@ -122,8 +130,8 @@
     "id": "cascades_south",
     "title": "Cascades South",
     "anchor": {
-     "place": "bc_rainier",
-     "role": "Base"
+     "place": "bc_west_south",
+     "role": "Mid"
     }
    },
    {
@@ -1945,7 +1953,7 @@
   {
    "id": "bc_rainier",
    "mode": "backcountry",
-   "region": "cascades_south",
+   "region": "mt_rainier",
    "title": "Mount Rainier",
    "subtitle": "Paradise, Muir Snowfield, Mazama Ridge, Tatoosh",
    "points": [
