@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Mountain Weather</title>
+<title>Weather Window</title>
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cpath d='M2 27 12 9l5 8 4-5 9 15z' fill='%231F5D88'/%3E%3Cpath d='m12 9 3 5-3-1-2 2z' fill='%23fff'/%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -15,18 +15,14 @@
 <header class="top">
   <div class="wrap">
     <div class="top-row">
-      <div class="brandbox"><h1 class="brand">Mountain Weather</h1><span class="asof-t">Loading…</span></div>
+      <div class="brandbox"><h1 class="brand">Weather Window</h1><span class="asof-t">Loading…</span></div>
       <div class="asof">
         <button class="btn-quiet" type="button" id="refresh">Refresh</button>
       </div>
     </div>
     <div class="seg" role="group" aria-label="Activity">
-      <button type="button" data-top="ski" aria-pressed="true">Ski</button>
-      <button type="button" data-top="hike" aria-pressed="false">Hike</button>
-    </div>
-    <div class="seg2" id="sub" role="group" aria-label="Ski view">
-      <button type="button" data-sub="resorts" aria-pressed="true">Resorts</button>
-      <button type="button" data-sub="backcountry" aria-pressed="false">Backcountry</button>
+      <button type="button" data-mode="ski" aria-pressed="true">Ski</button>
+      <button type="button" data-mode="hike" aria-pressed="false">Hike</button>
     </div>
     <p class="saved-tag" id="saved-tag" hidden></p>
   </div>
@@ -36,6 +32,25 @@
 <main class="wrap" id="main"></main>
 
 <footer class="wrap" id="foot"></footer>
+
+<dialog class="pv" id="pv" aria-labelledby="pv-h">
+  <div class="pv-head">
+    <div class="wrap">
+      <div class="pv-bar">
+        <button type="button" class="back" id="pv-back"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M10 3 5 8l5 5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>Back</button>
+        <div class="seg pv-seg" role="group" aria-label="Activity for this place" id="pv-mode"></div>
+        <span id="pv-star"></span>
+      </div>
+      <div class="pv-title"><h2 id="pv-h"></h2><span id="pv-pill"></span></div>
+      <p class="pv-sub" id="pv-sub"></p>
+      <div id="pv-avy" hidden></div>
+    </div>
+  </div>
+  <div class="pv-body" id="pv-body">
+    <div class="pv-tabbar"><div class="wrap"><div class="tabs" role="tablist" aria-label="Place details" id="pv-tabs"></div></div></div>
+    <div class="wrap" id="pv-panel" role="tabpanel" tabindex="0"></div>
+  </div>
+</dialog>
 
 <script type="module" src="app.js"></script>
 </body>

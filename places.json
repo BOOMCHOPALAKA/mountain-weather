@@ -1,5 +1,5 @@
 {
- "_note": "Built by scripts/build_places.py from regions.draft.json and the resort table; do not hand-edit.",
+ "_note": "Built by scripts/build_places.py from regions.draft.json, the resort table and the v3 area list; do not hand-edit.",
  "regions": {
   "hike": [
    {
@@ -1351,17 +1351,17 @@
    "id": "sc_white_pass",
    "mode": "hike",
    "region": "south_cascades",
-   "title": "White Pass & Packwood",
-   "subtitle": "High Rock, Tatoosh Ridge, Jug Lake, Shellrock Peak",
+   "title": "White Pass",
+   "subtitle": "Spiral Butte, White Pass, Pacific Crest Trail",
    "points": [
     {
      "role": "High",
-     "name": "High Rock Lookout",
-     "lat": 46.68344,
-     "lon": -121.90159,
-     "elev_ft": 5686,
-     "dem_ft": 5561,
-     "source": "Wikidata (1,733 m); WTA 5,685"
+     "name": "Spiral Butte",
+     "lat": 46.6648254,
+     "lon": -121.3544297,
+     "elev_ft": 5929,
+     "dem_ft": 5922,
+     "source": "Wikidata Q49076406 (5,929 ft; GNIS 1526369); DEM-checked 2026-11-05"
     },
     {
      "role": "Trailhead",
@@ -1376,20 +1376,20 @@
    "glance": "High",
    "snotel": [
     {
-     "triplet": "1257:WA:SNTL",
-     "name": "Skate Creek",
-     "elev_ft": 3770,
-     "mi": 4.4,
-     "lat": 46.64336,
-     "lon": -121.83044
+     "triplet": "863:WA:SNTL",
+     "name": "White Pass E.S.",
+     "elev_ft": 4440,
+     "mi": 2.1,
+     "lat": 46.64142,
+     "lon": -121.38153
     },
     {
-     "triplet": "679:WA:SNTL",
-     "name": "Paradise",
-     "elev_ft": 5150,
-     "mi": 10.0,
-     "lat": 46.78266,
-     "lon": -121.74767
+     "triplet": "692:WA:SNTL",
+     "name": "Pigtail Peak",
+     "elev_ft": 5800,
+     "mi": 3.4,
+     "lat": 46.62153,
+     "lon": -121.38643
     }
    ],
    "cams": [
@@ -1639,6 +1639,60 @@
    "snotel": [],
    "cams": [],
    "avalanche": null
+  },
+  {
+   "id": "rainier_tatoosh",
+   "mode": "hike",
+   "region": "rainier",
+   "title": "The Tatoosh",
+   "subtitle": "Pinnacle Peak, Reflection Lakes, Plummer Peak, Unicorn Peak",
+   "points": [
+    {
+     "role": "High",
+     "name": "Pinnacle Peak",
+     "lat": 46.7577989,
+     "lon": -121.7325035,
+     "elev_ft": 6562,
+     "dem_ft": 6181,
+     "source": "Wikidata Q7196308 (6,562 ft; GNIS 1533612); DEM-checked 2026-11-05 (DEM 381 ft below the published height)"
+    },
+    {
+     "role": "Trailhead",
+     "name": "Reflection Lakes",
+     "lat": 46.76952,
+     "lon": -121.72999,
+     "elev_ft": 4859,
+     "dem_ft": 4856,
+     "source": "Wikidata Q49395673 (1,481 m = 4,859 ft; GNIS 1533615); DEM-checked 2026-11-05"
+    }
+   ],
+   "glance": "High",
+   "snotel": [
+    {
+     "triplet": "679:WA:SNTL",
+     "name": "Paradise",
+     "elev_ft": 5150,
+     "mi": 1.9,
+     "lat": 46.78266,
+     "lon": -121.74767
+    },
+    {
+     "triplet": "1085:WA:SNTL",
+     "name": "Cayuse Pass",
+     "elev_ft": 5260,
+     "mi": 12.1,
+     "lat": 46.86956,
+     "lon": -121.53434
+    }
+   ],
+   "cams": [
+    "paradise_tatoosh"
+   ],
+   "avalanche": {
+    "center": "NWAC",
+    "zone": 3023,
+    "link": null
+   }
   },
   {
    "id": "bc_olympics_hood_canal",
@@ -3360,6 +3414,333 @@
     "zone": null,
     "link": "https://avalanche.ca/forecasts"
    }
+  }
+ ],
+ "areas": [
+  {
+   "id": "ellinor",
+   "group": "Olympics",
+   "region": "Washington",
+   "name": "Mount Ellinor and Lake Cushman",
+   "hike": [
+    "olympic_hood_canal",
+    "olympic_hood_canal_north"
+   ],
+   "bc": "bc_olympics_hood_canal",
+   "resorts": [],
+   "far": false
+  },
+  {
+   "id": "hurricane",
+   "group": "Olympics",
+   "region": "Washington",
+   "name": "Hurricane Ridge",
+   "hike": [
+    "olympic_north"
+   ],
+   "bc": "bc_olympics_hurricane",
+   "resorts": [
+    "res_hurricane"
+   ],
+   "far": false
+  },
+  {
+   "id": "snoqualmie",
+   "group": "Cascade passes",
+   "region": "Washington",
+   "name": "Snoqualmie Pass",
+   "hike": [
+    "snoq_pass",
+    "snoq_north_bend"
+   ],
+   "bc": "bc_snoqualmie",
+   "resorts": [
+    "res_alpental",
+    "res_summit_snoq"
+   ],
+   "far": false
+  },
+  {
+   "id": "stevens",
+   "group": "Cascade passes",
+   "region": "Washington",
+   "name": "Stevens Pass",
+   "hike": [
+    "cc_stevens_east",
+    "cc_stevens_west"
+   ],
+   "bc": "bc_stevens",
+   "resorts": [
+    "res_stevens"
+   ],
+   "far": false
+  },
+  {
+   "id": "crystal",
+   "group": "Cascade passes",
+   "region": "Washington",
+   "name": "Crystal Mountain and Chinook Pass",
+   "hike": [
+    "rainier_chinook"
+   ],
+   "bc": "bc_west_south",
+   "resorts": [
+    "res_crystal"
+   ],
+   "far": false
+  },
+  {
+   "id": "whitepass",
+   "group": "Cascade passes",
+   "region": "Washington",
+   "name": "White Pass",
+   "hike": [
+    "sc_white_pass"
+   ],
+   "bc": null,
+   "resorts": [
+    "res_white_pass"
+   ],
+   "far": false
+  },
+  {
+   "id": "rainier",
+   "group": "Volcanoes",
+   "region": "Washington",
+   "name": "Mount Rainier",
+   "hike": [
+    "rainier_paradise",
+    "rainier_sunrise",
+    "rainier_mowich",
+    "rainier_ohanapecosh"
+   ],
+   "bc": "bc_rainier",
+   "resorts": [],
+   "far": false
+  },
+  {
+   "id": "tatoosh",
+   "group": "Volcanoes",
+   "region": "Washington",
+   "name": "The Tatoosh",
+   "hike": [
+    "rainier_tatoosh"
+   ],
+   "bc": null,
+   "resorts": [],
+   "far": false
+  },
+  {
+   "id": "adams",
+   "group": "Volcanoes",
+   "region": "Washington",
+   "name": "Mount Adams",
+   "hike": [
+    "sc_adams"
+   ],
+   "bc": null,
+   "resorts": [],
+   "far": false
+  },
+  {
+   "id": "goatrocks",
+   "group": "Volcanoes",
+   "region": "Washington",
+   "name": "Goat Rocks",
+   "hike": [
+    "sc_goat_rocks"
+   ],
+   "bc": null,
+   "resorts": [],
+   "far": false
+  },
+  {
+   "id": "helens",
+   "group": "Volcanoes",
+   "region": "Washington",
+   "name": "Mount St. Helens",
+   "hike": [
+    "sc_st_helens"
+   ],
+   "bc": null,
+   "resorts": [],
+   "far": false
+  },
+  {
+   "id": "baker",
+   "group": "North Cascades",
+   "region": "Washington",
+   "name": "Mount Baker and Artist Point",
+   "hike": [
+    "nc_baker"
+   ],
+   "bc": "bc_west_north",
+   "resorts": [
+    "res_baker"
+   ],
+   "far": false
+  },
+  {
+   "id": "mtloop",
+   "group": "North Cascades",
+   "region": "Washington",
+   "name": "Mountain Loop Highway",
+   "hike": [
+    "nc_mountain_loop"
+   ],
+   "bc": "bc_west_central",
+   "resorts": [],
+   "far": false
+  },
+  {
+   "id": "nchwy",
+   "group": "North Cascades",
+   "region": "Washington",
+   "name": "North Cascades Highway",
+   "hike": [
+    "nc_hwy20",
+    "nc_methow",
+    "nc_pasayten"
+   ],
+   "bc": "bc_east_north",
+   "resorts": [],
+   "far": false
+  },
+  {
+   "id": "enchantments",
+   "group": "East side",
+   "region": "Washington",
+   "name": "The Enchantments",
+   "hike": [
+    "cc_leavenworth"
+   ],
+   "bc": null,
+   "resorts": [],
+   "far": false
+  },
+  {
+   "id": "teanaway",
+   "group": "East side",
+   "region": "Washington",
+   "name": "Teanaway",
+   "hike": [
+    "snoq_teanaway"
+   ],
+   "bc": null,
+   "resorts": [],
+   "far": false
+  },
+  {
+   "id": "blewett",
+   "group": "East side",
+   "region": "Washington",
+   "name": "Blewett Pass",
+   "hike": [
+    "cc_blewett"
+   ],
+   "bc": "bc_east_central",
+   "resorts": [],
+   "far": false
+  },
+  {
+   "id": "mission",
+   "group": "East side",
+   "region": "Washington",
+   "name": "Mission Ridge and Wenatchee",
+   "hike": [
+    "cw_wenatchee"
+   ],
+   "bc": null,
+   "resorts": [
+    "res_mission"
+   ],
+   "far": false
+  },
+  {
+   "id": "bumping",
+   "group": "East side",
+   "region": "Washington",
+   "name": "Bumping Lake and American Ridge",
+   "hike": [],
+   "bc": "bc_east_south",
+   "resorts": [],
+   "far": false
+  },
+  {
+   "id": "hood",
+   "group": "Oregon Cascades",
+   "region": "Oregon Cascades",
+   "name": "Mount Hood",
+   "hike": [],
+   "bc": "bc_mt_hood",
+   "resorts": [
+    "res_timberline",
+    "res_meadows",
+    "res_skibowl",
+    "res_cooper_spur",
+    "res_summit_govy"
+   ],
+   "far": true
+  },
+  {
+   "id": "bachelor",
+   "group": "Oregon Cascades",
+   "region": "Oregon Cascades",
+   "name": "Mt Bachelor",
+   "hike": [],
+   "bc": null,
+   "resorts": [
+    "res_bachelor"
+   ],
+   "far": true
+  },
+  {
+   "id": "schweitzer",
+   "group": "Idaho",
+   "region": "Idaho",
+   "name": "Schweitzer",
+   "hike": [],
+   "bc": null,
+   "resorts": [
+    "res_schweitzer"
+   ],
+   "far": true
+  },
+  {
+   "id": "whistler",
+   "group": "BC, Canada",
+   "region": "BC, Canada",
+   "name": "Whistler Blackcomb",
+   "hike": [],
+   "bc": null,
+   "resorts": [
+    "res_whistler"
+   ],
+   "far": true
+  },
+  {
+   "id": "revelstoke",
+   "group": "BC, Canada",
+   "region": "BC, Canada",
+   "name": "Revelstoke",
+   "hike": [],
+   "bc": null,
+   "resorts": [
+    "res_revelstoke"
+   ],
+   "far": true
+  },
+  {
+   "id": "kickinghorse",
+   "group": "BC, Canada",
+   "region": "BC, Canada",
+   "name": "Kicking Horse",
+   "hike": [],
+   "bc": null,
+   "resorts": [
+    "res_kicking_horse"
+   ],
+   "far": true
   }
  ]
 }

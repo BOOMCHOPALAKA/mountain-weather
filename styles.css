@@ -388,7 +388,7 @@ footer .disc { border-top: 1px solid var(--line-strong); padding-top: var(--s3);
 .cond p { display: flex; flex-wrap: wrap; align-items: center; gap: 2px 14px; font-size: 14px; line-height: 1.45; }
 .cond p .info { margin: -12px -10px; }
 .cond .verdict { margin-right: 0; white-space: nowrap; }
-.cond .verdict.wrap, .verdict.wrap { white-space: normal; }   /* real verdict texts run longer than the mock's */
+.cond .verdict.wrap, .verdict.wrap { white-space: normal; }   /* real verdict texts run longer than sample text */
 .cond .ci { min-width: 0; }
 .cond .ci b { font-weight: 600; }
 .cond .kk { font-size: 12px; color: var(--muted); font-weight: 600; letter-spacing: 0.04em; margin-right: 4px; }
@@ -453,6 +453,34 @@ footer .disc { border-top: 1px solid var(--line-strong); padding-top: var(--s3);
 .srow-jump { min-height: 44px; display: inline-flex; align-items: center; padding: 0 var(--s2); border-radius: 999px; color: var(--accent); font-size: 14px; font-weight: 600; white-space: nowrap; }
 .srow-jump span { display: inline-flex; align-items: center; min-height: 28px; padding: 0 10px; border: 1px solid var(--line-strong); border-radius: 999px; }
 .nw { white-space: nowrap; }
+/* round 13: Areas | Resorts toggle, sort by distance, Resorts rows */
+.sec-h.places-h { flex-wrap: wrap; row-gap: 0; }
+.places-h h2 { margin-right: auto; }
+.sortbtn { align-self: center; min-height: 44px; padding: 0 var(--s3); font: inherit; font-size: 14px; font-weight: 500; color: var(--ink); background: var(--surface); border: 1px solid var(--line-strong); border-radius: 8px; cursor: pointer; }
+.sortbtn[aria-pressed="true"] { background: var(--surface-2); box-shadow: inset 0 0 0 1.5px var(--accent); }
+.list-tog { display: flex; align-items: center; gap: var(--s3); }
+.list-tog .seg2 { flex: 1 1 auto; max-width: 360px; }
+.list-tog .info { margin: 0; }
+.pgrp ul.res-ul { display: block; }
+.rrow { position: relative; display: grid; grid-template-columns: minmax(0, 1fr) 48px 60px 56px 16px; grid-template-areas: "name n24 t5 bars chev" "base base base base base"; align-items: center; gap: var(--s1) var(--s4); min-height: 60px; padding: var(--s2) var(--s4); border-top: 1px solid var(--line); }
+.pgrp li:first-child .rrow { border-top: 0; border-radius: calc(var(--radius) - 1px) calc(var(--radius) - 1px) 0 0; }
+.pgrp li:last-child .rrow { border-radius: 0 0 calc(var(--radius) - 1px) calc(var(--radius) - 1px); }
+.pgrp li:only-child .rrow { border-radius: calc(var(--radius) - 1px); }
+.rrow-btn { grid-area: name; font: inherit; color: inherit; background: none; border: 0; padding: 0; cursor: pointer; text-align: left; display: grid; gap: 2px; min-width: 0; }
+.rrow-btn::after { content: ""; position: absolute; inset: 0; border-radius: 4px; }
+.rrow-btn:focus-visible { outline: none; }
+.rrow-btn:focus-visible::after { outline: 2px solid var(--accent); outline-offset: -3px; }
+.rrow .row-chev { grid-area: chev; justify-self: end; }
+.rr-n24, .rr-t5, .rr-bars { display: grid; gap: 1px; line-height: 1.1; }
+.rr-n24 { grid-area: n24; justify-items: start; }
+.rr-t5 { grid-area: t5; justify-items: start; }
+.rr-bars { grid-area: bars; justify-items: end; gap: 2px; }
+.rr-t { font-family: var(--display); font-weight: 700; font-size: 26px; line-height: 1; white-space: nowrap; }
+.rr-t.zero { color: var(--muted); }
+.rr-base { grid-area: base; font-size: 12px; line-height: 1.3; color: var(--muted); }
+@media (max-width: 559px) {
+  .rrow { grid-template-columns: 56px 72px minmax(0, 1fr) 16px; grid-template-areas: "name name name chev" "n24 t5 bars bars" "base base base base"; }
+}
 /* v7: ski rows. Mini bars (7 days, no axis) + the 24 h number sit where hike rows show the glance. */
 .srow-sk { display: flex; align-items: center; gap: var(--s2); justify-items: unset; }
 .mbars { display: inline-flex; align-items: flex-end; gap: 3px; height: 28px; flex: none; }
@@ -562,3 +590,352 @@ dialog.sheet::backdrop { background: rgb(8 14 18 / 0.55); }
 .elev-t thead th { font-family: var(--display); font-weight: 600; background: var(--surface-2); }
 .elev-t th[scope="row"], .elev-t thead th:first-child { position: sticky; left: 0; z-index: 1; text-align: left; font-weight: 500; color: var(--muted); background: var(--surface); box-shadow: 1px 0 0 var(--line); }
 .elev-t td { font-variant-numeric: tabular-nums; color: var(--ink); }
+
+/* ---------- v3 (Weather Window). Colors only from the tokens above. ---------- */
+/* page/render.js gives verdicts the class "wrap", which also matches the page's .wrap layout class (auto margin, 16 px gutters). Undo that here. */
+.verdict.wrap { max-width: none; margin-left: 0; padding: 0; }
+
+/* the guide: When, After, Best, picks */
+.guide { display: grid; gap: var(--s3); }
+.g-label { display: flex; align-items: center; justify-content: space-between; gap: var(--s2); min-height: 24px; }
+.g-label h3 { font-size: 12px; color: var(--muted); font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; font-family: var(--body); }
+.g-label .info { margin: -12px -10px -12px 0; }
+.wchips { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: var(--s1); }
+.wchip { min-height: 52px; min-width: 0; display: grid; align-content: center; justify-items: center; gap: 1px; padding: 4px 2px; border: 1px solid var(--line-strong); border-radius: 8px; background: var(--surface); color: var(--ink); cursor: pointer; text-align: center; }
+.wchip .wl { font-family: var(--display); font-weight: 600; font-size: 15px; line-height: 1.1; }
+.wchip .ws { font-size: 12px; line-height: 1.2; color: var(--muted); white-space: nowrap; }
+.wchip .best { display: inline-flex; align-items: center; gap: 4px; font-size: 12px; font-weight: 700; line-height: 1.2; color: var(--accent); }
+.wchip .best::before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: currentColor; flex: none; }
+.wchip.is-best { box-shadow: inset 0 0 0 1.5px var(--accent); border-color: var(--accent); }
+.wchip[aria-pressed="true"] { background: var(--accent); border-color: var(--accent); color: var(--accent-ink); }
+.wchip[aria-pressed="true"] .ws, .wchip[aria-pressed="true"] .best { color: var(--accent-ink); }
+.sl-tag { display: block; margin-top: 2px; color: var(--ink); font-weight: 600; }
+.tagp { display: inline-block; max-width: 100%; font-size: 12px; font-weight: 600; line-height: 1.3; color: var(--ink); border: 1px solid var(--line-strong); border-radius: 999px; padding: 1px 8px; white-space: nowrap; }
+.wchip .tagp { margin-top: 2px; }
+.wchip[aria-pressed="true"] .tagp { color: var(--accent-ink); border-color: currentColor; }
+.best-def { margin: 0; font-size: 13px; line-height: 1.4; color: var(--muted); }
+.picks-h .info { margin: -12px -10px -12px 0; }
+.why { font-size: 14px; line-height: 1.45; color: var(--ink); background: var(--surface); border-radius: 6px; padding: var(--s2) var(--s3); border-left: 3px solid var(--accent); }
+.why b { color: var(--accent); }
+.early { font-size: 14px; color: var(--ink); background: var(--surface); border-radius: 6px; padding: var(--s2) var(--s3); border-left: 3px solid var(--line-strong); }
+.picks-h { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 0 var(--s2); }
+.picks-h h3 { font-family: var(--display); font-weight: 600; font-size: 20px; line-height: 1.2; }
+.picks { list-style: none; margin: 0; padding: 0; background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); }
+.pick:first-child { border-top: 0; }
+.pick-btn { font: inherit; color: inherit; background: none; border: 0; padding: 0; cursor: pointer; text-align: left; display: grid; gap: 2px; min-width: 0; }
+.pick-btn::after { content: ""; position: absolute; inset: 0; border-radius: 4px; }
+.pick-btn:focus-visible { outline: none; }
+.pick-btn:focus-visible::after { outline: 2px solid var(--accent); outline-offset: -3px; }
+.picks-foot { font-size: 12px; color: var(--muted); }
+.picks-empty { padding: var(--s3) var(--s4); font-size: 14px; color: var(--ink); }
+
+/* places: one flat list with plain group headings */
+.places { display: grid; gap: var(--s4); }
+.pgrp { display: grid; gap: var(--s1); }
+.pgrp-h { font-family: var(--display); font-weight: 600; font-size: 14px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); }
+.pgrp ul { list-style: none; margin: 0; padding: 0; background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); }
+.prow { position: relative; display: grid; grid-template-columns: minmax(0, 1fr) auto 16px 44px; align-items: center; gap: var(--s2); min-height: 60px; padding: var(--s2) 0 var(--s2) var(--s4); border-top: 1px solid var(--line); }
+.pgrp li:first-child .prow { border-top: 0; border-radius: calc(var(--radius) - 1px) calc(var(--radius) - 1px) 0 0; }
+.pgrp li:last-child .prow { border-radius: 0 0 calc(var(--radius) - 1px) calc(var(--radius) - 1px); }
+.pgrp li:only-child .prow { border-radius: calc(var(--radius) - 1px); }
+.prow:has(.prow-btn:hover), .prow:has(.prow-btn:active), .rrow:has(.rrow-btn:hover), .rrow:has(.rrow-btn:active) { background: var(--surface-2); }
+.row-chev { width: 16px; height: 16px; color: var(--muted); transform: rotate(-90deg); flex: none; }
+.row-inside { font-size: 12px; line-height: 1.3; color: var(--muted); }
+.prow-btn { font: inherit; color: inherit; background: none; border: 0; padding: 0; cursor: pointer; text-align: left; display: grid; gap: 2px; min-width: 0; }
+.prow-btn::after { content: ""; position: absolute; inset: 0; border-radius: 4px; }
+.prow-btn:focus-visible { outline: none; }
+.prow-btn:focus-visible::after { outline: 2px solid var(--accent); outline-offset: -3px; }
+.prow .star { position: relative; z-index: 1; }
+.prow .pg { align-self: start; }
+.pg { display: grid; justify-items: end; text-align: right; font-size: 14px; line-height: 1.3; white-space: nowrap; min-width: 0; }
+.pg .g1 { display: inline-flex; align-items: center; gap: 6px; }
+.pg .g1 b { font-family: var(--display); font-weight: 700; font-size: 24px; line-height: 1; }
+.pg .g1 .wx svg { width: 30px; height: 30px; }
+.pg .gw { font-size: 12px; color: var(--muted); max-width: 112px; white-space: normal; line-height: 1.2; }
+.pg .g2 { font-size: 12px; color: var(--muted); }
+.pg .g2 b { font-family: var(--display); font-weight: 700; font-size: 19px; line-height: 1.1; color: var(--forecast); }   /* 19 px bold = large text: --forecast is 4.37:1 on white, above the 3:1 large-text bar */
+.pg .g2 .wetv { color: var(--wet); font-weight: 600; }
+@media (max-width: 359px) { .pg .g1 b { font-size: 22px; } .pg .g1 .wx svg { width: 26px; height: 26px; } .pg .gw { max-width: 92px; } }
+.list-note { font-size: 12px; color: var(--muted); }
+/* round 10 (owner test, 2026-11-06): a row says so when the selected day is not looking good. Facts only, no new colors. */
+.rflag { display: block; margin-top: 4px; padding-left: 8px; border-left: 3px solid var(--warn); font-size: 13px; font-weight: 700; line-height: 1.3; color: var(--warn); }
+.pick .reason .rflag { margin-top: 6px; }
+.places-top { display: grid; gap: var(--s2); }
+
+
+/* ---------- round 2: weather icons. Shape plus a text label every time; colors from the page tokens. ---------- */
+.wx { display: inline-grid; justify-items: center; gap: 2px; color: var(--ink); flex: none; }
+.wx svg { display: block; width: 40px; height: 40px; overflow: visible; }
+.wx .s { color: var(--clear); } .wx .c { color: var(--cloud); } .wx .r { color: var(--wet); } .wx .f { color: var(--forecast); } .wx .m { color: var(--muted); }
+.wx-t { font-size: 12px; line-height: 1.2; color: var(--muted); text-align: center; }
+/* picks, round 3: compact rows. Left: rank, name, one short line, the pill. Right: icon, high, key number on one row.
+   Under 380 px the weather row drops under the name. From 720 px the three picks sit side by side as cards. */
+.pick { position: relative; display: grid; grid-template-columns: minmax(0, 1fr) auto; grid-template-areas: "name wx" "why flags"; gap: 2px 8px; align-items: center; padding: 10px 12px; border-top: 1px solid var(--line); }
+.pick-n { grid-area: name; display: flex; flex-wrap: wrap; align-items: baseline; gap: 2px 6px; min-width: 0; }
+.pick-id { display: flex; align-items: baseline; gap: 6px; min-width: 0; }
+.pick-n .tagp { align-self: center; white-space: normal; }   /* the hike snow note is a sentence; it may wrap inside its pill */
+.pick .rank { font-size: 14px; }
+.pick .t3-name { font-size: 18px; line-height: 1.15; }
+.pick .reason { grid-area: why; font-size: 12px; line-height: 1.3; color: var(--muted); align-self: start; }
+.pick-wx { grid-area: wx; display: flex; align-items: flex-start; justify-content: flex-end; gap: 10px; }
+.pick-wx .wx { width: 56px; }
+.pick-wx .wx svg { width: 44px; height: 44px; }
+.pick-t { display: grid; justify-items: end; line-height: 1; }
+.pick-t b { font-family: var(--display); font-weight: 700; font-size: 30px; white-space: nowrap; }
+.pick-t small { font-size: 12px; color: var(--muted); margin-top: 3px; white-space: nowrap; }
+.pick-wx .wx-t { white-space: nowrap; }
+.pick-flags { grid-area: flags; display: flex; flex-wrap: wrap; justify-content: flex-end; align-items: center; gap: 0 var(--s2); position: relative; z-index: 1; align-self: start; }
+.pick-flags .pill-link { min-height: 44px; margin-block: -8px; }   /* the target stays 44 px; it overlaps the row padding */
+@media (max-width: 379px) {
+  .pick { grid-template-columns: minmax(0, 1fr); grid-template-areas: "name" "wx" "why" "flags"; }
+  .pick-wx, .pick-flags { justify-content: flex-start; }
+  .pick-wx .wx { width: auto; min-width: 48px; }
+}
+@media (min-width: 720px) {
+  .picks { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); column-gap: var(--s2); row-gap: 0; background: none; border: 0; }
+  /* each card spans 4 rows of the shared grid (subgrid), so name, weather, reason and NWAC rows line up across cards even when a name wraps */
+  .pick { display: grid; grid-template-columns: minmax(0, 1fr); grid-template-areas: none; grid-row: span 4; grid-template-rows: subgrid; align-items: start; justify-items: stretch; row-gap: 6px; border: 1px solid var(--line); border-radius: var(--radius); background: var(--surface); padding: var(--s3); }
+  .pick > .pick-n, .pick > .pick-wx, .pick > .reason, .pick > .pick-flags { grid-area: auto; }
+  .pick:first-child { border-top: 1px solid var(--line); }
+  .pick-wx { justify-content: flex-start; gap: 14px; padding-block: 4px; }
+  .pick-t { justify-items: start; }
+  .pick-flags { justify-content: flex-start; align-self: end; }
+}
+/* 7-day forecast in the place view */
+.d7 { list-style: none; margin: 0; padding: 0; }
+.d7 > li + li { border-top: 1px solid var(--line); }
+.d7-btn { width: 100%; min-height: 68px; display: grid; grid-template-columns: 46px minmax(0, 1fr) auto minmax(52px, auto); gap: 4px 10px; align-items: center; padding: 8px 0; border: 0; background: none; color: inherit; font: inherit; text-align: left; cursor: pointer; border-radius: 6px; }
+.d7-btn .wx svg { width: 42px; height: 42px; }
+.d7-d { display: grid; gap: 1px; min-width: 0; }
+.d7-d .dn { display: inline-flex; align-items: center; gap: 4px; font-family: var(--display); font-weight: 700; font-size: 18px; line-height: 1.1; }
+.d7-d .dn .chev { width: 14px; height: 14px; }
+.d7-btn[aria-expanded="true"] .chev { transform: rotate(180deg); }
+.d7-d .lab { font-size: 13px; color: var(--ink); }
+.d7-d .lab .tagp { display: block; width: fit-content; margin-top: 3px; }
+.d7-d .d7-note { font-size: 12px; line-height: 1.25; color: var(--muted); }
+.d7-d .ear { font-size: 12px; color: var(--muted); font-style: italic; }
+.d7-t { display: flex; align-items: baseline; gap: 6px; white-space: nowrap; }
+.d7-t b { font-family: var(--display); font-weight: 700; font-size: 28px; line-height: 1; }
+.d7-t span { font-family: var(--display); font-size: 18px; color: var(--muted); }
+.d7-p { display: grid; justify-items: end; text-align: right; line-height: 1.15; white-space: nowrap; }
+.d7-p b { font-family: var(--display); font-weight: 700; font-size: 20px; }
+.d7-p b.sn { color: var(--forecast); } .d7-p b.rn { color: var(--wet); } .d7-p b.no { color: var(--muted); font-weight: 600; }
+.d7-p small { font-size: 12px; color: var(--muted); white-space: normal; max-width: 76px; line-height: 1.2; }
+.d7-x { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--s1); padding: 0 0 var(--s3); }
+.d7-x > div { display: grid; justify-items: center; gap: 2px; padding: 8px 4px; background: var(--surface-2); border-radius: 6px; min-width: 0; text-align: center; }
+.d7-x .pn { font-size: 12px; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); }
+.d7-x .wx svg { width: 32px; height: 32px; }
+.d7-x .pt { font-family: var(--display); font-weight: 700; font-size: 22px; line-height: 1; }
+.d7-x .pp { font-size: 12px; color: var(--ink); }
+@media (max-width: 359px) { .d7-btn { grid-template-columns: 40px minmax(0, 1fr) auto auto; gap: 4px 8px; } .d7-btn .wx svg { width: 36px; height: 36px; } .d7-t b { font-size: 24px; } .d7-t span { font-size: 16px; } .d7-p b { font-size: 18px; } }
+@media (prefers-reduced-motion: no-preference) { .d7-btn .chev { transition: transform 150ms ease; } }
+
+/* place view: full screen, one tap from a row or a pick */
+body.locked { overflow: hidden; }
+dialog.pv { position: fixed; inset: 0; width: 100%; max-width: 100%; height: 100%; max-height: 100%; margin: 0; padding: 0; border: 0; background: var(--bg); color: var(--ink); display: none; flex-direction: column; overflow: hidden; }
+dialog.pv[open] { display: flex; }
+dialog.pv::backdrop { background: var(--bg); }
+.pv-head { background: var(--surface); border-bottom: 1px solid var(--line); padding-top: env(safe-area-inset-top, 0px); flex: none; }
+.pv-head > .wrap { display: grid; gap: var(--s1); padding-block: var(--s1) 0; }
+.pv-bar { display: flex; align-items: center; justify-content: space-between; gap: var(--s2); margin-inline: -8px; }
+.back { min-height: 44px; min-width: 44px; display: inline-flex; align-items: center; gap: 4px; padding: 0 10px 0 6px; border: 0; background: none; color: var(--accent); font-weight: 600; font-size: 16px; cursor: pointer; border-radius: 6px; }
+.back svg { width: 18px; height: 18px; }
+/* round 12: switch Ski and Hike without leaving the place (Scott, 2026-11-06) */
+.pv-seg { width: 168px; flex: none; }
+.pv-seg button { min-height: 36px; font-size: 14px; }
+.pv-seg button:disabled { color: var(--muted); cursor: not-allowed; }
+.pv-title { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 0 var(--s2); }
+.pv-title h2 { font-family: var(--display); font-weight: 700; font-size: 24px; line-height: 1.15; min-width: 0; }
+.pv-sub { font-size: 12px; color: var(--muted); }
+.tabs { display: flex; gap: 0; overflow-x: auto; overscroll-behavior-x: contain; scrollbar-width: none; margin-inline: calc(var(--s2) * -1); }
+.tabs::-webkit-scrollbar { display: none; }
+.tab { flex: 1 0 auto; min-height: 44px; padding: 0 10px; border: 0; border-bottom: 3px solid transparent; background: none; color: var(--muted); font-family: var(--display); font-weight: 600; font-size: 16px; letter-spacing: 0.02em; cursor: pointer; white-space: nowrap; }
+.tab[aria-selected="true"] { color: var(--ink); border-bottom-color: var(--accent); }
+.tab:focus-visible { outline-offset: -3px; }
+@media (max-width: 359px) { .tab { padding: 0 6px; font-size: 15px; } }
+.pv-body { flex: 1; min-height: 0; overflow-y: auto; overscroll-behavior: contain; }
+.pv-tabbar { position: sticky; top: 0; z-index: 2; background: var(--bg); border-bottom: 1px solid var(--line); }
+.pcards { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--s2); }   /* two columns at every width, so the 7-day stays near the top on a phone */
+.pcard { display: flex; flex-direction: column; align-items: stretch; gap: var(--s2); min-height: 44px; min-width: 0; padding: var(--s3); text-align: left; cursor: pointer; background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); color: var(--ink); }
+.pcard:hover, .pcard:active { background: var(--surface-2); }
+.pc-t { font-family: var(--display); font-weight: 700; font-size: 14px; line-height: 1.2; }
+.pc-b { font-size: 13px; line-height: 1.35; color: var(--ink); overflow-wrap: anywhere; }
+.pc-b + .pc-b { color: var(--muted); }
+.pc-big { font-family: var(--display); font-weight: 700; font-size: 28px; line-height: 1; margin-right: 6px; }
+.pc-f { margin-top: auto; font-size: 12px; line-height: 1.2; color: var(--accent); }
+.pc-tile { height: 56px; display: grid; place-items: center; align-content: center; gap: 2px; padding: var(--s2); background: var(--surface-2); border-radius: 6px; color: var(--muted); text-align: center; font-size: 12px; line-height: 1.25; }
+.pc-tile svg { width: 28px; height: 28px; }
+.pcard .srow-sk { align-items: flex-end; }
+
+/* two columns at most: the place view column is 672 px wide, so four cards were about 150 px each */
+.pv-body > .wrap { display: grid; gap: var(--s4); padding-block: var(--s4) calc(var(--s6) + env(safe-area-inset-bottom, 0px)); }
+.pv-sec { display: grid; gap: var(--s3); min-width: 0; }
+.pv-sec > h3 { font-family: var(--display); font-weight: 600; font-size: 20px; line-height: 1.2; }
+.pv-card { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: var(--s3) var(--s4); display: grid; gap: var(--s3); min-width: 0; }
+.res-row { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: var(--s1) var(--s3); align-items: center; }
+.res-row + .res-row { border-top: 1px solid var(--line); padding-top: var(--s3); }
+.res-name { font-family: var(--display); font-weight: 600; font-size: 18px; line-height: 1.2; }
+.res-el { font-size: 12px; color: var(--muted); }
+.res-n { display: grid; justify-items: end; }
+.res-n b { font-family: var(--display); font-weight: 700; font-size: 26px; line-height: 1; }
+.res-n b.zero { color: var(--muted); }
+.res-n span { font-size: 12px; color: var(--muted); }
+.res-bands { grid-column: 1 / -1; display: flex; flex-wrap: wrap; align-items: center; gap: var(--s1) var(--s3); font-size: 12px; color: var(--muted); }
+.res-bands b { color: var(--ink); font-weight: 600; }
+.wind { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--s1); }
+.wind > div { display: grid; gap: 1px; padding: 6px; background: var(--surface-2); border-radius: 4px; min-width: 0; }
+.wind .b { font-size: 12px; color: var(--muted); }
+.wind .r { font-family: var(--display); font-weight: 700; font-size: 18px; line-height: 1.15; }
+.wind .r small { font-family: var(--body); font-weight: 400; font-size: 12px; color: var(--muted); }
+.slot-coming { border: 1.5px dashed var(--line-strong); border-radius: var(--radius); padding: var(--s3) var(--s4); color: var(--muted); font-size: 14px; display: grid; gap: 2px; }
+.slot-coming b { color: var(--ink); font-family: var(--display); font-weight: 600; font-size: 16px; }
+@media (prefers-reduced-motion: no-preference) {
+  dialog.pv[open] { animation: pv-in 160ms ease-out; }
+  @keyframes pv-in { from { transform: translateY(16px); opacity: 0.6; } to { transform: none; opacity: 1; } }
+  .wchip, .tab { transition: background-color 120ms ease, color 120ms ease, border-color 120ms ease; }
+}
+/* ---------- round 4 ---------- */
+/* avalanche block, Ski place view header. Danger colors live only here. */
+#pv-avy { padding-bottom: var(--s2); }
+.avy { display: grid; gap: var(--s2); border: 2px solid var(--line-strong); border-radius: var(--radius); padding: var(--s2) var(--s3); background: var(--surface); }
+.avy p { font-size: 14px; line-height: 1.4; }
+.avy a { display: inline-flex; align-items: center; min-height: 44px; font-weight: 600; }
+.avy p:has(> a:only-child) { margin-block: -8px; }
+.avy-h { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 0 var(--s2); }
+.avy-h b { font-family: var(--display); font-weight: 700; font-size: 18px; }
+.avy-h span { font-size: 12px; color: var(--muted); align-self: center; }
+.avy-list { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--s1); }
+.avy-b { display: flex; align-items: center; gap: 6px; min-width: 0; }
+.avy-n { flex: none; width: 30px; height: 30px; border-radius: 6px; display: grid; place-items: center; font-family: var(--display); font-weight: 700; font-size: 18px; color: #142028; border: 1px solid var(--line-strong); }
+.avy-n.d4, .avy-n.d5 { color: #FFFFFF; }
+.avy-w { display: grid; min-width: 0; line-height: 1.2; }
+.avy-w b { font-size: 13px; }
+.avy-w span { font-size: 12px; color: var(--muted); }
+.avy-none { border-width: 1px; border-style: dashed; background: var(--surface-2); }
+.avy-none b { font-weight: 600; }
+@media (max-width: 479px) { .avy-list { grid-template-columns: minmax(0, 1fr); } .avy-w { display: flex; flex-wrap: wrap; align-items: baseline; gap: 0 8px; } .avy-n { width: 26px; height: 26px; font-size: 16px; } }
+/* one-line rows with a tap for detail */
+.dwrap { display: grid; gap: var(--s2); }
+.dwrap + .dwrap { border-top: 1px solid var(--line); padding-top: var(--s2); }
+.dline { min-height: 44px; display: flex; align-items: center; justify-content: space-between; gap: var(--s2); width: 100%; padding: 0; border: 0; background: none; color: var(--ink); font: inherit; font-size: 14px; text-align: left; cursor: pointer; border-radius: 4px; }
+.dline b { font-weight: 600; }
+.dline-t { flex: none; color: var(--accent); font-size: 13px; font-weight: 600; }
+/* snow line */
+.snowline { display: grid; gap: var(--s1); border-left: 4px solid var(--line-strong); background: var(--surface); border-radius: 6px; padding: var(--s2) var(--s3); }
+.snowline.is-above { border-left-color: var(--forecast); }
+.snowline p { font-size: 14px; line-height: 1.4; }
+.snowline .sl-h b { font-family: var(--display); font-weight: 700; font-size: 18px; }
+/* clouds in plain words */
+.cl-grid { display: grid; gap: var(--s3); }
+.cl-fig { margin: 0; display: grid; gap: var(--s1); }
+.cl-fig figcaption { font-size: 14px; line-height: 1.4; }
+.cl-svg { display: block; width: 100%; max-width: 360px; height: auto; background: var(--surface-2); border-radius: 6px; }
+.cl-mtn { fill: var(--line); stroke: var(--line-strong); stroke-width: 1.5; }
+.cl-band { fill: var(--cloud); opacity: 0.5; }
+.cl-high { fill: var(--cloud); opacity: 0.3; }
+.cl-pt { fill: var(--ink); }
+.cl-tx { font: 600 12px var(--body); fill: var(--ink); paint-order: stroke; stroke: var(--surface-2); stroke-width: 3px; }
+@media (min-width: 560px) { .cl-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+.d7-why { font-size: 13px; }
+.d7-d .best { display: inline-flex; align-items: center; gap: 4px; font-size: 12px; font-weight: 700; color: var(--accent); }
+.d7-d .best::before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: currentColor; }
+/* round 9: the #1 pick carries Best; Best always names a place */
+.pick-n .best { display: inline-flex; align-items: center; gap: 4px; font-size: 12px; font-weight: 700; color: var(--accent); align-self: center; }
+.pick-n .best::before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: currentColor; }
+.pick.is-best { box-shadow: inset 3px 0 0 var(--accent); }
+@media (min-width: 720px) { .pick.is-best { box-shadow: inset 0 3px 0 var(--accent); } }
+/* round 8: Good is quieter than Best: ink, not the accent, and a ring, not a filled dot */
+.d7-d .good { display: inline-flex; align-items: center; gap: 4px; font-size: 12px; font-weight: 600; color: var(--ink); }
+.d7-d .good::before { content: ""; width: 7px; height: 7px; border-radius: 50%; border: 1.5px solid currentColor; box-sizing: border-box; }
+.d7-btn.is-best { box-shadow: inset 3px 0 0 var(--accent); padding-left: 6px; }
+
+/* wide screens last, so they override the base rules above */
+/* round 3: from 720 px the place rows sit two per line, so name and glance stay close together */
+@media (min-width: 720px) {
+  .pgrp ul { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .pgrp li:nth-child(2) .prow { border-top: 0; }
+  .pgrp li:nth-child(odd) .prow { border-right: 1px solid var(--line); }
+  .pgrp li:nth-child(odd):last-child { grid-column: 1 / -1; }
+  .pgrp li:nth-child(odd):last-child .prow { border-right: 0; }
+  /* When chips: one row of up to 8 */
+  .wchips { grid-template-columns: none; grid-auto-flow: column; grid-auto-columns: minmax(0, 1fr); }
+  /* 7-day: a strip of 7 day columns; the tapped day's AM, PM and Night open under the whole strip */
+  .d7 { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); column-gap: 4px; }
+  .d7 > li { display: contents; }
+  .d7 > li + li { border-top: 0; }
+  .d7-btn { grid-row: 1; grid-template-columns: minmax(0, 1fr); grid-template-areas: "d" "b" "i" "l" "t" "p" "x" "n"; justify-items: center; align-content: start; text-align: center; min-height: 0; height: 100%; padding: 8px 4px; border: 1px solid var(--line); background: var(--surface); }
+  .d7-d { display: contents; }
+  .d7-d .dn { grid-area: d; }
+  .d7-d .best, .d7-d .good { grid-area: b; }
+  .d7-btn.is-best { box-shadow: inset 0 3px 0 var(--accent); padding-left: 4px; }
+  .d7-d .lab { grid-area: l; font-size: 12px; line-height: 1.2; }
+  .d7-d .lab .tagp { margin-inline: auto; }
+  .d7-d .d7-note { grid-area: n; }
+  .d7-d .ear, .d7-d .gust { grid-area: x; }
+  .d7-d .ear + .gust { grid-area: auto; }
+  .d7-btn[aria-expanded="true"] { border-color: var(--accent); box-shadow: inset 0 0 0 1px var(--accent); }
+  .d7-btn > .wx { grid-area: i; }
+  .d7-d .gust { white-space: normal; text-align: center; }
+  .d7-t { grid-area: t; }
+  .d7-p { grid-area: p; justify-items: center; text-align: center; }
+  .d7-p small { max-width: none; }
+  .d7-x { grid-row: 2; grid-column: 1 / -1; padding-top: var(--s2); }
+  .d7-x[hidden] { display: none; }
+}
+
+/* ---------- v3 Plan 2: the weather window ---------- */
+/* the short window line on a pick card and an area row */
+.wline { font-size: 12px; line-height: 1.3; color: var(--ink); }
+.wline b { color: var(--accent); font-weight: 700; }
+.prow .wline { display: block; margin-top: 2px; }
+/* the row's Best under the whole row: the day, then the window on its own line (Plan 3) */
+.prow-best { grid-column: 1 / 3; display: grid; min-width: 0; margin-top: -4px; }
+/* a window line never wraps: at 320 px the longest ("Good weather window the rest of the day", 232 px) still fits. Pick
+   cards only below 720 px: from 720 they sit three across in a 171 px column, where the line wraps instead of spilling. */
+.prow-best .wline { white-space: nowrap; }
+@media (max-width: 719px) { .pick .wline { white-space: nowrap; } }
+/* a place-view section heading beside its (i) button reads like "Next 7 days" and the other section headings */
+.pv-sec > .sec-h > h3 { font-family: var(--display); font-weight: 600; font-size: 20px; }
+.pick { grid-template-areas: "name wx" "why flags" "win win"; }
+.pick .wline { grid-area: win; }
+@media (max-width: 379px) { .pick { grid-template-areas: "name" "wx" "why" "win" "flags"; } }
+@media (min-width: 720px) {
+  /* the card is a subgrid of 5 rows (name, weather, reason, window, flags); the phone areas above must not come back */
+  .pick { grid-row: span 5; grid-template-areas: none; }
+  .pick > .wline { grid-area: auto; }
+}
+/* hour strips: 6 AM to 10 PM, one cell per hour; closed hours hatched and labeled; dark hours shaded */
+.hstrips { display: grid; gap: var(--s3); }
+.hstrip { margin: 0; display: grid; gap: 4px; min-width: 0; }
+.hstrip figcaption { font-size: 14px; line-height: 1.4; }
+.hstrip figcaption b { font-family: var(--display); font-weight: 700; margin-right: 4px; }
+.hs, .hs-why, .hs-x { display: grid; grid-template-columns: repeat(16, minmax(0, 1fr)); }
+.hs { list-style: none; margin: 0; padding: 0; gap: 2px; }
+.hs li { position: relative; height: 26px; border-radius: 3px; background: color-mix(in srgb, var(--clear) 45%, var(--surface)); }
+.hs li.shut { background: repeating-linear-gradient(135deg, var(--wet) 0 2px, transparent 2px 6px); box-shadow: inset 0 0 0 1px var(--wet); }
+.hs li.shut.snowy { background: repeating-linear-gradient(135deg, var(--forecast) 0 2px, transparent 2px 6px); box-shadow: inset 0 0 0 1px var(--forecast); }
+.hs li.shut.windy { background: repeating-linear-gradient(90deg, var(--muted) 0 2px, transparent 2px 6px); box-shadow: inset 0 0 0 1px var(--muted); }
+.hs li.dark::after { content: ""; position: absolute; inset: 0; border-radius: inherit; background: color-mix(in srgb, var(--ink) 30%, transparent); }
+.hs li.past { background: none; box-shadow: none; }
+.hs-why { font-size: 12px; font-weight: 600; color: var(--ink); min-height: 16px; }
+.hs-why span { text-align: center; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.hs-x { font-size: 12px; color: var(--muted); }
+.hs-x span { grid-column: span 4; }
+.hs-leg { display: flex; flex-wrap: wrap; gap: 0 var(--s3); font-size: 12px; color: var(--muted); }
+.hs-leg i { display: inline-block; width: 12px; height: 12px; border-radius: 2px; vertical-align: -2px; margin-right: 4px; }
+.hs-leg .o { background: color-mix(in srgb, var(--clear) 45%, var(--surface)); }
+.hs-leg .c { background: repeating-linear-gradient(135deg, var(--wet) 0 2px, transparent 2px 6px); box-shadow: inset 0 0 0 1px var(--wet); }
+.hs-leg .d { background: color-mix(in srgb, var(--ink) 30%, var(--surface)); }
+
+/* ---------- v3 Plan 2, Task 10: dark hours band and the Cams card image ---------- */
+/* dark hours get their own 4 px band under the cells, solid --muted (6.71:1 light, 6.84:1 dark on --surface; architect
+   ruling, Task 9 review). The cell overlay above stays but is no longer the signal; the strip's hidden sentence names the
+   dark hours too. The legend's Dark swatch is the band. */
+.hs-dark { display: grid; grid-template-columns: repeat(16, minmax(0, 1fr)); column-gap: 2px; height: 4px; }
+.hs-dark span { grid-row: 1; background: var(--muted); border-radius: 2px; }
+.hs-leg .d { background: var(--muted); height: 4px; vertical-align: 2px; }
+/* the Cams card shows the chosen cam's image, not a placeholder tile */
+.pc-tile.pc-cam { padding: 0; overflow: hidden; }
+.pc-tile.pc-cam img { display: block; width: 100%; height: 100%; max-width: 100%; object-fit: cover; }
+/* a heavy-snow closure hatches the other way, so it differs from rain by more than color (short runs carry no label) */
+.hs li.shut.snowy { background: repeating-linear-gradient(45deg, var(--forecast) 0 2px, transparent 2px 6px); }

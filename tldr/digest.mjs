@@ -3,16 +3,21 @@
 // A small JSON digest of what the page shows on load, built with the page's own engine and view-model,
 // so the TLDR writer has one source of facts and tldr/check.mjs can verify every number and place.
 //
-//   node tldr/digest.mjs --root <deploy root> [--out digest.json] [--saved]
+//   node tldr/digest.mjs --root <deploy root> [--out digest.json] [--saved [--at <ISO time>]]
 //
-// --saved reads Open-Meteo from the disk copy in scripts/saved_fetch.mjs. It is for local runs; the deployed copy has no scripts/.
+// --saved runs with no network, for local checks: Open-Meteo point by point from the saved pulls (scripts/saved_locs.mjs, the
+// pull nearest --at wins a tie), the avalanche layers and SNOTEL from tests/fixtures. --at <ISO time> sets the digest's clock
+// (default now). The deployed copy has no scripts/ or tests/, so neither loads without --saved.
 //
 // <root> is laid out like the deploy: vm.js, net.js, engine.js, engine/, places.json, package.json.
 // Fetches what page/app.js fetches on load for Ski > Resorts, Ski > Backcountry and Hike: glance for every
 // place and region anchor, clouds for the anchors (and the hike top three's high points), the three avalanche
-// map layers, and SNOTEL hourly for the anchor stations and each ski place's nearest station. Open-Meteo: planRequests (weight <= 300), 2 in flight.
+// map layers, SNOTEL hourly for the anchor stations, and glance at the v3 landing's points for the picks. Open-Meteo: planRequests
+// (weight <= 300), 2 in flight.
 // A failed request leaves its regions and places out and names them under "missing". Nothing is guessed.
-// "picks" names the best weather for the TLDR. engine/picks.js holds the rules; this file only gathers their inputs.
+// "picks" names the page's own Best and its weather window (guide.js bestAhead: the landing's Top 3 #1 on the best day the
+// window reaches) and Snow coming (guide.js snowComing: the Resorts view's first Washington resort and the snowiest Washington
+// backcountry over 5 days). The rules live in page/engine/ and guide.js; this file only gathers their inputs (program R1).
 import fs from "node:fs";
 import path from "node:path";
 import { pathToFileURL } from "node:url";
@@ -22,7 +27,7 @@ const MODE = { resorts: "resort", backcountry: "backcountry", hike: "hike" };
 const NOUN = { resorts: "resort", backcountry: "zone", hike: "area" };
 const CENTERS = ["NWAC", "COAA", "IPAC"];
 const TIMEOUT_MS = 20000;   // the page's Open-Meteo timeout; used for every request here (a batch job, not a phone)
-const NEEDED = ["vm.js", "net.js", "engine.js", "engine/request.js", "engine/clouds.js"];
+const NEEDED = ["vm.js", "net.js", "engine.js", "guide.js", "engine/request.js", "engine/clouds.js", "engine/areas.js", "engine/window.js", "engine/week.js", "engine/best.js"];
 const fin = (x) => typeof x === "number" && Number.isFinite(x);
 const rnd = (x) => (fin(x) ? Math.round(x) : null);
 
@@ -37,10 +42,10 @@ export function isoPacific(ms) {
 
 // Display string -> the value a writer copies: "<1" stays a string, anything else a plain number.
 const dispVal = (s) => (s === "<1" ? "<1" : fin(Number(String(s).replaceAll(",", ""))) ? Number(String(s).replaceAll(",", "")) : null);
-// rangeText output ("3–6", "<1–2", "4", "<1") -> [lo, hi].
+// rangeText output ("3 to 6", "<1 to 2", "4", "<1") -> [lo, hi]. "n/a" (vm.js NA) is no range.
 function rangeOf(text) {
-  if (typeof text !== "string" || text === "–") return [null, null];
-  const [a, b = a] = text.split("–");
+  if (typeof text !== "string" || text === "n/a") return [null, null];
+  const [a, b = a] = text.split(" to ");
   return [dispVal(a), dispVal(b)];
 }
 const ftOf = (s) => { const m = /([\d,]+) ft/.exec(String(s || "")); return m ? Number(m[1].replaceAll(",", "")) : null; };
@@ -48,8 +53,9 @@ const plain = (html) => String(html).replace(/<[^>]*>/g, "").replaceAll("&lt;", 
 
 // Every number a writer may copy: numeric values and the digits inside display strings.
 // Names and links are not displayed numbers; avalanche levels are left out on purpose (the writer uses the word).
+// A pick's window is clock words the checker reads on their own ("4 PM"), so its digits are not forecast numbers either.
 const NOT_NUMBERS = new Set(["name", "spot", "zone", "gust_at", "link", "level", "center", "state",
-  "key", "zone_key", "spot_zone_key", "gust_at_zone_key"]);
+  "key", "zone_key", "spot_zone_key", "gust_at_zone_key", "window"]);
 function collectNumbers(x, out) {
   if (typeof x === "number") { if (fin(x)) out.add(x); }
   else if (typeof x === "string") for (const m of x.matchAll(/\d[\d,]*(\.\d+)?/g)) out.add(Number(m[0].replaceAll(",", "")));
@@ -60,11 +66,14 @@ function collectNumbers(x, out) {
 
 async function loadModules(codeDir) {
   const imp = (rel) => import(pathToFileURL(path.join(codeDir, rel)).href);
-  const [net, request, models, parse, avalanche, snotel, forecast, clouds, picks, vm] = await Promise.all([
+  const [net, request, models, parse, avalanche, snotel, forecast, clouds, picks, vm, areas, win, best, guide] = await Promise.all([
     imp("net.js"), imp("engine/request.js"), imp("engine/models.js"), imp("engine/parse.js"), imp("engine/avalanche.js"),
     imp("engine/snotel.js"), imp("engine/forecast.js"), imp("engine/clouds.js"), imp("engine/picks.js"), imp("vm.js"),
+    imp("engine/areas.js"), imp("engine/window.js"), imp("engine/best.js"), imp("guide.js"),
   ]);
-  return { ...net, ...request, ...models, ...parse, ...avalanche, ...snotel, ...forecast, ...clouds, ...picks, ...vm };
+  return { ...net, ...request, ...models, ...parse, ...avalanche, ...snotel, ...forecast, ...clouds, ...picks, ...vm,
+    areaIndex: areas.areaIndex, landingPoints: areas.landingPoints, resortPoints: areas.resortPoints, allResorts: areas.allResorts,
+    placeFor: areas.placeFor, tldrWindow: win.tldrWindow, isDry: best.isDry, bestAhead: guide.bestAhead, snowComing: guide.snowComing };
 }
 
 // codeDir holds vm.js, net.js and engine/; placesPath is places.json. Both are the deploy root in production.
@@ -72,6 +81,7 @@ export async function buildDigest({ codeDir, placesPath, fetchImpl, nowMs = Date
   const M = await loadModules(codeDir);
   const P = JSON.parse(fs.readFileSync(placesPath, "utf8"));
   const byId = Object.fromEntries(P.places.map((x) => [x.id, x]));
+  const ix = M.areaIndex(P);   // the v3 areas, for the picks
   const net = M.makeNet({ fetchImpl, storage: null, timeoutMs, retryDelayMs, now: () => nowMs });
 
   // ---- helpers re-created from page/app.js (it touches the DOM, so it is not imported) ----
@@ -138,12 +148,15 @@ export async function buildDigest({ codeDir, placesPath, fetchImpl, nowMs = Date
   }
 
   // ---- fetch, the way loadView does for each view ----
-  const omJobs = VIEWS.flatMap((v) => [...forecastJobs(viewGlancePoints(v), "glance", glance), ...forecastJobs(anchorPoints(v), "clouds", clouds)]);
+  // The picks read what the v3 landing loads (page/app.js): glance at every area's ranking point in Ski and in Hike, and at
+  // every resort's middle point (the Resorts view). Most of these points are already in the views' glance set; forecastJobs
+  // skips a key it already holds.
+  const v3Points = [...M.landingPoints(ix.areas, "ski", ix.places), ...M.landingPoints(ix.areas, "hike", ix.places),
+    ...M.resortPoints(M.allResorts(ix.areas), ix.places).mids];
+  const omJobs = [...VIEWS.flatMap((v) => [...forecastJobs(viewGlancePoints(v), "glance", glance), ...forecastJobs(anchorPoints(v), "clouds", clouds)]),
+    ...forecastJobs(v3Points, "glance", glance)];
   await Promise.all([runJobs(omJobs), loadLayers(), ...VIEWS.map(loadStations)]);
   if (![...glance.values()].some((g) => g.status === "ok")) throw new Error("no forecast data loaded (every Open-Meteo glance request failed)");
-  // best_day reads each ski place's own station. One more SNOTEL request for the ones the anchors didn't bring; a failure drops those places from best_day.
-  const ownStations = [...placesOf("resorts"), ...placesOf("backcountry")].map((p) => p.snotel?.[0]?.triplet).filter(Boolean);
-  await fetchStations([...new Set(ownStations)].filter((t) => !stations.has(t)));
 
   // ---- view-model, the way rowZ / regionView / top3View build it ----
   const avalOf = (place) => M.avalFor(place, layers, nowMs);
@@ -304,63 +317,37 @@ export async function buildDigest({ codeDir, placesPath, fetchImpl, nowMs = Date
     try { return build(); }
     catch (e) { process.stderr.write(`digest: pick ${name} left out: ${String(e?.message || e).split("\n")[0]}\n`); return null; }
   }
-  // Same place set for both ski picks. The title check matters: a place can load while another of its name fails (resort and
-  // backcountry Stevens Pass), and a name in missing is one the checker rejects.
-  const skiPlaces = () => [...placesOf("resorts"), ...placesOf("backcountry")].filter((p) => usable(p) && !gone.includes(p.title));
-  function mostSnowPick() {
-    const zs = skiPlaces().map(rowZ);
-    const row = M.top3Z("ski", zs).rows[0];
-    if (!row || !(zs.find((z) => z.id === row.id).rank.n24.precip.value >= M.PICK.stormIn)) return null;
-    const loc = locOf(glance, ptKey(row.id, byId[row.id].glance));
-    return { ...skiTop3Row(row), quality: M.snowQuality(M.snowRatio(loc, M.nowIndex(loc, nowMs))) };
+  // The landing's input (page/app.js landing()): the same getters over this run's data. Only glance and the avalanche
+  // rating reach the picks; flags and the hike snow line are display only and never change a rank.
+  const input = (mode) => ({ areas: ix.areas, places: ix.places, mode, nowMs, list: mode === "ski" ? "resorts" : "areas", starred: new Set(), pos: null,
+    glance: (k) => locOf(glance, k), freeze: () => null, bands: () => null, depth: () => null, aval: avalOf, loading: () => false });
+  // Best ski day and Best hike day: the page's own Best (guide.js bestAhead) with its weather window (window.js tldrWindow).
+  // An area whose ranking point failed is not in the landing's entries, so it can never be the pick. A Best whose day has
+  // no window (fewer models than the window needs) is no pick: the writer must copy a window, and there is none.
+  function bestPick(mode) {
+    const b = M.bestAhead(input(mode));
+    if (!b) return null;
+    const window = M.tldrWindow(b.w);
+    if (!window) return null;
+    const place = M.placeFor(b.area, mode, ix.places);
+    return { name: b.area.name, zone_key: zoneKeyOf(place), day: M.dow(b.slot.ymd),
+      window, dry: M.isDry(b.m), gust: b.m.gust ? rnd(b.m.gust.value) : null, hi_f: b.m.hi ? rnd(b.m.hi.value) : null,
+      aval: avalDigest(avalOf(place)) };
   }
-  // Depth at the place's own nearest station (snotel is nearest first): the page's latest reading, finite and at most 36 h old.
-  // null: no station speaks for this place, so a storm can still qualify it.
-  // undefined: one should have answered and didn't. The base is unknown, and a measurement might have ruled the place out, so it can't compete.
-  function baseOf(place) {
-    const st = place.snotel?.[0];
-    if (!st || !M.stationSpeaks(st.elev_ft, Math.min(...place.points.map((x) => x.elev_ft)))) return null;
-    const sd = stations.get(st.triplet);
-    return sd?.status === "ok" ? M.depthReading({ hourly: sd.hourly }, nowMs)?.depth : undefined;
-  }
-  // Forecast snow before a day, for ranking only. Offset 0: today's hours up to now. Offset 1: all of today. Offset 2: today and tomorrow.
-  // Yesterday is out of reach: the forecast data starts at local midnight today.
-  function freshBefore(loc, n, ymd0, offset) {
-    const wholeDay = (d) => M.daySummary(loc, M.addDays(ymd0, d), d, -1)?.snow?.value ?? 0;
-    const midnight = loc.time.indexOf(`${ymd0}T00:00`);
-    const inches = offset === 0 ? M.windowTotals(loc, midnight, n - midnight).snow?.value ?? 0 : wholeDay(0) + (offset === 2 ? wholeDay(1) : 0);
-    return Math.round(inches * 10) / 10;
-  }
-  function bestDayPick() {
-    if (![...stations.values()].some((s) => s.status === "ok")) return null;   // SNOTEL down: nothing to compare against
-    const cands = [];
-    for (const p of skiPlaces()) {
-      const loc = locOf(glance, ptKey(p.id, p.glance)), n = M.nowIndex(loc, nowMs);
-      if (n < 0) continue;
-      const baseIn = baseOf(p);
-      if (baseIn === undefined) continue;
-      const local = M.localHourString(nowMs, loc.utcOffset), ymd0 = local.slice(0, 10);
-      for (const offset of [0, 1, 2]) {
-        if (offset === 0 && +local.slice(11, 13) >= 11) continue;
-        const ymd = M.addDays(ymd0, offset);
-        if (p.mode === "resort" && !M.resortSeason(ymd)) continue;
-        const s = M.daySummary(loc, ymd, offset, offset === 0 ? n : -1);
-        if (M.niceDay(s)) cands.push({ id: p.id, offset, gust: s.gust.value, freshIn: freshBefore(loc, n, ymd0, offset), baseIn, s });
-      }
-    }
-    const c = M.bestSkiDay(cands);
-    if (!c) return null;
-    const p = byId[c.id];
-    return { name: p.title, zone_key: zoneKeyOf(p), day: M.dow(c.s.ymd), gust: rnd(c.gust), hi_f: rnd(c.s.hi.value), lo_f: rnd(c.s.lo?.value),
-      fresh: c.freshIn >= M.PICK.freshIn, sky: M.skyWord(c.s), aval: avalDigest(avalOf(p)) };
-  }
-  // modes.hike.top3[0], built from the same row. A row whose name is in missing can't be used, so the next one stands in.
-  function hikePick() {
-    const zs = placesOf("hike").map(rowZ);
-    const row = M.top3Z("hike", zs).rows.find((r) => !gone.includes(r.name));
-    if (!row) return null;
-    const t = zs.find((z) => z.id === row.id).rank.tomorrow;
-    return { ...hikeTop3Row(row), day: M.dow(t.ymd), hi_f: rnd(t.hi) };
+  // Snow coming: shown only when the resort or the backcountry reaches PICK.stormIn over the 5 days, as the page prints the
+  // amount (value_in, fmtIn of the 5-day sum: 2.6 in prints "3" and counts). at_ft is the height of the point it is read
+  // at, in feet as the page prints a height (vm.js fmtFt); by is the weekday of the 5th day. The threshold is checked
+  // again after naming (namedSnow), so a line never ships on a side that did not reach it.
+  const reaches = (side) => typeof side?.value_in === "number" && side.value_in >= M.PICK.stormIn;
+  function snowPick() {
+    const s = M.snowComing(input("ski"));
+    // A side whose printed amount is 0 drops out: "gets 0 in" is not a line a writer can honestly give.
+    const side = (x) => {
+      const value_in = x ? dispVal(M.fmtIn(x.t5)) : null;
+      return x && value_in !== 0 ? { name: x.name, zone_key: zoneKeyOf(x.place), value_in, at_ft: ftOf(M.fmtFt(x.ft)), aval: avalDigest(avalOf(x.place)) } : null;
+    };
+    const out = { resort: side(s.resort), backcountry: side(s.backcountry), by: s.resort?.by ?? s.backcountry?.by ?? null };
+    return reaches(out.resort) || reaches(out.backcountry) ? out : null;
   }
 
   // place_index: every name a writer may use -> its zone key. Place, region and spot names come first; a name that two
@@ -376,16 +363,24 @@ export async function buildDigest({ codeDir, placesPath, fetchImpl, nowMs = Date
     for (const row of md.top3) add(row.name, row.zone_key);
     for (const r of md.regions) { add(r.name, r.zone_key); add(r.spot, r.spot_zone_key); add(r.gust_at, r.gust_at_zone_key); }
   }
-  // A pick whose name already means another zone can't be written, so it reads null and the name keeps its meaning.
+  // A pick whose name already means another zone can't be written, so it reads null and the name keeps its meaning. A pick
+  // whose name is in missing reads null too: the checker rejects that name, so the TLDR would name what it cannot verify.
   const named = (pick) => {
     if (!pick) return null;
-    if (ambiguous.has(pick.name) || (index.has(pick.name) && index.get(pick.name) !== pick.zone_key)) return null;
+    if (gone.includes(pick.name) || ambiguous.has(pick.name) || (index.has(pick.name) && index.get(pick.name) !== pick.zone_key)) return null;
     add(pick.name, pick.zone_key);
     return pick;
   };
+  // Snow coming names two places; a side whose name already means another zone, or is in missing, drops out. The line goes
+  // with it unless a side that is left still reaches PICK.stormIn.
+  const namedSnow = (p) => {
+    if (!p) return null;
+    const out = { ...p, resort: named(p.resort), backcountry: named(p.backcountry) };
+    return reaches(out.resort) || reaches(out.backcountry) ? out : null;
+  };
   const picks = {
-    ski: { most_snow: named(safely("most_snow", mostSnowPick)), best_day: named(safely("best_day", bestDayPick)) },
-    hike: { best: named(safely("hike", hikePick)) },
+    ski: { snow_coming: namedSnow(safely("snow_coming", snowPick)), best_day: named(safely("best_ski_day", () => bestPick("ski"))) },
+    hike: { best_day: named(safely("best_hike_day", () => bestPick("hike"))) },
   };
   for (const a of avalanche) if (a.zone && !index.has(a.zone) && !ambiguous.has(a.zone)) index.set(a.zone, a.key);
   for (const m of gone) index.delete(m);
@@ -409,20 +404,38 @@ export function layout(v, pad = "") {
 }
 
 /* ---------- CLI ---------- */
+// --saved: no request leaves the machine. Open-Meteo from the saved pulls, NWAC and SNOTEL from the test fixtures. The fixture
+// is NWAC's layer, so another center's layer (COAA, IPAC) gets a 404 and reads "unavailable", never NWAC's zones.
+// The fixture answer for one non Open-Meteo URL in a --saved run, or null (a 404). layer: NWAC's map layer; station: one
+// SNOTEL hourly record, copied for every triplet asked.
+export function savedAnswer(url, { layer, station }) {
+  const u = new URL(url);
+  if (u.host === "api.avalanche.org") return /\/map-layer\/NWAC$/.test(u.pathname) ? layer : null;
+  if (u.host === "wcc.sc.egov.usda.gov") return (u.searchParams.get("stationTriplets") || "").split(",").map((t) => ({ ...station, stationTriplet: t }));
+  return null;
+}
+async function offlineFetchFor(nowMs) {
+  const { loadSaved, offlineFetch } = await import(new URL("../scripts/saved_locs.mjs", import.meta.url));
+  const fx = (n) => JSON.parse(fs.readFileSync(new URL(`../tests/fixtures/${n}`, import.meta.url), "utf8"));
+  const fixtures = { layer: fx("avy_maplayer_nwac.json"), station: fx("snotel_hourly_paradise.json")[0] };
+  return offlineFetch(loadSaved(), { near: nowMs, answer: (url) => savedAnswer(url, fixtures) });
+}
 function fail(msg, code = 1) { process.stderr.write(`digest: ${msg}\n`); process.exit(code); }
 async function main(argv) {
   const arg = (k) => { const i = argv.indexOf(k); return i >= 0 ? argv[i + 1] : undefined; };
-  const rootArg = arg("--root"), out = arg("--out");
-  if (!rootArg) fail("usage: node tldr/digest.mjs --root <deploy root> [--out digest.json] [--saved]", 2);
+  const rootArg = arg("--root"), out = arg("--out"), atArg = arg("--at");
+  if (!rootArg) fail("usage: node tldr/digest.mjs --root <deploy root> [--out digest.json] [--saved [--at <ISO time>]]", 2);
+  // --at only with --saved: a live run at a past clock would read today's forecast as if it were then.
+  if (atArg && !argv.includes("--saved")) fail("--at needs --saved (a live run always uses the current time)", 2);
+  const nowMs = atArg ? Date.parse(atArg) : Date.now();
+  if (!Number.isFinite(nowMs)) fail(`--at ${atArg} is not a time`, 2);
   const root = path.resolve(rootArg);
   const lack = [...NEEDED, "places.json"].filter((f) => !fs.existsSync(path.join(root, f)));
   if (lack.length) fail(`--root ${root} is not a deploy root (missing ${lack.join(", ")})`, 2);
   // Dynamic import: the deployed copy has no scripts/, so the helper loads only when --saved is given. No flag means live fetch, as before.
-  const fetchImpl = argv.includes("--saved")
-    ? (await import(new URL("../scripts/saved_fetch.mjs", import.meta.url))).savedFetch({ log: () => {} })
-    : undefined;
+  const fetchImpl = argv.includes("--saved") ? await offlineFetchFor(nowMs) : undefined;
   let d;
-  try { d = await buildDigest({ codeDir: root, placesPath: path.join(root, "places.json"), fetchImpl }); }
+  try { d = await buildDigest({ codeDir: root, placesPath: path.join(root, "places.json"), fetchImpl, nowMs }); }
   catch (e) { fail(String(e?.message || e).split("\n")[0]); }
   let json = layout(d) + "\n";
   if (Buffer.byteLength(json) >= 20480) json = JSON.stringify(d) + "\n";   // compact when the readable form runs long

@@ -17,18 +17,21 @@ const DOW = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 const fin = (x) => typeof x === "number" && Number.isFinite(x);
 const int = (x) => (fin(x) ? Math.round(x) : null);
 const round1 = (x) => (fin(x) ? Math.round(x * 10) / 10 : null);
-export const fmtNum = (n) => (fin(n) ? Math.round(n).toLocaleString("en-US") : "–");
-export const fmtFt = (n) => (fin(n) ? `${fmtNum(n)} ft` : "–");
+// A value a reader sees for a missing number (Plan 3: no en or em dash anywhere a person reads; ui.js uses the same word).
+export const NA = "n/a";
+export const fmtNum = (n) => (fin(n) ? Math.round(n).toLocaleString("en-US") : NA);
+export const fmtFt = (n) => (fin(n) ? `${fmtNum(n)} ft` : NA);
 export function fmtIn(x) {
-  if (!fin(x)) return "–";
+  if (!fin(x)) return NA;
   return x > 0 && x < 1 ? "<1" : String(Math.round(x));
 }
-// Each end follows fmtIn, so 0.6 reads "<1" here and in the row. Both ends under 1 read as the high end alone.
+// Each end follows fmtIn, so 0.6 reads "<1" here and in the row. Both ends under 1 read as the high end alone. "3 to 6",
+// never an en dash (Plan 3).
 export function rangeText(lo, hi) {
-  if (!fin(lo) || !fin(hi)) return "–";
+  if (!fin(lo) || !fin(hi)) return NA;
   if (hi < 1) return fmtIn(hi);
   const a = fmtIn(lo), b = fmtIn(hi);
-  return a === b ? b : `${a}–${b}`;
+  return a === b ? b : `${a} to ${b}`;
 }
 // One wording for a forecast that failed to load, shared by vm and render.
 export const UNAVAILABLE = "Forecast unavailable";
@@ -47,10 +50,10 @@ export function forecastNotice(glances, clock) {
   if (limit) return `${hit}. Forecasts return when it resets, and Refresh won't help until then.`;
   return failed.length === gs.length ? "Forecasts didn't load. Tap Refresh to try again." : "Some forecasts didn't load. Tap Refresh to try again.";
 }
-export const fmtWater = (x) => (fin(x) ? x.toFixed(2) : "–");
+export const fmtWater = (x) => (fin(x) ? x.toFixed(2) : NA);
 export const dow = (ymd) => DOW[new Date(`${ymd}T12:00:00Z`).getUTCDay()];
 // Display inches for the trio: a number, or "<1" (the mock's render dims 0 and "<1").
-const dispIn = (x) => (!fin(x) ? "–" : x > 0 && x < 1 ? "<1" : Math.round(x));
+const dispIn = (x) => (!fin(x) ? NA : x > 0 && x < 1 ? "<1" : Math.round(x));
 const cap = (s) => (s ? s[0].toUpperCase() + s.slice(1) : s);
 
 /* ---------- cloud words (program rule 1) ---------- */
@@ -324,12 +327,6 @@ export function camsFor(ids, cams, nowMs) {
   const by = Object.fromEntries(camList(cams).map((c) => [c.id, c]));
   return (ids || []).filter((id) => by[id]).map((id) => camZ(by[id], nowMs));
 }
-// sunNow: nowMs, or a predicate (cam) => boolean.
-export function camsForPage(cams, sunNow) {
-  const up = typeof sunNow === "function" ? sunNow : (c) => sunUp(c.lat, c.lon, sunNow);
-  return camList(cams).filter(up).map((c) => camZ(c, typeof sunNow === "number" ? sunNow : null));
-}
-
 /* ---------- SNOTEL ---------- */
 // Rule 4: the stored mi is measured from the glance point. Any other point needs the station's coordinates.
 export function stationMiles(place, st, fromRole) {
@@ -439,7 +436,7 @@ function trioZ(loc, nowMs) {
   const n = isLoc(loc) ? nowIndex(loc, nowMs) : -1;
   return [6, 12, 24].map((h) => {
     const s = n >= 0 ? windowTotals(loc, n, h).snow : null;
-    return [`${h} h`, s ? dispIn(s.value) : "–", s ? rangeText(s.min, s.max) : "–"];
+    return [`${h} h`, s ? dispIn(s.value) : NA, s ? rangeText(s.min, s.max) : NA];
   });
 }
 // Water-weighted snow ratio over the next 24 hours' snowy hours, per model, then the middle value. null when under 0.5 in.
@@ -504,7 +501,7 @@ export function skiCardZ(place, detailLocs, cloudLocs, glanceLocs, snotel, produ
     ...snotelZ(place, snotel, nowMs, offset),
     snowLevel: snowLevelText(sl), snowLevelModels: sl?.models || [],
     clouds: amPm(cl, fd.ymd, fd.off, sumPt.elev_ft), cloudsDay: fd.label,
-    empty: raw.every((v) => v === 0), noData: raw.every((v) => v === "–" || v == null),
+    empty: raw.every((v) => v === 0), noData: raw.every((v) => v === NA || v == null),
     gust: int(n24Of(atLoc, nowMs).n?.gust?.value), summit: sumPt.elev_ft, standsFor: standsFor(place, aval),
     bands: bandsZ(place, locAt, nowMs), ratio: ratioZ(atLoc, nowMs, roleLabel(place, atPt.role)),
     cams: camsFor(place.cams, cams, nowMs), avalBands: avalBandsZ(product, aval, nowMs),
@@ -653,12 +650,13 @@ function regionLine(areas, anchorClouds, anchorFt, nowMs) {
   }
   return phrases.length ? phrases.map((p, i) => (i ? p : cap(p))).join(" · ") : null;
 }
-function regionPill(zs) {
+// Exported for its test (Plan 3 review): "NWAC 2 to 3", never a dash.
+export function regionPill(zs) {
   const av = zs.map((z) => z.aval).filter((a) => a && Number.isInteger(a.l) && a.l >= 1);
   if (av.length < 2) return null;
   const c = av[0].c, same = av.filter((a) => a.c === c), ls = same.map((a) => a.l);
   const lo = Math.min(...ls), hi = Math.max(...ls);
-  return lo === hi ? null : { c, lo, hi, url: same[0].url, text: `${c} ${lo}–${hi}` };
+  return lo === hi ? null : { c, lo, hi, url: same[0].url, text: `${c} ${lo} to ${hi}` };
 }
 // anchorLoc: { glance, clouds } at the anchor point (rule 5), or a bare glance Loc.
 export function regionZ(region, places, zsCollapsed, glanceByPlace, anchorLoc, anchorStation, nowMs, noun) {

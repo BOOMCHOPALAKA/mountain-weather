@@ -8,7 +8,8 @@
 // A false reject costs one retry. A false pass puts a wrong forecast in front of skiers, so every
 // ambiguous case below is decided in favour of rejecting.
 //
-// Rules: at (1), shape (2), numbers (3), places (4), avalanche (5, including ratings beside a later day), advice (6), wording (7, 8), picks, markup.
+// Rules: at (1), shape (2), numbers (3), places (4), avalanche (5, including ratings beside a later day), advice (6), wording (7, 8,
+// and "open" beside a window), picks (Best ski day, Best hike day, Snow coming), markup.
 // Spec: tldr/prompt.md.
 import fs from "node:fs";
 import { fileURLToPath, pathToFileURL } from "node:url";
@@ -94,7 +95,9 @@ const AVAL_STRICT = /(?<![A-Za-z0-9])(avalanche|danger[a-z]*|hazard|snowpack|sta
 const STRONG_LOOSE = ["stable", "unstable", "dangerous", "no danger", "severe", "benign", "manageable", "favorable", "unfavorable", "tricky",
   "touchy", "reactive", "sketchy", "hazardous", "deadly", "high-risk", "low-risk"];
 const WEAK_LOOSE = ["minimal", "minor", "little", "limited", "elevated", "serious", "significant"];
-// "level 4", "levels 4", "4 of 5", "4/5", "4 out of 5". A snow level such as "level 2,500 ft" is an elevation, not a rating.
+// "level 4", "levels 4", "4 of 5", "4/5", "4 out of 5". A snow level such as "level 2,500 ft" is an elevation, not a rating,
+// and "3 of 5 areas" is a count the digest's region lines carry ("snow at 3 of 5 areas"), so a count noun after it, with a
+// place name between or not, is not one.
 // "avalanche" may appear only in the state phrase and the center's name. Anything else is a claim about avalanche conditions the digest does not carry.
 const AVALANCHE_OK = [/avalanche\s+data\s+is\s+unavailable/gi, /Avalanche\s+Canada/g];
 const AVALANCHE_WORD = /(?<![A-Za-z0-9])avalanches?(?![A-Za-z0-9])/i;
@@ -106,7 +109,7 @@ const SAFETY_CLAIMS = [["travel is easy", /travel\s+is\s+easy/i], ["easy travel"
   ["no risk", new RegExp(`no[-\\s]+risk${RISK_OF_WEATHER}`, "i")], ["no danger", /no\s+danger/i], ["no problems", /no\s+problems?/i], ["no concerns", /no\s+concerns?/i]];
 const LEVEL_NUMBER = [
   /(?<![A-Za-z0-9])levels?\s*[1-5](?![\d]|[,.]\d)/i,
-  /(?<![\d])[0-5]\s*(?:of|out\s+of|\/)\s*5(?![\d]|[,.]\d)/i,
+  /(?<![\d])[0-5]\s*(?:of|out\s+of|\/)\s*5(?![\d]|[,.]\d)(?!\s+(?:\u0000+\s+)?(?:areas?|resorts?|zones?|places?|stations?|spots?)(?![A-Za-z]))/i,
 ];
 // A rating describes today. A sentence that names a later day must say so: the danger word followed directly by "today" ("tonight" counts as today).
 // Short weekday forms are matched capitalized only, because "sun" and "sat" are ordinary words. Full names match in either case.
@@ -154,12 +157,13 @@ const STATE_WORDS = ["Washington", "Oregon", "Idaho"];
 const MOUNTAINS_NEXT = new RegExp(`^(?:(?:,|\\s+and|,\\s+and)\\s+(?:${STATE_WORDS.join("|")}))*\\s+(?:Cascades|mountains|Olympics|Rockies|resorts)(?![A-Za-z0-9])`);
 
 /* ---------- known names ---------- */
-// Every name a writer could use for a place, from places.json: region titles, place titles, each comma-separated piece of a
-// subtitle, every point name and every SNOTEL station name. A bare compass word ("East") is not a name.
+// Every name a writer could use for a place, from places.json: region titles, the v3 area names, place titles, each
+// comma-separated piece of a subtitle, every point name and every SNOTEL station name. A bare compass word ("East") is not a name.
 export function knownNamesFrom(P) {
   const out = new Set();
   const add = (x) => { if (typeof x === "string" && x.trim() && !DIRECTIONS.has(x.trim())) out.add(x.trim()); };
   for (const list of Object.values(P?.regions || {})) for (const r of list || []) add(r?.title);
+  for (const x of P?.areas || []) add(x?.name);
   for (const p of P?.places || []) {
     add(p?.title);
     String(p?.subtitle || "").split(",").forEach(add);
@@ -502,7 +506,7 @@ function stateClaims(text) {
 /* ---------- rule 5c: avalanche claims made without a danger word ---------- */
 function checkLooseAvalanche(field, a, out) {
   for (const re of LEVEL_NUMBER) {
-    const m = re.exec(a.text);
+    const m = re.exec(a.masked);   // place names blanked, so "3 of 5 North Cascades areas" still reads as a count
     if (m) out.push(`${field}: avalanche: "${m[0].trim()}" is a danger level number; use the center name and the danger word from the digest, never a level`);
   }
   const outside = AVALANCHE_OK.reduce((t, re) => t.replace(re, " "), a.masked);
@@ -562,102 +566,271 @@ function checkWording(field, text, out) {
 }
 
 /* ---------- picks ---------- */
-// Which pick a sentence opens with. "Driest" needs its weekday, so "Driest day" is not a label.
+// Every snow level string the digest carries (modes...days[].snow_level), which rule 3 makes the writer quote whole.
+function snowLevels(digest) {
+  const out = new Set();
+  const walk = (x) => {
+    if (Array.isArray(x)) x.forEach(walk);
+    else if (x && typeof x === "object") for (const [k, v] of Object.entries(x)) { if (k === "snow_level" && typeof v === "string" && v) out.add(v); else walk(v); }
+  };
+  walk(digest?.modes);
+  return [...out];
+}
+// Which pick a sentence opens with (Plan 3): the page's Best for each activity, and Snow coming.
 const LABELS = {
-  most_snow: { field: "ski", shown: "Most snow:", path: "picks.ski.most_snow", re: /^Most snow:/ },
-  best_day: { field: "ski", shown: "Best ski day:", path: "picks.ski.best_day", re: /^Best ski day:/ },
-  hike_best: { field: "hike", shown: "Driest <Weekday>", path: "picks.hike.best", re: new RegExp(`^Driest\\s+${ANY_WEEKDAY}`) },
+  snow_coming: { field: "ski", shown: "Snow coming:", path: "picks.ski.snow_coming", re: /^Snow coming:/ },
+  best_ski: { field: "ski", shown: "Best ski day:", path: "picks.ski.best_day", re: /^Best ski day:/ },
+  best_hike: { field: "hike", shown: "Best hike day:", path: "picks.hike.best_day", re: /^Best hike day:/ },
 };
+const LABEL_LIST = Object.values(LABELS).map((l) => `"${l.shown}"`).join(", ");
 const labelOf = (m) => Object.keys(LABELS).find((k) => LABELS[k].re.test(m)) ?? null;
-// Comparative words belong to a label sentence. "at best" is ordinary English and ranks nothing.
+// Comparative words belong to a label sentence. "at best" is ordinary English and ranks nothing. "Driest" and "Most snow"
+// were labels before Plan 3; they rank, so they fail anywhere now.
 const COMPARATIVE = [["best", /(?<![A-Za-z0-9])(?<!(?<![A-Za-z0-9])at\s+)best(?![A-Za-z0-9])/i], ["driest", /(?<![A-Za-z0-9])driest(?![A-Za-z0-9])/i],
-  ["most snow", /(?<![A-Za-z0-9])most\s+(?:(?:new|fresh)\s+)?snow(?![A-Za-z0-9])/i]];
+  ["most snow", /(?<![A-Za-z0-9])most\s+(?:(?:new|fresh)\s+)?snow(?![A-Za-z0-9])/i], ["snowiest", /(?<![A-Za-z0-9])snowiest(?![A-Za-z0-9])/i],
+  ["top pick", /(?<![A-Za-z0-9])top\s+picks?(?![A-Za-z0-9])/i]];
 const FIGURE = "under\\s+1|\\.?\\d[\\d,]*(?:\\.\\d+)?";
 const RANGE = "\\s?(?:-|\u2013|to)\\s?";
-const INCH_RE = () => new RegExp(`(?<![\\d.,-])(${FIGURE})(?:${RANGE}(${FIGURE}))?\\s?(?:in(?![A-Za-z])(?!\\s+the\\s+(?:morning|afternoon|evening))|inch(?:es)?(?![A-Za-z])|\u2033|")`, "gi");
+const INCH_RE = () => new RegExp(`(?<![\\d.,-])(${FIGURE})(?:${RANGE}(${FIGURE}))?\\s?(?:in(?![A-Za-z])(?!\\s+the\\s+(?:morning|afternoon|evening))|-?inch(?:es)?(?![A-Za-z])|\u2033|")`, "gi");
 const MPH_RE = () => new RegExp(`(?<![\\d.,-])(\\d+)(?:${RANGE}(\\d+))?\\s?mph(?![A-Za-z])`, "gi");
 const TEMP_RE = () => /(?<![A-Za-z0-9])(high|low)s?\s+(?:of|near|around|about|at)\s+~?(\d+)(?![\d,.]*\d)(?!\s?(?:ft|feet|in|inches|mph)(?![A-Za-z]))|(?<![\d.,-])(\d+)\s?(?:\u00b0\s?F?|degrees(?![A-Za-z])|F(?![A-Za-z]))/gi;
+// Any clock time a writer could give: "4 PM", "4:30 PM", "16:00", "noon", "midnight". Times appear only in a Best sentence,
+// and only the times its window text gives (Plan 3 review): the digest has no other clock time for anything.
+// "4 o'clock" counts too (Plan 3 re-review M-a).
+const CLOCK_RE = () => /(?<![\d.:A-Za-z])(?:(1[0-2]|[1-9])(?::([0-5]\d))?\s?(AM|PM|a\.m\.|p\.m\.)|([01]?\d|2[0-3]):([0-5]\d)|(noon|midnight)|(1[0-2]|[1-9])\s+o['\u2019]\s?clock)(?![A-Za-z\d])/gi;
+const clockOf = (m) => (m[7] ? `${m[7]} o'clock` : m[6] ? m[6].toLowerCase() : m[4] ? `${m[4]}:${m[5]}` : `${m[1]}${m[2] ? `:${m[2]}` : ""} ${m[3].replaceAll(".", "").toUpperCase()}`);
+const WINDOW_WORD = /(?<![A-Za-z0-9])window(?:s)?(?![A-Za-z0-9])/i;
 const isUnderOne = (t) => /^under\s+1$/i.test(t);
 const sameValue = (t, v) => (v === "<1" ? isUnderOne(t) : !isUnderOne(t) && Number(String(t).replaceAll(",", "")) === v);
 const shown = (v) => (v === "<1" ? "under 1" : String(v));
 const QUALITY = ["light", "medium", "heavy", "concrete"];
 // A quality word counts when it describes snow: right before "snow", or after "in of". "heavy rain" and "light wind" are weather.
+// The digest carries no snow quality since Plan 3 (the 24-hour ratio does not describe a 5-day total), so any use fails.
 const qualityUse = (w) => new RegExp(`(?<![A-Za-z0-9])${w}\\s+(?:(?:new|fresh|wet)\\s+)?snow(?![A-Za-z0-9])|(?:in|inch|inches|\u2033)\\s+of\\s+${w}(?![A-Za-z0-9])`, "i");
+// "open" describes a resort's hours to a reader, never the weather (Scott, 2026-11-07). It fails in any sentence that also
+// gives a clock time or the word "window", and anywhere it runs on to until, till or through ("stays open until the rain").
+const OPEN_WORD = /(?<![A-Za-z0-9])open(?:s|ed|ing)?(?![A-Za-z0-9])/i;
+const OPEN_UNTIL = /(?<![A-Za-z0-9])open(?:s|ed)?\s+(?:until|till|til|through|thru)(?![A-Za-z0-9])/i;
+const hasClock = (t) => CLOCK_RE().test(t);
+// "Snow coming" in any form but the label ("snow is coming", "more snow coming", "snow's coming", "snow is on the way") reads
+// as a pick the digest did not make.
+// "on the way out" says the opposite and stays legal (Plan 3 re-review 2, N3).
+const SNOW_COMING = /(?<![A-Za-z0-9])snow(?:\s+(?:is|are)|['\u2019]s)?\s+(?:coming|on\s+the\s+way(?!\s+out))(?![A-Za-z0-9])/i;
+// The words that point an amount at the place after them: "13 in at Mt Baker", "brings 13 in to Mt Baker" (worked example 3's
+// form), "into", "onto", "over", "around" (Plan 3 re-review 2, N2). The rest of a name ("the") may follow.
+const OWNER_LEAD = "(?:at|in|into|onto|to|near|on|for|across|over|around)\\s+(?:the\\s+)?";
+// The region words prompt.md gives for the outlook own an amount for the Snow coming value rule, as a place does (Plan 3
+// Task 6, architect's ruling): "up to 2 in at Washington resorts", "The Washington Cascades get 2 to 3 in Monday." start is
+// where the words after "the" begin, so it lines up with an OWNER_LEAD match. A region before an amount owns it only in the
+// same clause: the outlook names a region in nearly every text, and "Snow returns to the Washington Cascades Sunday, and
+// colder air brings 13 in by Wednesday" pins 13 in on no place.
+const REGION_WORDS = () => /(?<![A-Za-z0-9])(?:(the\s+)(Washington\s+Cascades|Oregon\s+Cascades|Cascades|mountains)|(Washington\s+resorts))(?![A-Za-z0-9])/gi;
+const CLAUSE_BREAK = /[,;:()]|\s(?:and|but|then|while|whereas|before|after|until)\s/i;
+function regionSpans(a, s) {
+  const out = [], t = a.text.slice(s.start, s.end);
+  for (const m of t.matchAll(REGION_WORDS())) {
+    const start = s.start + m.index + (m[1] ? m[1].length : 0), end = s.start + m.index + m[0].length;
+    if (!a.hits.some((h) => h.start < end && start < h.end)) out.push({ name: t.slice(start - s.start, end - s.start), start, end });
+  }
+  return out;
+}
+const FT_RE = () => /(?<![\d.,])(\d{1,2},\d{3}|\d{3,5})\s?(?:ft|feet)(?![A-Za-z])/gi;
+// A snow amount in feet ("2 feet"): Snow coming's amounts are inches, as the digest gives them.
+const SMALL_FT_RE = () => /(?<![\d.,])(\d{1,2}(?:\.\d+)?)\s?(?:ft|feet|foot)(?![A-Za-z])/gi;
+const norm = (t) => t.replace(/\s+/g, " ").toLowerCase();
 
-function checkPickFigures(key, pick, m, s, a, fail) {
+// A figure in a pick sentence belongs to the pick unless it follows another place, or points at one ("gusts reach 40 mph at
+// Chinook Pass"). pos and len are within the sentence.
+function ownedBy(pick, s, a) {
   const inSentence = a.hits.filter((h) => h.start >= s.start && h.start < s.end);
-  // A figure belongs to the pick unless it follows another place, or points at one ("gusts reach 40 mph at Chinook Pass").
-  const mine = (pos, len) => {
+  return (pos, len) => {
     const before = inSentence.filter((h) => h.end <= s.start + pos).pop();
     if (before && before.name !== pick.name) return false;
     const end = s.start + pos + len;
     const at = /^\s+(?:at|near|on|in|over|across)\s+/i.exec(a.masked.slice(end, s.end));
     return !(at && inSentence.some((h) => h.start === end + at[0].length && h.name !== pick.name));
   };
-  for (const x of m.matchAll(INCH_RE())) {
-    if (!mine(x.index, x[0].length)) continue;
-    const [, one, two] = x;
-    const upTo = /(?<![A-Za-z0-9])up\s+to\s+$/i.test(m.slice(0, x.index));
-    if (key === "best_day") { fail(`${x[0].trim()} has no field in the pick; give the sky and the gust, and no snow figure`); continue; }
-    const ok = key === "most_snow"
-      ? (two ? sameValue(one, pick.lo) && sameValue(two, pick.hi) : sameValue(one, pick.value_in) || (upTo && sameValue(one, pick.hi)) || (pick.lo === pick.hi && sameValue(one, pick.lo)))
-      : !two && sameValue(one, pick.water_in);
-    const want = key === "most_snow" ? `${shown(pick.value_in)} in or ${shown(pick.lo)}-${shown(pick.hi)} in` : `${shown(pick.water_in)} in`;
-    if (!ok) fail(`${x[0].trim()} does not match the pick; copy ${want} exactly`);
-  }
-  for (const x of m.matchAll(MPH_RE())) {
-    if (!mine(x.index, x[0].length)) continue;
-    if (x[2] !== undefined || Number(x[1]) !== pick.gust) fail(`${x[0].trim()} does not match the pick; copy ${pick.gust} mph exactly`);
-  }
-  if (pick.hi_f === undefined) return;
+}
+
+// The pick's figures in a Best day sentence: mph is its gust, a temperature its high, and no inches (Best names no snow amount).
+function checkBestFigures(pick, m, mine, fail) {
+  for (const x of m.matchAll(INCH_RE())) if (mine(x.index, x[0].length)) fail(`${x[0].trim()} has no field in the pick; Best gives the place, the day and the window, with no snow figure`);
+  for (const x of m.matchAll(MPH_RE())) if (mine(x.index, x[0].length) && (x[2] !== undefined || Number(x[1]) !== pick.gust)) fail(`${x[0].trim()} does not match the pick; ${pick.gust == null ? "the pick has no gust, so remove it" : `copy ${pick.gust} mph exactly`}`);
   for (const x of m.matchAll(TEMP_RE())) {
     if (!mine(x.index, x[0].length)) continue;
-    const n = Number(x[2] ?? x[3]), lo = pick.lo_f, kind = x[1]?.toLowerCase();
-    const ok = kind === "high" ? n === pick.hi_f : kind === "low" ? lo === undefined || n === lo : n === pick.hi_f || n === lo;
-    if (!ok) fail(`${x[0].trim()} does not match the pick; copy ${pick.hi_f} exactly`);
+    const n = Number(x[2] ?? x[3]), kind = x[1]?.toLowerCase();
+    if (kind === "low" || n !== pick.hi_f) fail(`${x[0].trim()} does not match the pick; ${pick.hi_f == null ? "the pick has no high, so remove it" : `the high is ${pick.hi_f}`}`);
   }
 }
 
-function checkPick(field, key, pick, l, a, fail) {
+// An unrated zone shows its state in the sentence that names the place, exactly: "no rating" does not stand in for "off-season".
+function checkPickState(side, s, fail) {
+  const state = side.aval?.state, center = side.aval?.center;
+  if (side.zone_key == null || !Object.hasOwn(STATE_TEXT, state ?? "")) return;
+  const claims = stateClaims(s.text).filter((c) => c.phrase.state === state);
+  const shows = claims.some((c) => (c.center === null ? state === "unavailable" : c.centers.some((x) => x.toLowerCase() === String(center).toLowerCase())));
+  if (!shows) fail(`add "${STATE_TEXT[state](center)}"; ${side.name}'s zone is ${state}, and its state goes in the pick's own sentence`);
+}
+
+// Best ski day and Best hike day: exactly one place and one weekday, the pick's (Plan 3 review: a second place or day would
+// carry the label or the window), then the window copied from the digest, and no time but the window's own.
+function checkBest(pick, l, a, fail) {
   const { s, m } = l;
-  // The pick's place comes first in the sentence, spelled exactly. Another place may follow.
-  const first = a.hits.find((h) => h.start >= s.start && h.start < s.end);
+  const inSentence = a.hits.filter((h) => h.start >= s.start && h.start < s.end);
+  const first = inSentence[0];
   if (!first) fail(`the sentence names no place; it must name "${pick.name}"`);
   else if (a.text.slice(first.start, first.end) !== pick.name) fail(`"${a.text.slice(first.start, first.end)}" is not the pick; the digest's pick is "${pick.name}"`);
-  // Day: the first weekday in the sentence. For best_day, "today" also names today's weekday.
+  const others = [...new Set(inSentence.filter((h) => Object.hasOwn(a.index, h.name) && h.name !== pick.name).map((h) => h.name))];
+  for (const n of others) fail(`"${n}" is not the pick; a Best sentence names one place, "${pick.name}"`);
   const want = fullDay(pick.day);
-  if (want && key !== "most_snow") {
-    const day = new RegExp(ANY_WEEKDAY).exec(m)?.[0];
-    const saysToday = key === "best_day" && want === a.today?.weekday && /(?<![A-Za-z0-9])today(?![A-Za-z0-9])/i.test(m);
-    if (day ? fullDay(day) !== want : !saysToday) fail(`the pick's day is ${want}; name it first, before any other day`);
+  const days = [...m.matchAll(new RegExp(ANY_WEEKDAY, "g"))].map((x) => fullDay(x[0]));
+  if (want && days[0] !== want) fail(`the pick's day is ${want}; name it first, before any other day`);
+  for (const d of new Set(days.slice(days[0] === want ? 1 : 0))) if (d !== want) fail(`${d} is not the pick's day; a Best sentence names one day, ${want}`);
+  const w = pick.window && typeof pick.window === "object" ? pick.window : null;
+  let rest = m;
+  if (w && typeof w.text === "string") {
+    const at = norm(m).indexOf(norm(w.text));
+    if (at < 0) fail(`copy the pick's window exactly: "${w.text}"`);
+    else {
+      rest = m.slice(0, at) + " ".repeat(w.text.length) + m.slice(at + w.text.length);
+      if (/(?<![A-Za-z0-9])(?:no|not|never|without|isn['\u2019]t|aren['\u2019]t)(?:\s+(?:a|an|any))?\s+$/i.test(m.slice(0, at))) fail(`the window is the pick's; copy it as written, with nothing that negates it`);
+    }
+    // Only the times the window's own text gives ("until about 8 PM" gives 8 PM, not the 6 AM start).
+    const times = new Set([...w.text.matchAll(CLOCK_RE())].map((x) => clockOf(x).toLowerCase()));
+    const shownTimes = [...w.text.matchAll(CLOCK_RE())].map((x) => x[0]).join(", ");
+    for (const x of m.matchAll(CLOCK_RE())) if (!times.has(clockOf(x).toLowerCase())) fail(`${x[0]} is not a time in the pick's window (${shownTimes || "it gives none"})`);
+  } else {
+    for (const x of m.matchAll(CLOCK_RE())) fail(`${x[0]}: the pick has no window, so give no time`);
+    if (WINDOW_WORD.test(m)) fail(`the pick has no window, so leave the window out`);
   }
-  if (key === "best_day" && typeof pick.sky === "string") {
-    const skyRe = new RegExp(`(?<![A-Za-z0-9])${pick.sky === "clear" ? "(?<!(?:mostly|partly|not|barely|hardly)\\s+)" : ""}${pick.sky.split(" ").map(esc).join("\\s+")}(?![A-Za-z0-9])`, "i");
-    if (!skyRe.test(m)) fail(`the pick's sky is "${pick.sky}"; use that word exactly`);
+  if (pick.dry !== true && /(?<![A-Za-z0-9])(?:dry|rain[-\s]?free|no\s+rain|without\s+rain|stays?\s+dry)(?![A-Za-z0-9])/i.test(rest)) fail(`"dry", "rain-free", "no rain" and "without rain" need dry true in the pick; it has rain or snow in 8 AM to 5 PM`);
+  for (const q of QUALITY) if (qualityUse(q).test(rest)) fail(`"${q}" snow: the digest has no snow quality; remove it`);
+  checkPickState(pick, s, fail);
+  checkBestFigures(pick, m, ownedBy(pick, s, a), fail);
+}
+
+// Snow coming: one place of each kind with its 5-day amount and its height together, "by" the 5th day's weekday, and nothing
+// else ranked. When the resort and the backcountry share a name (Stevens Pass), the name followed by "backcountry" is the
+// backcountry's clause and the bare name the resort's (Plan 3 review, I2).
+function checkSnowComing(pick, l, a, fail) {
+  const { s, m } = l;
+  const sides = [pick.resort, pick.backcountry].filter((x) => x && typeof x === "object");
+  const inSentence = a.hits.filter((h) => h.start >= s.start && h.start < s.end);
+  const names = new Set(sides.map((x) => x.name));
+  const shared = pick.resort && pick.backcountry && pick.resort.name === pick.backcountry.name;
+  const sideOf = (h) => {
+    if (!h) return null;
+    if (shared && h.name === pick.resort.name) return /^\s+backcountry(?![A-Za-z0-9])/i.test(a.masked.slice(h.end, s.end)) ? pick.backcountry : pick.resort;
+    return sides.find((y) => y.name === h.name) ?? null;
+  };
+  const label = (x) => (shared && x === pick.backcountry ? `the ${x.name} backcountry` : x.name);
+  for (const x of sides) if (!inSentence.some((h) => sideOf(h) === x)) fail(`name "${label(x)}" with its amount`);
+  for (const h of inSentence) if (Object.hasOwn(a.index, h.name) && !names.has(h.name)) fail(`"${h.name}" is not in the pick; Snow coming names ${[...names].map((n) => `"${n}"`).join(" and ")}`);
+  const by = fullDay(pick.by);
+  const days = [...m.matchAll(new RegExp(ANY_WEEKDAY, "g"))].map((x) => fullDay(x[0]));
+  const byForms = by ? [by, by.toLowerCase(), ...WEEKDAYS[by]].join("|") : null;
+  if (by && !new RegExp(`(?<![A-Za-z0-9])by\\s+(?:${byForms})(?![A-Za-z0-9])`).test(a.masked.slice(s.start, s.end))) fail(`give the day as "by ${by}", the 5th day of the total`);
+  for (const d of days) if (d !== by) fail(`${d} is not the pick's day; the totals run through ${by}`);
+  // An amount belongs to the place right after it, past its height ("4 in at 4,294 ft at Mt Baker", "22 in at 5,742 ft in the
+  // ... backcountry"), else to the closest place before it ("Mt Baker gets 4 in at 4,294 ft"). A height belongs to the amount
+  // right before it ("4 in at 4,294 ft"), else to a place by the same rule. Every side shows both, each exactly.
+  const ownerAt = (pos, len) => {
+    const end = s.start + pos + len;
+    const lead = new RegExp(`^\\s+(?:at\\s+[\\d,]+\\s?(?:ft|feet)\\s+)?${OWNER_LEAD}`, "i").exec(a.masked.slice(end, s.end));
+    const after = lead ? inSentence.find((h) => h.start === end + lead[0].length) : null;
+    return sideOf(after ?? inSentence.filter((h) => h.end <= s.start + pos).pop() ?? null);
+  };
+  const amounts = [], gaveAmount = new Set(), gave = new Set();
+  for (const x of m.matchAll(INCH_RE())) {
+    const side = ownerAt(x.index, x[0].length);
+    amounts.push({ end: x.index + x[0].length, side });
+    if (!side) { fail(`${x[0].trim()} does not sit with a place in the pick; put each amount beside its place`); continue; }
+    if (x[2] !== undefined || !sameValue(x[1], side.value_in)) fail(`${x[0].trim()} does not match ${label(side)}; copy ${shown(side.value_in)} in exactly`);
+    else gaveAmount.add(side);
   }
-  if (key === "best_day" && pick.fresh !== true && /(?<![A-Za-z0-9])(?<!(?<![A-Za-z0-9])no\s+)(?:fresh|new)\s+snow(?![A-Za-z0-9])/i.test(m)) fail(`"fresh snow" needs fresh true in the pick; remove it`);
-  for (const w of QUALITY) if (qualityUse(w).test(m) && pick.quality !== w) fail(`"${w}" does not match the pick's quality (${pick.quality ?? "none"}); ${pick.quality ? `write "${pick.quality}"` : "remove it"}`);
-  // An unrated pick with a zone shows its state in its own sentence, exactly: "no rating" does not stand in for "off-season" here.
-  const state = pick.aval?.state, center = pick.aval?.center;
-  if (pick.zone_key != null && Object.hasOwn(STATE_TEXT, state ?? "")) {
-    const claims = stateClaims(s.text).filter((c) => c.phrase.state === state);
-    const shows = claims.some((c) => (c.center === null ? state === "unavailable" : c.centers.some((x) => x.toLowerCase() === String(center).toLowerCase())));
-    if (!shows) fail(`add "${STATE_TEXT[state](center)}"; the pick's zone is ${state}, and its state goes in the pick's own sentence`);
+  for (const x of m.matchAll(SMALL_FT_RE())) fail(`${x[0].trim()}: Snow coming gives each amount in inches, as the digest does; copy it in inches`);
+  const heights = sides.map((y) => y.at_ft);
+  for (const x of m.matchAll(FT_RE())) {
+    const ft = Number(x[1].replaceAll(",", ""));
+    if (!heights.includes(ft)) { fail(`${x[0].trim()} is no place's height; Snow coming gives only each place's height beside its amount, so put a snow level in the outlook`); continue; }
+    const prev = amounts.find((y) => /^\s+at\s+$/i.test(m.slice(y.end, x.index)));
+    const side = prev ? prev.side : ownerAt(x.index, x[0].length);
+    if (!side) { fail(`${x[0].trim()} does not sit with a place in the pick; put each height beside its amount`); continue; }
+    if (ft !== side.at_ft) fail(`${x[0].trim()} does not match ${label(side)}; its amount is read at ${Number(side.at_ft).toLocaleString("en-US")} ft`);
+    else gave.add(side);
   }
-  if (key === "hike_best" && pick.water_in !== 0 && pick.water_in != null && /(?<![A-Za-z0-9])dry(?![A-Za-z0-9])/i.test(m)) fail(`"dry" needs water_in 0; the pick has ${shown(pick.water_in)} in, so give the water`);
-  checkPickFigures(key, pick, m, s, a, fail);
+  for (const x of sides) {
+    if (!gaveAmount.has(x)) fail(`give ${label(x)}'s amount with its height: "${shown(x.value_in)} in"`);
+    if (Number.isFinite(x.at_ft) && !gave.has(x)) fail(`give ${label(x)}'s height with its amount: "at ${x.at_ft.toLocaleString("en-US")} ft"`);
+  }
+  for (const x of m.matchAll(MPH_RE())) fail(`${x[0].trim()}: Snow coming has no wind figure; remove it`);
+  for (const q of QUALITY) if (qualityUse(q).test(m)) fail(`"${q}" snow: the digest has no snow quality; remove it`);
+  const seen = new Set();
+  for (const x of sides) {
+    const k = `${x.aval?.center}:${x.aval?.state}`;
+    if (seen.has(k)) continue;
+    seen.add(k);
+    checkPickState(x, s, fail);
+  }
 }
 
 function checkPicks(field, a, digest, out) {
   const root = digest.picks && typeof digest.picks === "object" ? digest.picks : {};
   const obj = (x) => (x && typeof x === "object" ? x : null);
-  const picks = { most_snow: obj(root.ski?.most_snow), best_day: obj(root.ski?.best_day), hike_best: obj(root.hike?.best) };
+  const picks = { snow_coming: obj(root.ski?.snow_coming), best_ski: obj(root.ski?.best_day), best_hike: obj(root.hike?.best_day) };
   const said = new Set();
+  // Heights the Snow coming sides are read at, and their places: they belong in that sentence only (Plan 3 review, I4), and
+  // so do their amounts (re-review M-b). The digest's own snow levels are masked first: an outlook that quotes one honestly
+  // ("~5,500 ft") may match a Snow coming height by chance (re-review N1, White Pass's middle point is 5,500 ft).
+  const scSides = [picks.snow_coming?.resort, picks.snow_coming?.backcountry].filter((x) => x && typeof x === "object");
+  const scHeights = new Set(scSides.map((x) => x.at_ft).filter((x) => Number.isFinite(x)));
+  const scNames = new Set(scSides.map((x) => x.name));
+  const label = (x) => (x === picks.snow_coming?.backcountry ? `the ${x.name} backcountry` : x.name);
+  const levels = snowLevels(digest).sort((x, y) => y.length - x.length);
+  const unLevel = (t) => levels.reduce((u, l) => u.split(l).join(" ".repeat(l.length)), t);
+  // The outlook leads: the first sentence is never a pick (P3-14).
+  if (a.sents.length && labelOf(a.masked.slice(a.sents[0].start, a.sents[0].end))) out.push(`${field}: picks: the text starts with a pick; give the outlook first, 1 or 2 sentences on the weather pattern, then the picks`);
   for (const s of a.sents) {
     const m = a.masked.slice(s.start, s.end);
+    if ((OPEN_WORD.test(m) && (WINDOW_WORD.test(m) || hasClock(m))) || OPEN_UNTIL.test(m)) out.push(`${field}: wording: "open" beside a window, a time or "until" reads as a resort's hours; write "good weather window"`);
     const key = labelOf(m);
+    const isBest = key === "best_ski" || key === "best_hike";
+    if (!isBest) {
+      for (const x of m.matchAll(CLOCK_RE())) out.push(`${field}: picks: ${x[0]} is a clock time outside a Best sentence; times belong only in a Best sentence, copied from its window`);
+      if (WINDOW_WORD.test(m)) out.push(`${field}: picks: "window" belongs only in a Best sentence, copied from its window`);
+    }
+    if (key !== "snow_coming") {
+      if (SNOW_COMING.test(m)) out.push(`${field}: picks: "snow coming" and "snow on the way" belong only in the "Snow coming:" label${picks.snow_coming ? "" : ", and the digest has no Snow coming today"}`);
+      for (const x of unLevel(m).matchAll(FT_RE())) if (scHeights.has(Number(x[1].replaceAll(",", "")))) out.push(`${field}: picks: ${x[0].trim()} is a Snow coming height; it belongs only in the "Snow coming:" sentence, beside its amount`);
+      if (scNames.size) {
+        const inSentence = a.hits.filter((h) => h.start >= s.start && h.start < s.end);
+        const regions = regionSpans(a, s);
+        for (const x of m.matchAll(INCH_RE())) {
+          const end = s.start + x.index + x[0].length, from = end - x[0].length;
+          const lead = new RegExp(`^\\s+${OWNER_LEAD}`, "i").exec(a.masked.slice(end, s.end));
+          const at = lead ? end + lead[0].length : -1;
+          const before = inSentence.filter((h) => h.end <= from).pop();
+          const regionBefore = regions.filter((r) => r.end <= from && (!before || r.start >= before.end) && !CLAUSE_BREAK.test(a.masked.slice(r.end, from))).pop();
+          const owner = (lead && (inSentence.find((h) => h.start === at) || regions.find((r) => r.start === at))) || regionBefore || before;
+          if (owner && scNames.has(owner.name)) { out.push(`${field}: picks: ${x[0].trim()} at ${owner.name}: a Snow coming place's amount belongs only in the "Snow coming:" sentence`); continue; }
+          // By value (Plan 3 re-review 3, fix round 4): a single amount equal to a Snow coming side's fails when the sentence
+          // names a Snow coming place anywhere, or when no place owns it, because no wording rule can tell which place the
+          // writer pinned it on. A range (re-review 4, fix round 5, Option A) fails only when no place owns it and either end
+          // equals a Snow coming amount ("drops 10 to 13 in that falls at Mt Baker"); an owned range ("2 to 3 in for Cascades
+          // North") passes, since the resort's small amount often matches an honest region figure.
+          if (x[2] !== undefined) {
+            const endSide = scSides.find((y) => sameValue(x[1], y.value_in) || sameValue(x[2], y.value_in));
+            if (endSide && !owner) out.push(`${field}: picks: ${x[0].trim()} carries ${label(endSide)}'s Snow coming amount with no place of its own; Snow coming amounts belong only in the "Snow coming:" sentence`);
+            continue;
+          }
+          const side = scSides.find((y) => sameValue(x[1], y.value_in));
+          const namesOne = inSentence.some((h) => scNames.has(h.name));
+          if (side && (namesOne || !owner)) out.push(`${field}: picks: ${x[0].trim()} is ${label(side)}'s Snow coming amount${namesOne ? " in a sentence that names a Snow coming place" : " with no place of its own"}; Snow coming amounts belong only in the "Snow coming:" sentence`);
+        }
+      }
+    }
     if (!key) {
-      for (const [w, re] of COMPARATIVE) if (re.test(m)) out.push(`${field}: picks: "${w}" belongs only in a pick label ("Most snow:", "Best ski day:", "Driest <Weekday>"); compare the weather another way`);
+      for (const [w, re] of COMPARATIVE) if (re.test(m)) out.push(`${field}: picks: "${w}" belongs only in a pick label (${LABEL_LIST}); compare the weather another way`);
       continue;
     }
     const L = LABELS[key];
@@ -665,16 +838,21 @@ function checkPicks(field, a, digest, out) {
     if (!picks[key]) { out.push(`${field}: picks: ${L.path} is null, so remove "${L.shown}"`); continue; }
     if (said.has(key)) { out.push(`${field}: picks: "${L.shown}" appears twice; the pick gets one sentence`); continue; }
     said.add(key);
-    checkPick(field, key, picks[key], { s, m }, a, (msg) => out.push(`${field}: picks: in the "${L.shown}" sentence, ${msg}`));
+    const fail = (msg) => out.push(`${field}: picks: in the "${L.shown}" sentence, ${msg}`);
+    if (key === "snow_coming") checkSnowComing(picks[key], { s, m }, a, fail);
+    else checkBest(picks[key], { s, m }, a, fail);
   }
   for (const key of Object.keys(LABELS)) {
-    if (LABELS[key].field === field && picks[key] && !said.has(key)) out.push(`${field}: picks: ${LABELS[key].path} is "${picks[key].name}"; the text needs it, starting a sentence with "${LABELS[key].shown}"`);
+    if (LABELS[key].field !== field || !picks[key] || said.has(key)) continue;
+    const what = key === "snow_coming" ? "Snow coming" : `"${picks[key].name}"`;
+    out.push(`${field}: picks: ${LABELS[key].path} is ${what}; the text needs it, starting a sentence with "${LABELS[key].shown}"`);
   }
 }
 
 /* ---------- markup ---------- */
 function checkMarkup(field, text, out) {
   for (const bad of ["<", ">", "http", "www"]) if (text.toLowerCase().includes(bad)) out.push(`${field}: markup: "${bad}" is not allowed in the text`);
+  if (/[\u2013\u2014]/.test(text)) out.push(`${field}: markup: an em or en dash is not allowed in the text; write "to" for a range, or end the sentence with a period`);
 }
 
 /* ---------- the check ---------- */

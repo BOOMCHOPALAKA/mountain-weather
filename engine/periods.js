@@ -128,8 +128,8 @@ export function periodRows(loc, cloudLoc, aloftLoc, ft, nowMs, days = 5) {
         }
         snow[m] = s; rain[m] = r; water[m] = w;
       }
-      const G = loc.series.wind_gusts_10m?.[m];
-      if (full(G, idx)) gust[m] = Math.max(...idx.map((i) => G[i]));
+      const G = loc.series.wind_gusts_10m?.[m];   // the preceding hour's maximum (Open-Meteo), so hour-ending like water
+      if (full(G, acc)) gust[m] = Math.max(...acc.map((i) => G[i]));
       const C = loc.series.weather_code?.[m];
       if (full(C, idx)) cloudy[m] = idx.filter((i) => C[i] >= 3).length / idx.length;
     }

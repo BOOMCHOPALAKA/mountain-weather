@@ -28,6 +28,10 @@ export const PROFILES = {
   clouds: { days: 6, models: [HRRR, HRDPS, GFS, ICON], hourly: CLOUD_VARS },
   detail: { days: 8, models: [NBM, HRRR, HRDPS, NAM, ECMWF, GFS, ICON],
             hourly: ["temperature_2m", "precipitation", "weather_code", "wind_speed_10m", "wind_direction_10m", "wind_gusts_10m"] },
+  // v3 landing, Hike: freezing level only, for each area's snow line (Plan 2). 0.2 weight per point.
+  freeze: { days: 3, models: FREEZE_SHORT, hourly: ["freezing_level_height"] },
+  // v3 Resorts view and resort rows: next 24 h snow at each resort's Base and Top. 0.8 weight per point.
+  bands: { days: 2, models: SHORT, hourly: ["temperature_2m", "precipitation"] },
   aloft: { days: 6, models: [HRRR, GFS, ICON],     // HRDPS left out: flat across levels on 2026-11-01
            hourly: WIND_LEVELS.flatMap((p) => [`wind_speed_${p}hPa`, `wind_direction_${p}hPa`, `geopotential_height_${p}hPa`]) },
 };

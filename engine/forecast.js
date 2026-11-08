@@ -100,8 +100,8 @@ export function daySummary(loc, ymd, dayOffset, fromIdx = -1) {
       const dw = waterOver(loc, m, daylight);
       if (dw != null) dWater[m] = dw;
     }
-    const G = loc.series.wind_gusts_10m?.[m];
-    if (covers(G, all)) gust[m] = Math.max(...all.map((i) => G[i]));
+    const G = loc.series.wind_gusts_10m?.[m];   // the preceding hour's maximum (Open-Meteo), so hour-ending like water
+    if (acc.length && covers(G, acc)) gust[m] = Math.max(...acc.map((i) => G[i]));
     const C = loc.series.weather_code?.[m];
     if (daylight.length && covers(C, daylight)) cloudy[m] = daylight.filter((i) => C[i] >= 3).length / daylight.length;
   }
