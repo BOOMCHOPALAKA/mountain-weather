@@ -897,6 +897,8 @@ dialog.pv::backdrop { background: var(--bg); }
 /* a place-view section heading beside its (i) button reads like "Next 7 days" and the other section headings */
 .pv-sec > .sec-h > h3 { font-family: var(--display); font-weight: 600; font-size: 20px; }
 .pick { grid-template-areas: "name wx" "why flags" "win win"; }
+/* 380 to 719 px: the flags get their own row, so the auto column never starves the name column */
+@media (min-width: 380px) and (max-width: 719px) { .pick { grid-template-areas: "name wx" "why why" "flags flags" "win win"; } .pick-flags { justify-content: flex-start; } }
 .pick .wline { grid-area: win; }
 @media (max-width: 379px) { .pick { grid-template-areas: "name" "wx" "why" "win" "flags"; } }
 @media (min-width: 720px) {
