@@ -127,6 +127,7 @@ section { min-width: 0; }
 .brief-card { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: var(--s3) var(--s4); display: grid; gap: var(--s2); }
 .brief-t { font-family: var(--body); font-size: 16px; line-height: 1.5; color: var(--ink); }
 .brief-n { font-size: 12px; color: var(--muted); }
+.brief-d { font-size: 14px; line-height: 1.4; font-weight: 600; color: var(--warn); }
 
 /* ---------- cam strip ---------- */
 .cams { display: grid; grid-auto-flow: column; grid-auto-columns: 152px; gap: var(--s2); overflow-x: auto; overscroll-behavior-x: contain; scroll-snap-type: x mandatory; padding-bottom: var(--s2); margin-top: var(--s1); }

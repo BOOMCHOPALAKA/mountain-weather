@@ -283,11 +283,17 @@ export function miniBars(z) {
 }
 // Each pick reads on its own line when it starts a sentence.
 const PICK_START = /(?<=[.!?])\s+(?=Snow coming:|Best ski day:|Best hike day:)/;
-// brief: { text, at } for one mode, already checked fresh by the app; null hides it.
+// The drift line (guide.js briefDrift): the page's live Best no longer matches the TLDR's, so the card says so first.
+export function driftText(drift, mode, atText) {
+  const now = drift.name ? `Best ${mode} day is now ${drift.name} on ${drift.day}.` : `The page no longer names a Best ${mode} day.`;
+  return `Forecast changed since ${atText}. ${now}`;
+}
+// brief: { text, atText, drift } for one mode, already checked fresh by the app; null hides it.
 export function briefSection(brief, mode) {
   if (!brief || typeof brief.text !== "string" || !brief.text.trim()) return "";
   const paras = brief.text.trim().split(PICK_START).map((t) => `<p class="brief-t">${esc(t)}</p>`).join("");
-  return `<section class="brief" aria-labelledby="h-brief"><div class="sec-h"><h2 id="h-brief">TLDR</h2><span class="small muted">AI summary · ${esc(brief.atText)}</span></div><div class="brief-card">${paras}<p class="brief-n">Written by AI from the forecast, cams and avalanche centers. Compares weather only; check the avalanche forecast before choosing terrain.</p></div></section>`;
+  const drift = brief.drift ? `<p class="brief-d" role="status">${esc(driftText(brief.drift, mode, brief.atText))}</p>` : "";
+  return `<section class="brief" aria-labelledby="h-brief"><div class="sec-h"><h2 id="h-brief">TLDR</h2><span class="small muted">AI summary · ${esc(brief.atText)}</span></div><div class="brief-card">${drift}${paras}<p class="brief-n">Written by AI from the forecast, cams and avalanche centers. Compares weather only; check the avalanche forecast before choosing terrain.</p></div></section>`;
 }
 
 // The data credits (spec "Data and attribution"), read by the page footer (page/ui.js).

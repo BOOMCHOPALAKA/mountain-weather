@@ -402,6 +402,27 @@ export function bestAhead(input) {
   return { slot: byDay.find((d) => d.ymd === b.ymd).slot, area: e.a, m: e.m, w: e.r.w };
 }
 
+const DAY_NAME = { Sun: "Sunday", Mon: "Monday", Tue: "Tuesday", Wed: "Wednesday", Thu: "Thursday", Fri: "Friday", Sat: "Saturday" };
+// The TLDR's Best against the page's live Best (Scott, 2026-11-08). pick: the brief's picks[mode], {id, ymd}, which
+// tldr/publish.sh copied from the digest. Null or malformed means the TLDR named no Best, so nothing is compared. input:
+// the digest's input (no stars, no position, the mode's default list). Returns null when the two agree; else what the
+// page's Best is now, {name, day} with day a full weekday, or {name: null, day: null} when the page has no Best.
+export function briefDrift(input, pick) {
+  if (!pick || typeof pick.id !== "string" || typeof pick.ymd !== "string") return null;
+  const b = bestAhead(input);
+  if (b && b.area.id === pick.id && b.slot.ymd === pick.ymd) return null;
+  return b ? { name: b.area.name, day: DAY_NAME[dow(b.slot.ymd)] } : { name: null, day: null };
+}
+
+// When the page may compare its Best with the TLDR's (final review I1, I2, 2026-11-08): every ranking point loaded fresh
+// from Open-Meteo, none failed and none a saved fallback copy, and the oldest is no older than the forecast the digest
+// read. A failed or older forecast is not a change in the forecast. entries: the glance store entries for the mode's
+// ranking points. pickAtMs: when the digest read its forecast.
+export function driftReady(entries, pickAtMs) {
+  if (!entries.length || !Number.isFinite(pickAtMs)) return false;
+  return entries.every((e) => e?.status === "ok" && !e.saved && Number.isFinite(e.at) && e.at >= pickAtMs);
+}
+
 // Snow coming (Plan 3; Scott, 2026-11-07): the Washington resort the Resorts view lists first (most new snow in the next
 // 5 days at its middle point, resortRow and its sort) and the Washington area whose backcountry gets the most in the same
 // 5 days. An area's backcountry is its Ski place when that is not a resort (its NWAC zone, or the hike stand-in the place

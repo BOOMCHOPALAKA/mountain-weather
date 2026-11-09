@@ -54,8 +54,9 @@ const plain = (html) => String(html).replace(/<[^>]*>/g, "").replaceAll("&lt;", 
 // Every number a writer may copy: numeric values and the digits inside display strings.
 // Names and links are not displayed numbers; avalanche levels are left out on purpose (the writer uses the word).
 // A pick's window is clock words the checker reads on their own ("4 PM"), so its digits are not forecast numbers either.
+// A pick's id and date are for the page's comparison (tldr/picks.mjs), not numbers a writer quotes.
 const NOT_NUMBERS = new Set(["name", "spot", "zone", "gust_at", "link", "level", "center", "state",
-  "key", "zone_key", "spot_zone_key", "gust_at_zone_key", "window"]);
+  "key", "zone_key", "spot_zone_key", "gust_at_zone_key", "window", "id", "ymd"]);
 function collectNumbers(x, out) {
   if (typeof x === "number") { if (fin(x)) out.add(x); }
   else if (typeof x === "string") for (const m of x.matchAll(/\d[\d,]*(\.\d+)?/g)) out.add(Number(m[0].replaceAll(",", "")));
@@ -332,7 +333,7 @@ export async function buildDigest({ codeDir, placesPath, fetchImpl, nowMs = Date
     const place = M.placeFor(b.area, mode, ix.places);
     return { name: b.area.name, zone_key: zoneKeyOf(place), day: M.dow(b.slot.ymd),
       window, dry: M.isDry(b.m), gust: b.m.gust ? rnd(b.m.gust.value) : null, hi_f: b.m.hi ? rnd(b.m.hi.value) : null,
-      aval: avalDigest(avalOf(place)) };
+      aval: avalDigest(avalOf(place)), id: b.area.id, ymd: b.slot.ymd };
   }
   // Snow coming: shown only when the resort or the backcountry reaches PICK.stormIn over the 5 days, as the page prints the
   // amount (value_in, fmtIn of the 5-day sum: 2.6 in prints "3" and counts). at_ft is the height of the point it is read

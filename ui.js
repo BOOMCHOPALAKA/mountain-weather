@@ -98,7 +98,7 @@ export const LABEL_MIN_H = 3;
 export const hourLegend = () => '<p class="hs-leg" aria-hidden="true"><span><i class="o"></i>Good weather</span><span><i class="c"></i>Closed</span><span><i class="d"></i>Dark</span></p>';
 
 /* ---------- top of the page ---------- */
-// brief: { text, atText } for the mode, already checked fresh by the app; null hides it.
+// brief: { text, atText, drift } for the mode, already checked fresh by the app; null hides it.
 export const tldr = (brief, mode) => briefSection(brief, mode);
 
 // The landing's "Where to go". m: guide.landing(...).

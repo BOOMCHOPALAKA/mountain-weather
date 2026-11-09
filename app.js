@@ -16,7 +16,7 @@ import { snotelUrl, parseSnotel } from "./engine/snotel.js";
 import { resortSeason } from "./engine/picks.js";
 import { areaIndex, landingPoints, resortPoints, allResorts, placePoints, skiPlace, hikePlace } from "./engine/areas.js";
 import { avalFor, depthReading, zonesFrom, zoneExpired, forecastNotice } from "./vm.js";
-import { landing } from "./guide.js";
+import { landing, briefDrift, driftReady } from "./guide.js";
 import { placeView, tabFor } from "./place.js";
 import * as UI from "./ui.js";
 
@@ -213,13 +213,16 @@ function depthOf(triplet) {
   const s = S.stations.get(triplet);
   return s?.status === "ok" ? depthReading(s, S.now) : null;
 }
-function landingModel() {
-  return landing({
+function landingInput() {
+  return {
     areas: S.areas, places: S.places, mode: S.mode, nowMs: S.now, when: S.when, list: S.list, starred: S.starred,
     pos: S.pos,
     glance: getter(S.glance), freeze: getter(S.freeze), bands: getter(S.bands), depth: depthOf, aval: avalOf,
     loading: (kind, key) => waiting(S[kind], key),
-  });
+  };
+}
+function landingModel() {
+  return landing(landingInput());
 }
 function placeModel(area) {
   const c = S.cards.get(area.id);
@@ -231,9 +234,21 @@ function placeModel(area) {
     loading: (kind, key) => waiting(kind === "detail" ? c?.detail : S[kind], key),
   });
 }
-function briefFor(mode) {
+// m: the landing model. The comparison waits until every ranking point has loaded fresh (none failed or a saved copy, none
+// older than the forecast the digest read), so the TLDR's pick is never compared with half the data, with a failed load or
+// with an older forecast. at: when the digest read its forecast (picks.at), else when the brief was written. The comparison
+// uses the digest's input (tldr/digest.mjs input()): no stars, no position, the mode's default list.
+function briefFor(mode, m) {
   const b = S.brief, text = b && b[mode];
-  return typeof text === "string" && text.trim() ? { text, atText: clock(b.atMs) } : null;
+  if (!(typeof text === "string" && text.trim())) return null;
+  const pick = b.picks && typeof b.picks === "object" ? b.picks[mode] : null;
+  const pickAt = Date.parse(b.picks?.at ?? "");
+  const entries = landingPoints(S.areas, mode, S.places).map((p) => S.glance.get(p.key));
+  const ready = m && !m.pending && driftReady(entries, Number.isFinite(pickAt) ? pickAt : b.atMs);
+  const drift = ready
+    ? briefDrift({ ...landingInput(), mode, pos: null, starred: new Set(), list: mode === "ski" ? "resorts" : "areas" }, pick)
+    : null;
+  return { text, atText: clock(b.atMs), drift };
 }
 
 /* ---------- rendering: swap only what changed, never drop focus to <body> ---------- */
@@ -287,7 +302,7 @@ function renderMain() {
   shell();
   document.querySelectorAll(".seg [data-mode]").forEach((b) => b.setAttribute("aria-pressed", String(b.dataset.mode === S.mode)));
   const m = landingModel();
-  swap("brief", $("#brief-slot"), UI.tldr(briefFor(S.mode), S.mode));
+  swap("brief", $("#brief-slot"), UI.tldr(briefFor(S.mode, m), S.mode));
   swap("guide", $("#guide-slot"), UI.guide(m));
   swap("places", $("#places-slot"), UI.placesList(m, { geoMsg: S.geoMsg, liveOutside: true }));
   const live = $("#geo-live");
