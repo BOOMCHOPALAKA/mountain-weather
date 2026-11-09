@@ -1,11 +1,11 @@
 {
-  "at": "2026-11-09T06:37:42-08:00",
-  "ski": "Snow falls in the mountains Monday and Tuesday, then Wednesday turns dry. Snow coming: Hurricane Ridge gets 8 in at 5,150 ft, NWAC has no rating posted, and the Mount Baker and Artist Point backcountry 31 in at 5,742 ft by Friday, NWAC has no rating posted. Best ski day: The Enchantments on Wednesday, good weather window all day, through 10 PM, NWAC has no rating posted.",
-  "hike": "Snow falls in the mountains Monday and Tuesday, then Wednesday turns dry. Best hike day: Teanaway on Wednesday, good weather window all day, through 10 PM, NWAC has no rating posted.",
+  "at": "2026-11-09T12:37:57-08:00",
+  "ski": "Snow falls in the Cascades Monday and Tuesday, then dry weather arrives Wednesday. Snow coming: Hurricane Ridge gets 7 in at 5,150 ft and the Mount Baker and Artist Point backcountry 23 in at 5,742 ft by Friday, NWAC has no rating posted. Best ski day: North Cascades Highway on Wednesday, good weather window all day, through 10 PM, NWAC has no rating posted.",
+  "hike": "Showers and clouds linger in the mountains Monday and Tuesday, then dry weather arrives Wednesday. Best hike day: Teanaway on Wednesday, good weather window all day, through 10 PM, NWAC has no rating posted.",
   "picks": {
-    "at": "2026-11-09T06:37:29-08:00",
+    "at": "2026-11-09T12:37:39-08:00",
     "ski": {
-      "id": "enchantments",
+      "id": "nchwy",
       "ymd": "2026-11-11"
     },
     "hike": {
