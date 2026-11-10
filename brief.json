@@ -1,15 +1,15 @@
 {
-  "at": "2026-11-10T06:38:22-08:00",
-  "ski": "Rain with the snow level near ~7,500 ft gives way to dry weather Wednesday and Thursday, and a system Friday brings snow to the Washington Cascades with the snow level near ~5,900 ft. Snow coming: Hurricane Ridge gets 4 in at 5,150 ft and the Mount Adams backcountry 13 in at 7,795 ft by Saturday, NWAC has no rating posted. Best ski day: Mission Ridge and Wenatchee on Thursday, good weather window all day, through 10 PM, NWAC has no rating posted.",
-  "hike": "Rain and wind with the snow level near ~7,500 ft ease Wednesday, dry weather holds Thursday, and a system Friday brings snow to the Washington Cascades above ~5,900 ft. Best hike day: Mission Ridge and Wenatchee on Thursday, good weather window all day, through 10 PM, NWAC has no rating posted.",
+  "at": "2026-11-10T12:38:18-08:00",
+  "ski": "Rain and a high snow level ease through Wednesday, and a system Friday brings the snow level to ~6,300 ft in the Cascades. Snow coming: Hurricane Ridge gets 4 in at 5,150 ft and the Mount St. Helens backcountry 12 in at 6,936 ft by Saturday, NWAC has no rating posted. Best ski day: White Pass on Thursday, good weather window all day, through 10 PM, NWAC has no rating posted.",
+  "hike": "Rain and a high snow level ease through Wednesday, and a system Friday brings the snow level to ~6,300 ft in the Cascades. Best hike day: North Cascades Highway on Thursday, good weather window all day, through 10 PM, NWAC has no rating posted.",
   "picks": {
-    "at": "2026-11-10T06:38:09-08:00",
+    "at": "2026-11-10T12:38:06-08:00",
     "ski": {
-      "id": "mission",
+      "id": "whitepass",
       "ymd": "2026-11-12"
     },
     "hike": {
-      "id": "mission",
+      "id": "nchwy",
       "ymd": "2026-11-12"
     }
   }
