@@ -1,16 +1,16 @@
 {
-  "at": "2026-11-09T12:37:57-08:00",
-  "ski": "Snow falls in the Cascades Monday and Tuesday, then dry weather arrives Wednesday. Snow coming: Hurricane Ridge gets 7 in at 5,150 ft and the Mount Baker and Artist Point backcountry 23 in at 5,742 ft by Friday, NWAC has no rating posted. Best ski day: North Cascades Highway on Wednesday, good weather window all day, through 10 PM, NWAC has no rating posted.",
-  "hike": "Showers and clouds linger in the mountains Monday and Tuesday, then dry weather arrives Wednesday. Best hike day: Teanaway on Wednesday, good weather window all day, through 10 PM, NWAC has no rating posted.",
+  "at": "2026-11-10T06:38:22-08:00",
+  "ski": "Rain with the snow level near ~7,500 ft gives way to dry weather Wednesday and Thursday, and a system Friday brings snow to the Washington Cascades with the snow level near ~5,900 ft. Snow coming: Hurricane Ridge gets 4 in at 5,150 ft and the Mount Adams backcountry 13 in at 7,795 ft by Saturday, NWAC has no rating posted. Best ski day: Mission Ridge and Wenatchee on Thursday, good weather window all day, through 10 PM, NWAC has no rating posted.",
+  "hike": "Rain and wind with the snow level near ~7,500 ft ease Wednesday, dry weather holds Thursday, and a system Friday brings snow to the Washington Cascades above ~5,900 ft. Best hike day: Mission Ridge and Wenatchee on Thursday, good weather window all day, through 10 PM, NWAC has no rating posted.",
   "picks": {
-    "at": "2026-11-09T12:37:39-08:00",
+    "at": "2026-11-10T06:38:09-08:00",
     "ski": {
-      "id": "nchwy",
-      "ymd": "2026-11-11"
+      "id": "mission",
+      "ymd": "2026-11-12"
     },
     "hike": {
-      "id": "teanaway",
-      "ymd": "2026-11-11"
+      "id": "mission",
+      "ymd": "2026-11-12"
     }
   }
 }
