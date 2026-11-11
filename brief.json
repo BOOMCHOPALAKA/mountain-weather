@@ -1,16 +1,16 @@
 {
-  "at": "2026-11-10T12:38:18-08:00",
-  "ski": "Rain and a high snow level ease through Wednesday, and a system Friday brings the snow level to ~6,300 ft in the Cascades. Snow coming: Hurricane Ridge gets 4 in at 5,150 ft and the Mount St. Helens backcountry 12 in at 6,936 ft by Saturday, NWAC has no rating posted. Best ski day: White Pass on Thursday, good weather window all day, through 10 PM, NWAC has no rating posted.",
-  "hike": "Rain and a high snow level ease through Wednesday, and a system Friday brings the snow level to ~6,300 ft in the Cascades. Best hike day: North Cascades Highway on Thursday, good weather window all day, through 10 PM, NWAC has no rating posted.",
+  "at": "2026-11-11T06:37:42-08:00",
+  "ski": "Dry through Thursday in the mountains, then a system Friday brings snow to the Cascades with the snow level near ~6,200 ft. Snow coming: Hurricane Ridge gets 3 in at 5,150 ft, NWAC has no rating posted, and the Mount St. Helens backcountry 12 in at 6,936 ft by Sunday, NWAC has no rating posted. Best ski day: Stevens Pass on Friday, good weather window until about noon, then rain, NWAC has no rating posted.",
+  "hike": "Dry and clear across the Cascades through Thursday, with gusts up to 47 mph at Sunrise & White River Thursday, then a front Friday. Best hike day: Stevens Pass on Friday, good weather window until about noon, then rain, NWAC has no rating posted.",
   "picks": {
-    "at": "2026-11-10T12:38:06-08:00",
+    "at": "2026-11-11T06:37:29-08:00",
     "ski": {
-      "id": "whitepass",
-      "ymd": "2026-11-12"
+      "id": "stevens",
+      "ymd": "2026-11-13"
     },
     "hike": {
-      "id": "nchwy",
-      "ymd": "2026-11-12"
+      "id": "stevens",
+      "ymd": "2026-11-13"
     }
   }
 }
