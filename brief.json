@@ -1,9 +1,9 @@
 {
-  "at": "2026-11-12T12:37:43-08:00",
-  "ski": "Dry today, then a system Friday brings rain and high-elevation snow to the Cascades, and another arrives Sunday. Snow coming: Mt Baker gets 3 in at 4,294 ft and the Mount St. Helens backcountry 19 in at 6,936 ft by Monday, NWAC has no rating posted. Best ski day: Mission Ridge and Wenatchee on Saturday, good weather window all day, through 10 PM, NWAC has no rating posted.",
-  "hike": "Dry today, then a system Friday brings rain and high-elevation snow to the Cascades, and another arrives Sunday. Best hike day: Mission Ridge and Wenatchee on Saturday, good weather window all day, through 10 PM, NWAC has no rating posted.",
+  "at": "2026-11-13T06:37:31-08:00",
+  "ski": "Mixed rain and snow Friday in the Washington Cascades with the snow level near ~5,600 ft, and more systems follow through Monday. Snow coming: Hurricane Ridge gets 6 in at 5,150 ft and the Mount St. Helens backcountry 31 in at 6,936 ft by Tuesday, NWAC has no rating posted. Best ski day: Mission Ridge and Wenatchee on Saturday, good weather window until about 4 PM, then snow and wind, NWAC has no rating posted.",
+  "hike": "Mixed rain and snow Friday in the Washington Cascades with the snow level near ~5,600 ft, and more systems follow through Monday. Best hike day: Mission Ridge and Wenatchee on Saturday, good weather window until about 4 PM, then snow and wind, NWAC has no rating posted.",
   "picks": {
-    "at": "2026-11-12T12:37:31-08:00",
+    "at": "2026-11-13T06:37:31-08:00",
     "ski": {
       "id": "mission",
       "ymd": "2026-11-14"
