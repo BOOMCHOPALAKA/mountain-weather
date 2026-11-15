@@ -1,16 +1,16 @@
 {
-  "at": "2026-11-14T12:37:34-08:00",
-  "ski": "A system brings snow to the Washington Cascades Sunday with the snow level uncertain, ~4,000 to 4,900 ft, and drier weather returns Tuesday. Snow coming: Hurricane Ridge gets 5 in at 5,150 ft, NWAC has no rating posted, and the Mount Adams backcountry 22 in at 7,795 ft by Wednesday, NWAC has no rating posted. Best ski day: Teanaway on Monday, good weather window all day, through 10 PM, NWAC has no rating posted.",
-  "hike": "A system brings snow to the Washington Cascades Sunday, and drier weather returns Tuesday. Best hike day: Teanaway on Monday, good weather window all day, through 10 PM, NWAC has no rating posted.",
+  "at": "2026-11-15T06:38:12-08:00",
+  "ski": "Snow falls in the Washington Cascades Sunday and Monday, and Tuesday turns dry. Snow coming: Mt Baker gets 4 in at 4,294 ft, NWAC has no rating posted, and the Mount Rainier backcountry 11 in at 6,919 ft by Thursday, NWAC has no rating posted. Best ski day: Mount Rainier on Tuesday, good weather window until about 9 PM, then gusts, NWAC has no rating posted.",
+  "hike": "Snow falls in the Washington Cascades Sunday and Monday, and Tuesday turns dry. Best hike day: North Cascades Highway on Tuesday, good weather window all day, through 10 PM, NWAC has no rating posted.",
   "picks": {
-    "at": "2026-11-14T12:37:18-08:00",
+    "at": "2026-11-15T06:37:55-08:00",
     "ski": {
-      "id": "teanaway",
-      "ymd": "2026-11-16"
+      "id": "rainier",
+      "ymd": "2026-11-17"
     },
     "hike": {
-      "id": "teanaway",
-      "ymd": "2026-11-16"
+      "id": "nchwy",
+      "ymd": "2026-11-17"
     }
   }
 }
