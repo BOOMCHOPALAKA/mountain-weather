@@ -1,11 +1,11 @@
 {
-  "at": "2026-11-17T06:39:00-08:00",
-  "ski": "Dry today, then a system Wednesday brings snow to the Cascades, and drier air returns Friday. Snow coming: Mission Ridge gets 5 in at 5,695 ft and the Mount Adams backcountry 9 in at 7,795 ft by Saturday, NWAC has no rating posted. Best ski day: Mount Ellinor and Lake Cushman on Thursday, good weather window all day, through 10 PM, NWAC has no rating posted.",
-  "hike": "Dry today, then a system Wednesday brings snow to the mountains, with the snow level down to the valley floor. Best hike day: Hurricane Ridge on Thursday, good weather window all day, through 10 PM, NWAC has no rating posted.",
+  "at": "2026-11-17T12:37:47-08:00",
+  "ski": "Dry today, then a system brings snow to the Cascades Wednesday before drier weather Thursday. Snow coming: Mission Ridge gets 8 in at 5,695 ft, NWAC has no rating posted, and the Mount Adams backcountry 11 in at 7,795 ft by Saturday, NWAC has no rating posted. Best ski day: Mount Adams on Thursday, good weather window all day, through 10 PM, NWAC has no rating posted.",
+  "hike": "Dry today, then a system brings snow to the Cascades Wednesday before drier weather Thursday. Best hike day: Hurricane Ridge on Thursday, good weather window all day, through 10 PM, NWAC has no rating posted.",
   "picks": {
-    "at": "2026-11-17T06:38:04-08:00",
+    "at": "2026-11-17T12:37:31-08:00",
     "ski": {
-      "id": "ellinor",
+      "id": "adams",
       "ymd": "2026-11-19"
     },
     "hike": {
