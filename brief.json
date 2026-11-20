@@ -1,16 +1,16 @@
 {
-  "at": "2026-11-19T12:38:08-08:00",
-  "ski": "Dry Friday, then new snow reaches the mountains Saturday and Sunday. Snow coming: Hurricane Ridge gets 5 in at 5,150 ft and the Mount Ellinor and Lake Cushman backcountry 16 in at 5,236 ft by Monday, NWAC has no rating posted. Best ski day: North Cascades Highway on Saturday, good weather window all day, through 10 PM, NWAC has no rating posted.",
-  "hike": "Dry Friday with clear skies across most of the mountains, then snow arrives Saturday and Sunday. Best hike day: North Cascades Highway on Saturday, good weather window all day, through 10 PM, NWAC has no rating posted.",
+  "at": "2026-11-20T06:38:25-08:00",
+  "ski": "Dry and cold in the mountains today, then a system brings snow Saturday with the snow level to valley floor and a stronger one Monday. Snow coming: Hurricane Ridge gets 12 in at 5,150 ft and the Mount Ellinor and Lake Cushman backcountry 35 in at 5,236 ft by Tuesday, NWAC has no rating posted. Best ski day: White Pass on Sunday, good weather window all day, through 10 PM, NWAC has no rating posted.",
+  "hike": "Dry and cold in the mountains today, then a system brings snow Saturday with the snow level to valley floor and a stronger one Monday. Best hike day: White Pass on Sunday, good weather window all day, through 10 PM, NWAC has no rating posted.",
   "picks": {
-    "at": "2026-11-19T12:37:57-08:00",
+    "at": "2026-11-20T06:38:12-08:00",
     "ski": {
-      "id": "nchwy",
-      "ymd": "2026-11-21"
+      "id": "whitepass",
+      "ymd": "2026-11-22"
     },
     "hike": {
-      "id": "nchwy",
-      "ymd": "2026-11-21"
+      "id": "whitepass",
+      "ymd": "2026-11-22"
     }
   }
 }
