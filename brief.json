@@ -1,15 +1,15 @@
 {
-  "at": "2026-11-21T06:37:54-08:00",
-  "ski": "Snow returns to the Cascades Sunday and again Tuesday, with the snow level to valley floor. Snow coming: Hurricane Ridge gets 22 in at 5,150 ft and the Mount Ellinor and Lake Cushman backcountry 63 in at 5,236 ft by Wednesday, NWAC has no rating posted. Best ski day: Mount Adams on Sunday, good weather window from 9 AM to about 7 PM, then snow and wind, NWAC has no rating posted.",
-  "hike": "The mountains stay mostly clear today, and snow returns to the Cascades Sunday and again Tuesday. Best hike day: Blewett Pass on Sunday, good weather window all day, through 10 PM, NWAC has no rating posted.",
+  "at": "2026-11-21T12:37:56-08:00",
+  "ski": "Cold air keeps snow in the Washington Cascades through Tuesday. Snow coming: Hurricane Ridge gets 27 in at 5,150 ft and the Mount Ellinor and Lake Cushman backcountry 61 in at 5,236 ft by Wednesday, NWAC has no rating posted. Best ski day: Hurricane Ridge on Sunday, good weather window until about 7 PM, then gusts, NWAC has no rating posted.",
+  "hike": "Cold air keeps snow in the Washington Cascades through Tuesday. Best hike day: Hurricane Ridge on Sunday, good weather window until about 7 PM, then gusts, NWAC has no rating posted.",
   "picks": {
-    "at": "2026-11-21T06:37:39-08:00",
+    "at": "2026-11-21T12:37:44-08:00",
     "ski": {
-      "id": "adams",
+      "id": "hurricane",
       "ymd": "2026-11-22"
     },
     "hike": {
-      "id": "blewett",
+      "id": "hurricane",
       "ymd": "2026-11-22"
     }
   }
