@@ -1,16 +1,16 @@
 {
-  "at": "2026-11-21T12:37:56-08:00",
-  "ski": "Cold air keeps snow in the Washington Cascades through Tuesday. Snow coming: Hurricane Ridge gets 27 in at 5,150 ft and the Mount Ellinor and Lake Cushman backcountry 61 in at 5,236 ft by Wednesday, NWAC has no rating posted. Best ski day: Hurricane Ridge on Sunday, good weather window until about 7 PM, then gusts, NWAC has no rating posted.",
-  "hike": "Cold air keeps snow in the Washington Cascades through Tuesday. Best hike day: Hurricane Ridge on Sunday, good weather window until about 7 PM, then gusts, NWAC has no rating posted.",
+  "at": "2026-11-22T06:38:38-08:00",
+  "ski": "Snow builds in the Washington Cascades Monday and tapers through Wednesday. Snow coming: Hurricane Ridge gets 26 in at 5,150 ft and the Mount Ellinor and Lake Cushman backcountry 68 in at 5,236 ft by Thursday, NWAC has no rating posted. Best ski day: White Pass on Monday, good weather window all day, through 10 PM, NWAC has no rating posted.",
+  "hike": "Snow builds in the Washington Cascades Monday and tapers through Wednesday. Best hike day: White Pass on Monday, good weather window all day, through 10 PM, NWAC has no rating posted.",
   "picks": {
-    "at": "2026-11-21T12:37:44-08:00",
+    "at": "2026-11-22T06:38:19-08:00",
     "ski": {
-      "id": "hurricane",
-      "ymd": "2026-11-22"
+      "id": "whitepass",
+      "ymd": "2026-11-23"
     },
     "hike": {
-      "id": "hurricane",
-      "ymd": "2026-11-22"
+      "id": "whitepass",
+      "ymd": "2026-11-23"
     }
   }
 }
