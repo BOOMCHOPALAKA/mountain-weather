@@ -1,15 +1,15 @@
 {
-  "at": "2026-11-23T06:38:29-08:00",
-  "ski": "Snow falls in the Washington Cascades through Thursday, while the Oregon Cascades stay mostly dry. Snow coming: Hurricane Ridge gets 17 in at 5,150 ft, NWAC has no rating posted, and the Mount Baker and Artist Point backcountry 49 in at 5,742 ft by Friday, NWAC has no rating posted. Best ski day: Mission Ridge and Wenatchee on Wednesday, good weather window all day, through 10 PM, dry with gusts of 10 mph, NWAC has no rating posted.",
-  "hike": "Snow falls in the Washington Cascades through Thursday, and the mountains see their strongest gusts Tuesday. Best hike day: Blewett Pass on Wednesday, good weather window all day, through 10 PM, dry with gusts of 7 mph, NWAC has no rating posted.",
+  "at": "2026-11-23T12:38:41-08:00",
+  "ski": "Snow builds in the Washington Cascades and Olympics Tuesday with the snow level to valley floor, and a second system Thursday brings the snow level near ~5,200 ft. Snow coming: Hurricane Ridge gets 21 in at 5,150 ft and the Mount Baker and Artist Point backcountry 53 in at 5,742 ft by Friday, NWAC has no rating posted. Best ski day: Mission Ridge and Wenatchee on Wednesday, good weather window all day, through 10 PM, NWAC has no rating posted.",
+  "hike": "Snow builds in the Washington Cascades and Olympics Tuesday with the snow level to valley floor, and a second system Thursday brings the snow level near ~5,200 ft. Best hike day: Mission Ridge and Wenatchee on Wednesday, good weather window all day, through 10 PM, NWAC has no rating posted.",
   "picks": {
-    "at": "2026-11-23T06:38:11-08:00",
+    "at": "2026-11-23T12:38:26-08:00",
     "ski": {
       "id": "mission",
       "ymd": "2026-11-25"
     },
     "hike": {
-      "id": "blewett",
+      "id": "mission",
       "ymd": "2026-11-25"
     }
   }
