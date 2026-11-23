@@ -1,16 +1,16 @@
 {
-  "at": "2026-11-22T12:38:27-08:00",
-  "ski": "Snow spreads across the mountains Monday with the snow level to valley floor, and more follows Tuesday and Wednesday. Snow coming: Hurricane Ridge gets 33 in at 5,150 ft and the Mount Ellinor and Lake Cushman backcountry 67 in at 5,236 ft by Thursday, NWAC has no rating posted. Best ski day: Mountain Loop Highway on Monday, good weather window from 11 AM to about 2 PM, then gusts, NWAC has no rating posted.",
-  "hike": "The mountains stay dry today, then snow spreads across them Monday with the snow level to valley floor. Best hike day: Mountain Loop Highway on Monday, good weather window from 10 AM to about 6 PM, then snow and wind, NWAC has no rating posted.",
+  "at": "2026-11-23T06:38:29-08:00",
+  "ski": "Snow falls in the Washington Cascades through Thursday, while the Oregon Cascades stay mostly dry. Snow coming: Hurricane Ridge gets 17 in at 5,150 ft, NWAC has no rating posted, and the Mount Baker and Artist Point backcountry 49 in at 5,742 ft by Friday, NWAC has no rating posted. Best ski day: Mission Ridge and Wenatchee on Wednesday, good weather window all day, through 10 PM, dry with gusts of 10 mph, NWAC has no rating posted.",
+  "hike": "Snow falls in the Washington Cascades through Thursday, and the mountains see their strongest gusts Tuesday. Best hike day: Blewett Pass on Wednesday, good weather window all day, through 10 PM, dry with gusts of 7 mph, NWAC has no rating posted.",
   "picks": {
-    "at": "2026-11-22T12:38:14-08:00",
+    "at": "2026-11-23T06:38:11-08:00",
     "ski": {
-      "id": "mtloop",
-      "ymd": "2026-11-23"
+      "id": "mission",
+      "ymd": "2026-11-25"
     },
     "hike": {
-      "id": "mtloop",
-      "ymd": "2026-11-23"
+      "id": "blewett",
+      "ymd": "2026-11-25"
     }
   }
 }
