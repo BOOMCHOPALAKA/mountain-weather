@@ -1,11 +1,11 @@
 {
-  "at": "2026-11-24T06:38:22-08:00",
-  "ski": "Snow keeps falling in the Washington Cascades through Friday, and the snow level drops to valley floor Friday. Snow coming: Hurricane Ridge gets 12 in at 5,150 ft, NWAC has no rating posted, and the Mount Baker and Artist Point backcountry 42 in at 5,742 ft by Saturday, NWAC has no rating posted. Best ski day: Mount Adams on Wednesday, good weather window from 2 PM through 10 PM, NWAC has no rating posted.",
-  "hike": "Snow keeps falling in the Washington Cascades through Friday, and the snow level drops to valley floor Friday. Best hike day: Teanaway on Wednesday, good weather window until about 9 AM, then snow and wind, NWAC has no rating posted.",
+  "at": "2026-11-24T12:38:13-08:00",
+  "ski": "Snow continues in the Washington Cascades through Friday, when the snow level drops to valley floor. Snow coming: White Pass gets 13 in at 5,500 ft, NWAC has no rating posted, and the Mount Baker and Artist Point backcountry 50 in at 5,742 ft by Saturday, NWAC has no rating posted. Best ski day: Teanaway on Wednesday, good weather window until about 3 PM, then gusts, NWAC has no rating posted.",
+  "hike": "Snow continues in the mountains through Friday, when the snow level drops to valley floor. Best hike day: Teanaway on Wednesday, good weather window until about 3 PM, then gusts, NWAC has no rating posted.",
   "picks": {
-    "at": "2026-11-24T06:38:05-08:00",
+    "at": "2026-11-24T12:37:57-08:00",
     "ski": {
-      "id": "adams",
+      "id": "teanaway",
       "ymd": "2026-11-25"
     },
     "hike": {
