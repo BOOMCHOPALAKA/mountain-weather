@@ -1,15 +1,15 @@
 {
-  "at": "2026-11-26T06:38:34-08:00",
-  "ski": "Snow falls in the Cascades Thursday and Friday with the snow level to the valley floor Friday, Saturday dries out, and another system arrives Sunday. Snow coming: White Pass gets 23 in at 5,500 ft and the Mount Adams backcountry 49 in at 7,795 ft by Monday, NWAC has no rating posted. Best ski day: Mount Adams on Saturday, good weather window all day, through 10 PM, NWAC has no rating posted.",
-  "hike": "Snow falls in the mountains Thursday and Friday, Saturday dries out, and another system arrives Sunday. Best hike day: Hurricane Ridge on Saturday, good weather window all day, through 10 PM, NWAC has no rating posted.",
+  "at": "2026-11-26T12:38:14-08:00",
+  "ski": "Snow moves through the Cascades Friday with the snow level to valley floor, then Saturday dries out before more snow Sunday. Snow coming: White Pass gets 19 in at 5,500 ft and the Mount Adams backcountry 40 in at 7,795 ft by Monday, NWAC has no rating posted. Best ski day: Mount Adams on Saturday, good weather window all day, through 10 PM, NWAC has no rating posted.",
+  "hike": "Snow moves through the Cascades Friday with the snow level to valley floor, then Saturday dries out before more snow Sunday. Best hike day: Teanaway on Saturday, good weather window all day, through 10 PM, NWAC has no rating posted.",
   "picks": {
-    "at": "2026-11-26T06:38:22-08:00",
+    "at": "2026-11-26T12:38:03-08:00",
     "ski": {
       "id": "adams",
       "ymd": "2026-11-28"
     },
     "hike": {
-      "id": "hurricane",
+      "id": "teanaway",
       "ymd": "2026-11-28"
     }
   }
